@@ -1,0 +1,18 @@
+[project]
+name = "tk3u8"
+version = "0.1.0"
+description = "A TikTok live downloader"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "bs4>=0.0.2",
+    "inquirerpy>=0.3.4",
+    "requests>=2.32.3",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.15.0",
+    "pip>=25.0.1",
+    "types-requests>=2.32.0.20250328",
+]
