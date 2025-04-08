@@ -1,4 +1,3 @@
-from typing import Optional
 import requests
 
 from tk3u8.custom_exceptions import RequestFailedError
@@ -18,7 +17,7 @@ class RequestHandler:
             "Priority": "u=0, i",
             "Referer": "https://www.tiktok.com/"
         })
-        self.response: Optional[requests.Response] = None
+        self.response: requests.Response
 
     def get_data(self, username) -> requests.Response:
         self.response = self.session.get(f"https://www.tiktok.com/@{username}/live")
