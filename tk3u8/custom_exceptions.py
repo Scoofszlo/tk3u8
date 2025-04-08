@@ -81,3 +81,11 @@ class LinkNotAvailableError(Exception):
     def __init__(self) -> None:
         self.message = "Stream link can't be retrieved. Please try again."
         super().__init__(self.message)
+
+
+class StreamDataNotFoundError(Exception):
+    """Custom exception when the stream data can't be scraped."""
+
+    def __init__(self, username) -> None:
+        self.message = f"Stream data can't be retrieved from user @{username}. Please try again."
+        super().__init__(self.message)

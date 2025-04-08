@@ -5,7 +5,7 @@ from typing import Dict, List
 from bs4 import BeautifulSoup
 
 from tk3u8.constants import Mode, Quality, DownloadLink
-from tk3u8.custom_exceptions import InvalidQualityError, LinkNotAvailableError, ScriptTagNotFoundError, UnknownStatusCodeError, UserNotLiveError, UserNotFoundError
+from tk3u8.custom_exceptions import InvalidQualityError, LinkNotAvailableError, ScriptTagNotFoundError, StreamDataNotFoundError, UnknownStatusCodeError, UserNotLiveError, UserNotFoundError
 from tk3u8.request_handler import RequestHandler
 
 
@@ -59,10 +59,13 @@ class Tk3u8:
         return json.loads(script_content)
 
     def _get_stream_data(self) -> Dict:
+        if not self._is_user_exists():
+            raise UserNotFoundError(self.args.username)
+
         try:
             return json.loads(self.raw_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
         except KeyError:
-            raise UserNotFoundError(self.args.username)
+            raise StreamDataNotFoundError(self.args.username)
 
     def _start_download(self, download_link: DownloadLink):
         print(f"Starting download:\nUsername: @{self.args.username}\nQuality: {download_link.quality}\nDownload Link: {download_link.link}\n")
@@ -91,3 +94,8 @@ class Tk3u8:
             return False
         else:
             raise UnknownStatusCodeError(status)
+
+    def _is_user_exists(self) -> bool:
+        if self.raw_data.get("LiveRoom"):
+            return True
+        return False
