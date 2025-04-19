@@ -30,7 +30,9 @@ class ArgsHandler():
             "-q",
             choices=[
                 "original",
+                "uhd_60",
                 "uhd",
+                "hd_60",
                 "hd",
                 "ld",
                 "sd"

@@ -22,7 +22,9 @@ class StatusCode(Enum):
 
 class Quality(Enum):
     ORIGINAL = "Original"
+    UHD_60 = "UHD_60"
     UHD = "UHD"
+    HD_60 = "HD_60"
     HD = "HD"
     LD = "LD"
     SD = "SD"

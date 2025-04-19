@@ -31,8 +31,12 @@ class Tk3u8:
         try:
             if self.args.quality == "original":
                 return StreamLink(Quality.ORIGINAL, self.stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None))
+            elif self.args.quality == "uhd_60":
+                return StreamLink(Quality.UHD_60, self.stream_data.get("data", None).get("uhd_60", None).get("main", None).get("hls", None))
             elif self.args.quality == "uhd":
                 return StreamLink(Quality.UHD, self.stream_data.get("data", None).get("uhd", None).get("main", None).get("hls", None))
+            elif self.args.quality == "hd_60":
+                return StreamLink(Quality.HD_60, self.stream_data.get("data", None).get("hd_60", None).get("main", None).get("hls", None))
             elif self.args.quality == "hd":
                 return StreamLink(Quality.HD, self.stream_data.get("data", None).get("hd", None).get("main", None).get("hls", None))
             elif self.args.quality == "ld":
