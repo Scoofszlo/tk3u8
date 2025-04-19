@@ -14,7 +14,6 @@ class Tk3u8:
         self.args: Namespace = args
         self.config: Config = Config()
         self.request_handler = RequestHandler(self.config)
-        self.identify_mode = self._identify_mode()
         self.raw_data = self._get_raw_data()
         self.stream_data = self._get_stream_data()
         self.links: List[DownloadLink] = []
@@ -26,12 +25,6 @@ class Tk3u8:
             self._start_download(download_link)
         else:
             raise UserNotLiveError(self.args.username)
-
-    def _identify_mode(self):
-        if self.args.mode == "auto":
-            return Mode.AUTO
-        if self.args.mode == "manual":
-            return Mode.MANUAL
 
     def _get_download_link_by_quality(self) -> DownloadLink:
         if self.args.quality == "original":
