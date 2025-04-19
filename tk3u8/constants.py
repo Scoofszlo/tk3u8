@@ -42,6 +42,7 @@ class ConfigKey(Enum):
 PROGRAM_DATA_DIR = "user_data"
 STREAM_DATA_DIR = PROGRAM_DATA_DIR + "/stream_data.json"
 CONFIG_FILE_PATH = PROGRAM_DATA_DIR + "/config.toml"
+DOWNLOAD_DIR = PROGRAM_DATA_DIR + "/downloads"
 
 # Default configuration settings
 DEFAULT_CONFIG = {

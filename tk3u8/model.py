@@ -4,9 +4,10 @@ import subprocess
 from typing import Dict, List
 from bs4 import BeautifulSoup
 from tk3u8.config import Config
-from tk3u8.constants import Quality, StreamLink
+from tk3u8.constants import DOWNLOAD_DIR, Quality, StreamLink
 from tk3u8.custom_exceptions import InvalidQualityError, LinkNotAvailableError, ScriptTagNotFoundError, StreamDataNotFoundError, UnknownStatusCodeError, UserNotLiveError, UserNotFoundError
 from tk3u8.request_handler import RequestHandler
+from datetime import datetime
 
 
 class Tk3u8:
@@ -67,8 +68,12 @@ class Tk3u8:
         if not stream_link.link:
             raise LinkNotAvailableError()
 
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+        filename = DOWNLOAD_DIR + f"/{self.args.username}/{self.args.username}-{timestamp}-{stream_link.quality.value.lower()}.%(ext)s"
+
         command = [
             "yt-dlp",
+            "-o", filename,
             stream_link.link
         ]
 
