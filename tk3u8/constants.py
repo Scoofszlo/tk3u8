@@ -4,7 +4,7 @@ from typing import Optional
 
 
 @dataclass
-class DownloadLink:
+class StreamLink:
     quality: "Quality"
     link: Optional[str]
 

@@ -4,7 +4,7 @@ import subprocess
 from typing import Dict, List
 from bs4 import BeautifulSoup
 from tk3u8.config import Config
-from tk3u8.constants import Mode, Quality, DownloadLink
+from tk3u8.constants import Quality, StreamLink
 from tk3u8.custom_exceptions import InvalidQualityError, LinkNotAvailableError, ScriptTagNotFoundError, StreamDataNotFoundError, UnknownStatusCodeError, UserNotLiveError, UserNotFoundError
 from tk3u8.request_handler import RequestHandler
 
@@ -16,27 +16,27 @@ class Tk3u8:
         self.request_handler = RequestHandler(self.args, self.config)
         self.raw_data = self._get_raw_data()
         self.stream_data = self._get_stream_data()
-        self.links: List[DownloadLink] = []
+        self.links: List[StreamLink] = []
 
     def run(self):
-        download_link = self._get_download_link_by_quality()
+        stream_link = self._get_stream_link_by_quality()
 
         if self._is_user_live():
-            self._start_download(download_link)
+            self._start_download(stream_link)
         else:
             raise UserNotLiveError(self.args.username)
 
-    def _get_download_link_by_quality(self) -> DownloadLink:
+    def _get_stream_link_by_quality(self) -> StreamLink:
         if self.args.quality == "original":
-            return DownloadLink(Quality.ORIGINAL, self.stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None))
+            return StreamLink(Quality.ORIGINAL, self.stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None))
         elif self.args.quality == "uhd":
-            return DownloadLink(Quality.UHD, self.stream_data.get("data", None).get("uhd", None).get("main", None).get("hls", None))
+            return StreamLink(Quality.UHD, self.stream_data.get("data", None).get("uhd", None).get("main", None).get("hls", None))
         elif self.args.quality == "hd":
-            return DownloadLink(Quality.HD, self.stream_data.get("data", None).get("hd", None).get("main", None).get("hls", None))
+            return StreamLink(Quality.HD, self.stream_data.get("data", None).get("hd", None).get("main", None).get("hls", None))
         elif self.args.quality == "ld":
-            return DownloadLink(Quality.LD, self.stream_data.get("data", None).get("ld", None).get("main", None).get("hls", None))
+            return StreamLink(Quality.LD, self.stream_data.get("data", None).get("ld", None).get("main", None).get("hls", None))
         elif self.args.quality == "sd":
-            return DownloadLink(Quality.SD, self.stream_data.get("data", None).get("sd", None).get("main", None).get("hls", None))
+            return StreamLink(Quality.SD, self.stream_data.get("data", None).get("sd", None).get("main", None).get("hls", None))
         else:
             raise InvalidQualityError()
 
@@ -61,15 +61,15 @@ class Tk3u8:
         except KeyError:
             raise StreamDataNotFoundError(self.args.username)
 
-    def _start_download(self, download_link: DownloadLink):
-        print(f"Starting download:\nUsername: @{self.args.username}\nQuality: {download_link.quality}\nDownload Link: {download_link.link}\n")
+    def _start_download(self, stream_link: StreamLink):
+        print(f"Starting download:\nUsername: @{self.args.username}\nQuality: {stream_link.quality}\Stream Link: {stream_link.link}\n")
 
-        if not download_link.link:
+        if not stream_link.link:
             raise LinkNotAvailableError()
 
         command = [
             "yt-dlp",
-            download_link.link
+            stream_link.link
         ]
 
         try:

@@ -10,8 +10,8 @@ class RequestHandler:
         self.session = requests.Session()
         self.args = args
         self.config = config
-        self._update_cookies()
-        self._update_proxy()
+        self._setup_cookies()
+        self._setup_proxy()
         self.session.headers.update({
             "Sec-Ch-Ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\"",
             "Sec-Ch-Ua-Mobile": "?0", "Sec-Ch-Ua-Platform": "\"Linux\"",
@@ -33,7 +33,7 @@ class RequestHandler:
 
         return self.response
 
-    def _update_cookies(self) -> None:
+    def _setup_cookies(self) -> None:
         sessionid_ss = self.config.get_config(Cookie.SESSIONID_SS)
         tt_target_idc = self.config.get_config(Cookie.TT_TARGET_IDC)
 
@@ -49,7 +49,7 @@ class RequestHandler:
                 "tt-target-idc": tt_target_idc
             })
 
-    def _update_proxy(self) -> None:
+    def _setup_proxy(self) -> None:
         proxy = self.args.proxy
 
         if proxy:
