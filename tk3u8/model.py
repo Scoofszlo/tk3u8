@@ -5,7 +5,7 @@ from typing import Dict, List
 from bs4 import BeautifulSoup
 from tk3u8.config import Config
 from tk3u8.constants import DOWNLOAD_DIR, Quality, StreamLink
-from tk3u8.custom_exceptions import InvalidQualityError, LinkNotAvailableError, ScriptTagNotFoundError, StreamDataNotFoundError, UnknownStatusCodeError, UserNotLiveError, UserNotFoundError
+from tk3u8.custom_exceptions import InvalidQualityError, LinkNotAvailableError, QualityNotAvailableError, ScriptTagNotFoundError, StreamDataNotFoundError, UnknownStatusCodeError, UserNotLiveError, UserNotFoundError
 from tk3u8.request_handler import RequestHandler
 from datetime import datetime
 
@@ -28,18 +28,21 @@ class Tk3u8:
             raise UserNotLiveError(self.args.username)
 
     def _get_stream_link_by_quality(self) -> StreamLink:
-        if self.args.quality == "original":
-            return StreamLink(Quality.ORIGINAL, self.stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None))
-        elif self.args.quality == "uhd":
-            return StreamLink(Quality.UHD, self.stream_data.get("data", None).get("uhd", None).get("main", None).get("hls", None))
-        elif self.args.quality == "hd":
-            return StreamLink(Quality.HD, self.stream_data.get("data", None).get("hd", None).get("main", None).get("hls", None))
-        elif self.args.quality == "ld":
-            return StreamLink(Quality.LD, self.stream_data.get("data", None).get("ld", None).get("main", None).get("hls", None))
-        elif self.args.quality == "sd":
-            return StreamLink(Quality.SD, self.stream_data.get("data", None).get("sd", None).get("main", None).get("hls", None))
-        else:
-            raise InvalidQualityError()
+        try:
+            if self.args.quality == "original":
+                return StreamLink(Quality.ORIGINAL, self.stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None))
+            elif self.args.quality == "uhd":
+                return StreamLink(Quality.UHD, self.stream_data.get("data", None).get("uhd", None).get("main", None).get("hls", None))
+            elif self.args.quality == "hd":
+                return StreamLink(Quality.HD, self.stream_data.get("data", None).get("hd", None).get("main", None).get("hls", None))
+            elif self.args.quality == "ld":
+                return StreamLink(Quality.LD, self.stream_data.get("data", None).get("ld", None).get("main", None).get("hls", None))
+            elif self.args.quality == "sd":
+                return StreamLink(Quality.SD, self.stream_data.get("data", None).get("sd", None).get("main", None).get("hls", None))
+            else:
+                raise InvalidQualityError()
+        except AttributeError:
+            raise QualityNotAvailableError()
 
     def _get_raw_data(self) -> Dict:
         response = self.request_handler.get_data(self.args.username)

@@ -75,6 +75,14 @@ class InvalidQualityError(Exception):
         super().__init__(self.message)
 
 
+class QualityNotAvailableError(Exception):
+    """Custom exception when quality is not available for download."""
+
+    def __init__(self) -> None:
+        self.message = "The requested video quality is not available for download."
+        super().__init__(self.message)
+
+
 class LinkNotAvailableError(Exception):
     """Custom exception when the stream link isn't available for some reason."""
 
