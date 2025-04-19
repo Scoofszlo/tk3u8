@@ -20,7 +20,12 @@ class ArgsHandler():
         return args
 
     def init_args(self) -> None:
-        self.parser.add_argument("-u", "--username", help="The username to be used for recording live stream", required=True)
+        self.parser.add_argument(
+            "-u",
+            "--username",
+            help="The username to be used for recording live stream",
+            required=True
+        )
         self.parser.add_argument(
             "-q",
             choices=[
@@ -33,4 +38,8 @@ class ArgsHandler():
             default="original",
             dest="quality",
             help="Specify the quality of the video to download. Default: original"
+        )
+        self.parser.add_argument(
+            "--proxy",
+            help="The proxy server to use for downloading. Sample format: 127.0.0.1:8080"
         )

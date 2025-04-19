@@ -13,7 +13,7 @@ class Tk3u8:
     def __init__(self, args):
         self.args: Namespace = args
         self.config: Config = Config()
-        self.request_handler = RequestHandler(self.config)
+        self.request_handler = RequestHandler(self.args, self.config)
         self.raw_data = self._get_raw_data()
         self.stream_data = self._get_stream_data()
         self.links: List[DownloadLink] = []

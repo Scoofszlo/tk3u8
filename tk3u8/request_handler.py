@@ -1,3 +1,4 @@
+from argparse import Namespace
 import requests
 from tk3u8.config import Config
 from tk3u8.constants import Cookie
@@ -5,10 +6,12 @@ from tk3u8.custom_exceptions import InvalidCookieError, RequestFailedError
 
 
 class RequestHandler:
-    def __init__(self, config: Config):
+    def __init__(self, args: Namespace, config: Config):
         self.session = requests.Session()
+        self.args = args
         self.config = config
         self._update_cookies()
+        self._update_proxy()
         self.session.headers.update({
             "Sec-Ch-Ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\"",
             "Sec-Ch-Ua-Mobile": "?0", "Sec-Ch-Ua-Platform": "\"Linux\"",
@@ -44,4 +47,13 @@ class RequestHandler:
             self.session.cookies.update({
                 "sessionid_ss": sessionid_ss,
                 "tt-target-idc": tt_target_idc
+            })
+
+    def _update_proxy(self) -> None:
+        proxy = self.args.proxy
+
+        if proxy:
+            self.session.proxies.update({
+                "http": self.args.proxy,
+                "https": self.args.proxy
             })
