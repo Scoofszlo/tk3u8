@@ -70,17 +70,18 @@ class Tk3u8:
             raise StreamDataNotFoundError(self.args.username)
 
     def _start_download(self, stream_link: StreamLink):
-        print(f"Starting download:\nUsername: @{self.args.username}\nQuality: {stream_link.quality}\Stream Link: {stream_link.link}\n")
+        print(f"Starting download:\nUsername: @{self.args.username}\nQuality: {stream_link.quality}\nStream Link: {stream_link.link}\n")
 
         if not stream_link.link:
             raise LinkNotAvailableError()
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-        filename = DOWNLOAD_DIR + f"/{self.args.username}/{self.args.username}-{timestamp}-{stream_link.quality.value.lower()}.%(ext)s"
+        filename = f"{self.args.username}-{timestamp}-{stream_link.quality.value.lower()}"
+        filename_with_download_dir = DOWNLOAD_DIR + f"/{self.args.username}/{filename}.%(ext)s"
 
         command = [
             "yt-dlp",
-            "-o", filename,
+            "-o", filename_with_download_dir,
             stream_link.link
         ]
 
@@ -90,6 +91,8 @@ class Tk3u8:
             raise RuntimeError(f"Download failed with error: {e}")
         except FileNotFoundError:
             raise FileNotFoundError("yt-dlp is not installed or not found in PATH.")
+        except KeyboardInterrupt:
+            print(f"\nFinished downloading {filename}.mp4")
 
     def _is_user_live(self) -> bool:
         status = self.raw_data["LiveRoom"]["liveRoomUserInfo"]["user"]["status"]
