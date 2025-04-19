@@ -15,14 +15,15 @@ class Config:
         self.config = self._load_config()
 
     def get_config(self, key) -> str | None:
-        if key == ConfigKey.SESSIONID_SS:
-            return self.config["sessionid_ss"]
-        if key == ConfigKey.TT_TARGET_IDC:
-            return self.config["tt-target-idc"]
-        if key == ConfigKey.PROXY:
-            return self.config["proxy"]
-        else:
-            raise KeyError
+        try:
+            if key == ConfigKey.SESSIONID_SS:
+                return self.config["sessionid_ss"]
+            if key == ConfigKey.TT_TARGET_IDC:
+                return self.config["tt-target-idc"]
+            if key == ConfigKey.PROXY:
+                return self.config["proxy"]
+        except KeyError:
+            return None
 
     def _load_config(self) -> dict:
         try:
