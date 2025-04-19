@@ -17,11 +17,12 @@ class Config:
     def get_config(self, key) -> str | None:
         try:
             if key == ConfigKey.SESSIONID_SS:
-                return self.config["sessionid_ss"]
+                return self.config[ConfigKey.SESSIONID_SS.value]
             if key == ConfigKey.TT_TARGET_IDC:
-                return self.config["tt-target-idc"]
+                return self.config[ConfigKey.TT_TARGET_IDC.value]
             if key == ConfigKey.PROXY:
-                return self.config["proxy"]
+                return self.config[ConfigKey.PROXY.value]
+            return None
         except KeyError:
             return None
 
