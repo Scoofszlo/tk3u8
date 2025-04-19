@@ -33,9 +33,10 @@ class Mode(Enum):
     MANUAL = "Manual"
 
 
-class Cookie(Enum):
+class ConfigKey(Enum):
     SESSIONID_SS = "sessionid_ss",
-    TT_TARGET_IDC = "tt-target-idc"
+    TT_TARGET_IDC = "tt-target-idc",
+    PROXY = "proxy"
 
 
 PROGRAM_DATA_DIR = "user_data"
@@ -47,5 +48,6 @@ DEFAULT_CONFIG = {
     "config": {
         "sessionid_ss": "",
         "tt-target-idc": "",
+        "proxy": ""
     }
 }

@@ -1,5 +1,5 @@
 import toml
-from tk3u8.constants import CONFIG_FILE_PATH, Cookie
+from tk3u8.constants import CONFIG_FILE_PATH, ConfigKey
 from tk3u8.custom_exceptions import FileParsingError
 
 
@@ -15,10 +15,12 @@ class Config:
         self.config = self._load_config()
 
     def get_config(self, key) -> str | None:
-        if key == Cookie.SESSIONID_SS:
+        if key == ConfigKey.SESSIONID_SS:
             return self.config["sessionid_ss"]
-        if key == Cookie.TT_TARGET_IDC:
+        if key == ConfigKey.TT_TARGET_IDC:
             return self.config["tt-target-idc"]
+        if key == ConfigKey.PROXY:
+            return self.config["proxy"]
         else:
             raise KeyError
 

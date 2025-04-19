@@ -1,7 +1,7 @@
 from argparse import Namespace
 import requests
 from tk3u8.config import Config
-from tk3u8.constants import Cookie
+from tk3u8.constants import ConfigKey
 from tk3u8.custom_exceptions import InvalidCookieError, RequestFailedError
 
 
@@ -34,8 +34,8 @@ class RequestHandler:
         return self.response
 
     def _setup_cookies(self) -> None:
-        sessionid_ss = self.config.get_config(Cookie.SESSIONID_SS)
-        tt_target_idc = self.config.get_config(Cookie.TT_TARGET_IDC)
+        sessionid_ss = self.config.get_config(ConfigKey.SESSIONID_SS)
+        tt_target_idc = self.config.get_config(ConfigKey.TT_TARGET_IDC)
 
         if sessionid_ss is None and tt_target_idc is None:
             return
@@ -50,10 +50,10 @@ class RequestHandler:
             })
 
     def _setup_proxy(self) -> None:
-        proxy = self.args.proxy
+        proxy = self.args.proxy or self.config.get_config(ConfigKey.PROXY)
 
         if proxy:
             self.session.proxies.update({
-                "http": self.args.proxy,
-                "https": self.args.proxy
+                "http": proxy,
+                "https": proxy
             })
