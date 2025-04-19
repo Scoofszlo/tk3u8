@@ -1,11 +1,14 @@
 import requests
-
-from tk3u8.custom_exceptions import RequestFailedError
+from tk3u8.config import Config
+from tk3u8.constants import Cookie
+from tk3u8.custom_exceptions import InvalidCookieError, RequestFailedError
 
 
 class RequestHandler:
-    def __init__(self):
+    def __init__(self, config: Config):
         self.session = requests.Session()
+        self.config = config
+        self._update_cookies()
         self.session.headers.update({
             "Sec-Ch-Ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\"",
             "Sec-Ch-Ua-Mobile": "?0", "Sec-Ch-Ua-Platform": "\"Linux\"",
@@ -26,3 +29,19 @@ class RequestHandler:
             raise RequestFailedError(status_code=self.response.status_code)
 
         return self.response
+
+    def _update_cookies(self) -> None:
+        sessionid_ss = self.config.get_config(Cookie.SESSIONID_SS)
+        tt_target_idc = self.config.get_config(Cookie.TT_TARGET_IDC)
+
+        if sessionid_ss is None and tt_target_idc is None:
+            return
+        elif sessionid_ss is None and tt_target_idc is not None:
+            raise InvalidCookieError("The 'tt-target-idc' cookie is set in your config, but 'sessionid_ss' is missing.")
+        elif sessionid_ss is not None and tt_target_idc is None:
+            raise InvalidCookieError("The 'sessionid_ss' cookie is set in your config, but 'tt-target-idc' is missing.")
+        elif sessionid_ss and tt_target_idc:
+            self.session.cookies.update({
+                "sessionid_ss": sessionid_ss,
+                "tt-target-idc": tt_target_idc
+            })

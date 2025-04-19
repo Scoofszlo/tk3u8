@@ -33,4 +33,19 @@ class Mode(Enum):
     MANUAL = "Manual"
 
 
-STREAM_DATA_DIR = "user_data/stream_data.json"
+class Cookie(Enum):
+    SESSIONID_SS = "sessionid_ss",
+    TT_TARGET_IDC = "tt-target-idc"
+
+
+PROGRAM_DATA_DIR = "user_data"
+STREAM_DATA_DIR = PROGRAM_DATA_DIR + "/stream_data.json"
+CONFIG_FILE_PATH = PROGRAM_DATA_DIR + "/config.toml"
+
+# Default configuration settings
+DEFAULT_CONFIG = {
+    "config": {
+        "sessionid_ss": "",
+        "tt-target-idc": "",
+    }
+}

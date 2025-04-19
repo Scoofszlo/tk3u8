@@ -89,3 +89,18 @@ class StreamDataNotFoundError(Exception):
     def __init__(self, username) -> None:
         self.message = f"Stream data can't be retrieved from user @{username}. Please try again."
         super().__init__(self.message)
+
+
+class FileParsingError(Exception):
+    """Custom exception for when there is a problem parsing the file"""
+
+    def __init__(self) -> None:
+        self.message = "Error parsing config file."
+        super().__init__(self.message)
+
+
+class InvalidCookieError(Exception):
+    """Custom exception when user improperly sets cookie in the config file"""
+
+    def __init__(self, message) -> None:
+        super().__init__(message)

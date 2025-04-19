@@ -3,7 +3,7 @@ import json
 import subprocess
 from typing import Dict, List
 from bs4 import BeautifulSoup
-
+from tk3u8.config import Config
 from tk3u8.constants import Mode, Quality, DownloadLink
 from tk3u8.custom_exceptions import InvalidQualityError, LinkNotAvailableError, ScriptTagNotFoundError, StreamDataNotFoundError, UnknownStatusCodeError, UserNotLiveError, UserNotFoundError
 from tk3u8.request_handler import RequestHandler
@@ -12,7 +12,8 @@ from tk3u8.request_handler import RequestHandler
 class Tk3u8:
     def __init__(self, args):
         self.args: Namespace = args
-        self.request_handler = RequestHandler()
+        self.config: Config = Config()
+        self.request_handler = RequestHandler(self.config)
         self.identify_mode = self._identify_mode()
         self.raw_data = self._get_raw_data()
         self.stream_data = self._get_stream_data()
