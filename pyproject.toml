@@ -7,7 +7,6 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "bs4>=0.0.2",
-    "inquirerpy>=0.3.4",
     "requests>=2.32.3",
     "toml>=0.10.2",
 ]

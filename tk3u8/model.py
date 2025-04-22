@@ -17,7 +17,6 @@ class Tk3u8:
         self.request_handler = RequestHandler(self.args, self.config)
         self.raw_data = self._get_raw_data()
         self.stream_data = self._get_stream_data()
-        self.links: List[StreamLink] = []
 
     def run(self):
         stream_link = self._get_stream_link_by_quality()
