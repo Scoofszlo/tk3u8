@@ -1,4 +1,5 @@
 import argparse
+from rich_argparse import RichHelpFormatter
 
 
 class ArgsHandler():
@@ -11,7 +12,8 @@ class ArgsHandler():
 
     def __init__(self):
         self.parser: argparse.ArgumentParser = argparse.ArgumentParser(
-            description="tk3u8 - A TikTok live downloader"
+            description="tk3u8 - A TikTok live downloader",
+            formatter_class=RichHelpFormatter
         )
         self.init_args()
 
