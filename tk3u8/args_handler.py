@@ -1,6 +1,8 @@
 import argparse
 from rich_argparse import RichHelpFormatter
 
+from tk3u8.constants import Quality
+
 
 class ArgsHandler():
     _instance = None
@@ -28,16 +30,8 @@ class ArgsHandler():
         )
         self.parser.add_argument(
             "-q",
-            choices=[
-                "original",
-                "uhd_60",
-                "uhd",
-                "hd_60",
-                "hd",
-                "ld",
-                "sd"
-            ],
-            default="original",
+            choices=[quality.value.lower() for quality in Quality],
+            default=Quality.ORIGINAL.value.lower(),
             dest="quality",
             help="Specify the quality of the video to download. Default: original"
         )
