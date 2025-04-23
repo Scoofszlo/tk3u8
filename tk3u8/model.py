@@ -28,22 +28,14 @@ class Tk3u8:
 
     def _get_stream_link_by_quality(self) -> StreamLink:
         try:
-            if self.args.quality == "original":
+            if self.args.quality == Quality.ORIGINAL.value.lower():
                 return StreamLink(Quality.ORIGINAL, self.stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None))
-            elif self.args.quality == "uhd_60":
-                return StreamLink(Quality.UHD_60, self.stream_data.get("data", None).get("uhd_60", None).get("main", None).get("hls", None))
-            elif self.args.quality == "uhd":
-                return StreamLink(Quality.UHD, self.stream_data.get("data", None).get("uhd", None).get("main", None).get("hls", None))
-            elif self.args.quality == "hd_60":
-                return StreamLink(Quality.HD_60, self.stream_data.get("data", None).get("hd_60", None).get("main", None).get("hls", None))
-            elif self.args.quality == "hd":
-                return StreamLink(Quality.HD, self.stream_data.get("data", None).get("hd", None).get("main", None).get("hls", None))
-            elif self.args.quality == "ld":
-                return StreamLink(Quality.LD, self.stream_data.get("data", None).get("ld", None).get("main", None).get("hls", None))
-            elif self.args.quality == "sd":
-                return StreamLink(Quality.SD, self.stream_data.get("data", None).get("sd", None).get("main", None).get("hls", None))
             else:
-                raise InvalidQualityError()
+                for quality in list(Quality)[1:]:  # Turns them into a list of its members and skips the first one since it is already checked from the if statement
+                    if quality.value.lower() == self.args.quality:
+                        return StreamLink(quality, self.stream_data.get("data", None).get(self.args.quality, None).get("main", None).get("hls", None))
+
+            raise InvalidQualityError()
         except AttributeError:
             raise QualityNotAvailableError()
 
