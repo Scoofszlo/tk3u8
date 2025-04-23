@@ -36,7 +36,7 @@ After installation, you can now use the project's folder, open the terminal ther
 
 To download a live stream from a user, simply run:
 ```sh
-uv run -m tk3u8 -u username
+uv run -m tk3u8 username
 ```
 
 If the user is not live, the program will raise an error:
@@ -52,7 +52,7 @@ To stop recording and save the live stream, just do `Ctrl+C` on your keyboard an
 
 By default, the program will download the highest quality stream. If you want to specify the quality, simply choose either `original`, `uhd_60`, `uhd`, `hd_60`, `hd`, `ld`, or `sd`.
 ```sh
-uv run -m tk3u8 -u username -q uhd
+uv run -m tk3u8 username -q uhd
 ```
 
 ### Using proxy
@@ -60,7 +60,7 @@ uv run -m tk3u8 -u username -q uhd
 You can also use a proxy by specifying the `IP_ADDRESS:PORT` in `--proxy` arg:
 ```sh
 # Replace with your actual proxy address
-uv run -m tk3u8 -u username --proxy 127.0.0.1:80
+uv run -m tk3u8 username --proxy 127.0.0.1:80
 ```
 
 Or you can supply it too in the config file located in `user_data/config.toml`:

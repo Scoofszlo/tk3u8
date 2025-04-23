@@ -23,10 +23,8 @@ class ArgsHandler():
 
     def init_args(self) -> None:
         self.parser.add_argument(
-            "-u",
-            "--username",
+            "username",
             help="The username to be used for recording live stream",
-            required=True
         )
         self.parser.add_argument(
             "-q",
