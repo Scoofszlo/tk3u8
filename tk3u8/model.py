@@ -1,11 +1,11 @@
 from argparse import Namespace
 import json
-import subprocess
-from typing import Dict, List
+from typing import Dict
 from bs4 import BeautifulSoup
+from yt_dlp import YoutubeDL
 from tk3u8.config import Config
 from tk3u8.constants import DOWNLOAD_DIR, Quality, StreamLink
-from tk3u8.custom_exceptions import InvalidQualityError, LinkNotAvailableError, QualityNotAvailableError, ScriptTagNotFoundError, StreamDataNotFoundError, UnknownStatusCodeError, UserNotLiveError, UserNotFoundError
+from tk3u8.custom_exceptions import DownloadError, InvalidQualityError, LinkNotAvailableError, QualityNotAvailableError, ScriptTagNotFoundError, StreamDataNotFoundError, UnknownStatusCodeError, UserNotLiveError, UserNotFoundError
 from tk3u8.request_handler import RequestHandler
 from datetime import datetime
 
@@ -70,20 +70,17 @@ class Tk3u8:
         filename = f"{self.args.username}-{timestamp}-{stream_link.quality.value.lower()}"
         filename_with_download_dir = DOWNLOAD_DIR + f"/{self.args.username}/{filename}.%(ext)s"
 
-        command = [
-            "yt-dlp",
-            "-o", filename_with_download_dir,
-            stream_link.link
-        ]
+        ydl_opts = {
+            'outtmpl': filename_with_download_dir,
+            'quiet': False,  # Set to True to suppress output if needed
+        }
 
         try:
-            subprocess.run(command, check=True)
-        except subprocess.CalledProcessError as e:
-            raise RuntimeError(f"Download failed with error: {e}")
-        except FileNotFoundError:
-            raise FileNotFoundError("yt-dlp is not installed or not found in PATH.")
-        except KeyboardInterrupt:
-            print(f"\nFinished downloading {filename}.mp4")
+            with YoutubeDL(ydl_opts) as ydl:
+                ydl.download([stream_link.link])
+                print(f"\nFinished downloading {filename}.mp4")
+        except Exception as e:
+            raise DownloadError(e)
 
     def _is_user_live(self) -> bool:
         status = self.raw_data["LiveRoom"]["liveRoomUserInfo"]["user"]["status"]

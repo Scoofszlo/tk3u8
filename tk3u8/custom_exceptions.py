@@ -112,3 +112,10 @@ class InvalidCookieError(Exception):
 
     def __init__(self, message) -> None:
         super().__init__(message)
+
+
+class DownloadError(Exception):
+    """Custom exception when there is an issue downloading with yt-dlp."""
+
+    def __init__(self, e) -> None:
+        super().__init__(f"Download failed with error: {e}")
