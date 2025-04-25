@@ -6,25 +6,23 @@ tk3u8 is a Python program that helps you download live streams from TikTok. The 
 ## Requirements
 - Windows OS
 - Python `>=3.10.0`
-- yt-dlp
 - Git
 - uv
 
 ## Installation
 1. Install Python 3.10.0 or above.
-2. Install [yt-dlp](https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#recommended), and add it to the `Path` in your system envrionment variables.
-3. Install [Git](https://git-scm.com/downloads/win).
+2. Install [Git](https://git-scm.com/downloads/win).
 3. Install uv, through `pip` command or via [Standalone installer](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer).
     ```sh
     pip install uv
     ```
-3. Clone this repository.
+4. Clone this repository using Git.
     ```sh
     git clone https://github.com/Scoofszlo/tk3u8.git
-4. Change your directory to the project's folder.
+5. Change the current directory to the project's folder.
     ```sh
     cd tk3u8
-5. Run the program.
+6. Run the program.
     ```sh
     uv run -m tk3u8 -h
     ```
