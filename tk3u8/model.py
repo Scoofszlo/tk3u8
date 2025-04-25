@@ -1,11 +1,23 @@
 from argparse import Namespace
 import json
+import re
 from typing import Dict
 from bs4 import BeautifulSoup
 from yt_dlp import YoutubeDL
 from tk3u8.config import Config
 from tk3u8.constants import DOWNLOAD_DIR, Quality, StreamLink
-from tk3u8.custom_exceptions import DownloadError, InvalidQualityError, LinkNotAvailableError, QualityNotAvailableError, ScriptTagNotFoundError, StreamDataNotFoundError, UnknownStatusCodeError, UserNotLiveError, UserNotFoundError
+from tk3u8.custom_exceptions import (
+    DownloadError,
+    InvalidQualityError,
+    InvalidUsernameError,
+    LinkNotAvailableError,
+    QualityNotAvailableError,
+    ScriptTagNotFoundError,
+    StreamDataNotFoundError,
+    UnknownStatusCodeError,
+    UserNotLiveError,
+    UserNotFoundError,
+)
 from tk3u8.request_handler import RequestHandler
 from datetime import datetime
 
@@ -40,6 +52,9 @@ class Tk3u8:
             raise QualityNotAvailableError()
 
     def _get_raw_data(self) -> Dict:
+        if not self._is_username_valid(self.args.username):
+            raise InvalidUsernameError(self.args.username)
+
         response = self.request_handler.get_data(self.args.username)
 
         soup = BeautifulSoup(response.text, "html.parser")
@@ -94,5 +109,13 @@ class Tk3u8:
 
     def _is_user_exists(self) -> bool:
         if self.raw_data.get("LiveRoom"):
+            return True
+        return False
+
+    def _is_username_valid(self, username) -> bool:
+        pattern = r"^[a-z0-9_.]{1,24}$"
+        match = re.match(pattern, username)
+
+        if match:
             return True
         return False

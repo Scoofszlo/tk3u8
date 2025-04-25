@@ -53,6 +53,14 @@ class UserNotFoundError(Exception):
         super().__init__(self.message)
 
 
+class InvalidUsernameError(Exception):
+    """Custom exception whenever username entered is invalid."""
+
+    def __init__(self, username) -> None:
+        self.message = f"The username @{username} is invalid. Ensure the username contains only lowercase letters, numbers, underscores, and/or periods, and is up to 24 characters in length."
+        super().__init__(self.message)
+
+
 class UnknownStatusCodeError(Exception):
     """Custom exception whenever the status code returned isn't 2 or 4.
 
