@@ -19,9 +19,11 @@ tk3u8 is a Python program that helps you download live streams from TikTok. The 
 4. Clone this repository using Git.
     ```sh
     git clone https://github.com/Scoofszlo/tk3u8.git
+    ```
 5. Change the current directory to the project's folder.
     ```sh
     cd tk3u8
+    ```
 6. Run the program.
     ```sh
     uv run -m tk3u8 -h
