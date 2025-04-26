@@ -69,6 +69,9 @@ class Tk3u8:
         self.options_handler.save_script_args({OptionKey.PROXY.value: proxy})
         self.request_handler.update_proxy(proxy)
 
+    def set_program_data_dir(self, program_data_dir):
+        self.options_handler.set_program_data_dir(program_data_dir)
+
     def _initialize_data(self):
         if not self.username:
             self.username = self.options_handler.get_option_val(OptionKey.USERNAME)

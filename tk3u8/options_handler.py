@@ -1,13 +1,16 @@
 from argparse import Namespace
 import toml
-from tk3u8.constants import CONFIG_FILE_PATH, OptionKey, Quality
+from tk3u8.constants import CONFIG_FILE_PATH, PROGRAM_DATA_DIR, OptionKey, Quality
 from tk3u8.exceptions import FileParsingError, NoUsernameEnteredError
+import os
 
 
 class OptionsHandler:
     def __init__(self, args: Namespace | None = None):
         self.script_args = {}
         self.cl_args: Namespace = args if args else Namespace()
+        self.PROGRAM_DATA_DIR = PROGRAM_DATA_DIR
+        self.CONFIG_PATH = PROGRAM_DATA_DIR + "/config.toml"
         self.config = self._load_config()
 
     def get_option_val(self, key) -> str | None:
@@ -41,9 +44,21 @@ class OptionsHandler:
     def save_script_args(self, script_arg: dict):
         self.script_args.update(script_arg)
 
+    def set_program_data_dir(self, program_data_dir: str):
+        if not os.path.isabs(program_data_dir):
+            program_data_dir = os.path.abspath(program_data_dir)
+
+        if not os.path.exists(program_data_dir):
+            os.makedirs(program_data_dir, exist_ok=True)
+
+        self.PROGRAM_DATA_DIR = program_data_dir
+        self.CONFIG_PATH = os.path.join(self.PROGRAM_DATA_DIR, "config.toml")
+
+        self.config = self._load_config()
+
     def _load_config(self) -> dict:
         try:
-            with open(CONFIG_FILE_PATH, 'r') as file:
+            with open(self.CONFIG_PATH, 'r') as file:
                 config = self._retouch_config(toml.load(file))
                 return config
         except FileNotFoundError:
