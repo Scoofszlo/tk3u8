@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from yt_dlp import YoutubeDL
 from tk3u8.config import Config
 from tk3u8.constants import DOWNLOAD_DIR, Quality, StreamLink
-from tk3u8.custom_exceptions import (
+from tk3u8.exceptions import (
     DownloadError,
     InvalidQualityError,
     InvalidUsernameError,

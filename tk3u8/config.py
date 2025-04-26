@@ -1,6 +1,6 @@
 import toml
 from tk3u8.constants import CONFIG_FILE_PATH, ConfigKey
-from tk3u8.custom_exceptions import FileParsingError
+from tk3u8.exceptions import FileParsingError
 
 
 class Config:
