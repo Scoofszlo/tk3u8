@@ -36,17 +36,8 @@ class OptionsHandler:
         except KeyError:
             return None
 
-    def save_script_args(
-            self,
-            username: str | None,
-            quality: Quality | None,
-            wait_until_live: bool,
-            timeout: int
-        ):
-        self.script_args[OptionKey.USERNAME.value] = username
-        self.script_args[OptionKey.QUALITY.value] = quality.value if quality else None
-        self.script_args[OptionKey.WAIT_UNTIL_LIVE.value] = wait_until_live
-        self.script_args[OptionKey.TIMEOUT.value] = timeout
+    def save_script_args(self, script_arg: dict):
+        self.script_args.update(script_arg)
 
     def _load_config(self) -> dict:
         try:
@@ -66,3 +57,5 @@ class OptionsHandler:
                 raw_config[key] = None
 
         return raw_config
+    
+

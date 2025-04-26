@@ -40,7 +40,13 @@ class Tk3u8:
             wait_until_live: bool = False,
             timeout: int = 10
     ):
-        self.options_handler.save_script_args(username, quality, wait_until_live, timeout)
+        script_args = [
+            {OptionKey.USERNAME.value: username},
+            {OptionKey.QUALITY.value: quality.value if quality else None},
+            {OptionKey.WAIT_UNTIL_LIVE.value: wait_until_live},
+            {OptionKey.TIMEOUT.value: timeout}
+        ]
+        [self.options_handler.save_script_args(arg) for arg in script_args]
         self._initialize_data()
 
         stream_link = self._get_stream_link_by_quality()
