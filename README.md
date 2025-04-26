@@ -100,9 +100,9 @@ Remember do not share this to anyone as this is a sensitive data tied to your Ti
 
 ## Issues
 
-### `StreamDataNotFoundError` occurs
+### `ScriptTagNotFoundError` or `StreamDataNotFoundError` occurs
 
-Sometimes, the program may raise an `StreamDataNotFoundError`. One of the possible reasons is that you might have repeatedly download live streams in a short amount of time (I'm not really sure with this one due to limited testing done by myself).
+Sometimes, the program may raise an `ScriptTagNotFoundError` or `StreamDataNotFoundError`. One of the possible reasons is that you might have repeatedly download live streams in a short amount of time (I'm not really sure with this one due to limited testing done by myself).
 
 To fix this, you have to supply a `sessionid_ss` and `tt-target-idc` based from your browser's cookies. You will put those in `user_data/config.toml` located in the project's folder. Refer to the guide above for detailed steps.
 
