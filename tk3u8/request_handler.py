@@ -2,7 +2,7 @@ from argparse import Namespace
 import requests
 from tk3u8.config import Config
 from tk3u8.constants import ConfigKey
-from tk3u8.custom_exceptions import InvalidCookieError, RequestFailedError
+from tk3u8.exceptions import InvalidCookieError, RequestFailedError
 
 
 class RequestHandler:
