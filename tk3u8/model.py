@@ -91,7 +91,7 @@ class Tk3u8:
         }
 
         try:
-            with YoutubeDL(ydl_opts) as ydl:
+            with YoutubeDL(ydl_opts) as ydl:  # type: ignore[arg-type]
                 ydl.download([stream_link.link])
                 print(f"\nFinished downloading {filename}.mp4")
         except Exception as e:
