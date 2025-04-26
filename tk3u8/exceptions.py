@@ -61,6 +61,14 @@ class InvalidUsernameError(Exception):
         super().__init__(self.message)
 
 
+class NoUsernameEnteredError(Exception):
+    """Custom exception when no username is entered."""
+
+    def __init__(self) -> None:
+        self.message = "No username was entered. Please provide a valid username."
+        super().__init__(self.message)
+
+
 class UnknownStatusCodeError(Exception):
     """Custom exception whenever the status code returned isn't 2 or 4.
 

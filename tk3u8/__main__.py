@@ -6,5 +6,5 @@ if __name__ == "__main__":
     ah = ArgsHandler()
     args = ah.parse_args()
 
-    obj = Tk3u8(args)
-    obj.run()
+    tk3u8 = Tk3u8(args)
+    tk3u8.download()

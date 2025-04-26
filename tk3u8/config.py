@@ -1,5 +1,5 @@
 import toml
-from tk3u8.constants import CONFIG_FILE_PATH, ConfigKey
+from tk3u8.constants import CONFIG_FILE_PATH, OptionKey
 from tk3u8.exceptions import FileParsingError
 
 
@@ -16,12 +16,12 @@ class Config:
 
     def get_config(self, key) -> str | None:
         try:
-            if key == ConfigKey.SESSIONID_SS:
-                return self.config[ConfigKey.SESSIONID_SS.value]
-            if key == ConfigKey.TT_TARGET_IDC:
-                return self.config[ConfigKey.TT_TARGET_IDC.value]
-            if key == ConfigKey.PROXY:
-                return self.config[ConfigKey.PROXY.value]
+            if key == OptionKey.SESSIONID_SS:
+                return self.config[OptionKey.SESSIONID_SS.value]
+            if key == OptionKey.TT_TARGET_IDC:
+                return self.config[OptionKey.TT_TARGET_IDC.value]
+            if key == OptionKey.PROXY:
+                return self.config[OptionKey.PROXY.value]
             return None
         except KeyError:
             return None

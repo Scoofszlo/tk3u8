@@ -1,15 +1,13 @@
-from argparse import Namespace
 import requests
-from tk3u8.config import Config
-from tk3u8.constants import ConfigKey
+from tk3u8.constants import OptionKey
 from tk3u8.exceptions import InvalidCookieError, RequestFailedError
+from tk3u8.options_handler import OptionsHandler
 
 
 class RequestHandler:
-    def __init__(self, args: Namespace, config: Config):
+    def __init__(self, options_handler: OptionsHandler):
+        self.options_handler = options_handler
         self.session = requests.Session()
-        self.args = args
-        self.config = config
         self._setup_cookies()
         self._setup_proxy()
         self.session.headers.update({
@@ -33,9 +31,15 @@ class RequestHandler:
 
         return self.response
 
+    def update_proxy(self, proxy: str):
+        self.session.proxies.update({
+                "http": proxy,
+                "https": proxy
+        })
+
     def _setup_cookies(self) -> None:
-        sessionid_ss = self.config.get_config(ConfigKey.SESSIONID_SS)
-        tt_target_idc = self.config.get_config(ConfigKey.TT_TARGET_IDC)
+        sessionid_ss = self.options_handler.get_option_val(OptionKey.SESSIONID_SS)
+        tt_target_idc = self.options_handler.get_option_val(OptionKey.TT_TARGET_IDC)
 
         if sessionid_ss is None and tt_target_idc is None:
             return
@@ -50,10 +54,7 @@ class RequestHandler:
             })
 
     def _setup_proxy(self) -> None:
-        proxy = self.args.proxy or self.config.get_config(ConfigKey.PROXY)
+        proxy = self.options_handler.get_option_val(OptionKey.PROXY)
 
         if proxy:
-            self.session.proxies.update({
-                "http": proxy,
-                "https": proxy
-            })
+            self.update_proxy(proxy)

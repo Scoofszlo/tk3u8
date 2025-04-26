@@ -35,10 +35,14 @@ class Mode(Enum):
     MANUAL = "Manual"
 
 
-class ConfigKey(Enum):
+class OptionKey(Enum):
     SESSIONID_SS = "sessionid_ss"
     TT_TARGET_IDC = "tt-target-idc"
     PROXY = "proxy"
+    USERNAME = "username"
+    QUALITY = "quality"
+    WAIT_UNTIL_LIVE = "wait_until_live"
+    TIMEOUT = "timeout"
 
 
 PROGRAM_DATA_DIR = "user_data"
