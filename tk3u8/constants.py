@@ -36,8 +36,8 @@ class Mode(Enum):
 
 
 class ConfigKey(Enum):
-    SESSIONID_SS = "sessionid_ss",
-    TT_TARGET_IDC = "tt-target-idc",
+    SESSIONID_SS = "sessionid_ss"
+    TT_TARGET_IDC = "tt-target-idc"
     PROXY = "proxy"
 
 
