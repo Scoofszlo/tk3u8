@@ -45,7 +45,7 @@ uv run -m tk3u8 username
 
 If the user is not live, the program will raise an error:
 ```sh
-tk3u8.custom_exceptions.UserNotLiveError: User @username is not live.
+tk3u8.exceptions.UserNotLiveError: User @username is not live.
 ```
 
 ### Saving the live stream
