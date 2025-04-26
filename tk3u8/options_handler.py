@@ -24,10 +24,12 @@ class OptionsHandler:
                 except AttributeError:
                     raise NoUsernameEnteredError
             if key == OptionKey.QUALITY:
-                try:
-                    return self.script_args[OptionKey.QUALITY.value].lower() or self.cl_args.quality
-                except AttributeError:
-                    return Quality.ORIGINAL.value.lower()
+                if self.script_args[OptionKey.QUALITY.value] is not None:
+                    return self.script_args[OptionKey.QUALITY.value].lower()
+                elif self.cl_args.quality:
+                    return self.cl_args.quality
+                elif self.script_args is None and not self.cl.args.quality:
+                    return Quality.ORIGINAL.value
             if key == OptionKey.WAIT_UNTIL_LIVE:
                 return self.script_args[OptionKey.WAIT_UNTIL_LIVE.value]
             if key == OptionKey.TIMEOUT:
