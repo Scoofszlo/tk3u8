@@ -1,48 +1,43 @@
-from argparse import Namespace
-import toml
-from tk3u8.constants import CONFIG_FILE_PATH, PROGRAM_DATA_DIR, OptionKey, Quality
-from tk3u8.exceptions import FileParsingError, NoUsernameEnteredError
 import os
+import toml
+from tk3u8.constants import PROGRAM_DATA_DIR, OptionKey, Quality
+from tk3u8.exceptions import FileParsingError, NoUsernameEnteredError
 
 
 class OptionsHandler:
-    def __init__(self, args: Namespace | None = None):
-        self.script_args = {}
-        self.cl_args: Namespace = args if args else Namespace()
+    def __init__(self):
+        self.args = {}
         self.PROGRAM_DATA_DIR = PROGRAM_DATA_DIR
         self.CONFIG_PATH = PROGRAM_DATA_DIR + "/config.toml"
         self.config = self._load_config()
 
-    def get_option_val(self, key) -> str | None:
+    def get_arg_val(self, key) -> str | None:
         try:
             if key == OptionKey.SESSIONID_SS:
                 return self.config[OptionKey.SESSIONID_SS.value]
             if key == OptionKey.TT_TARGET_IDC:
                 return self.config[OptionKey.TT_TARGET_IDC.value]
             if key == OptionKey.PROXY:
-                return self.script_args[OptionKey.PROXY.value] or self.cl_args.proxy or self.config[OptionKey.PROXY.value]
+                return self.args[OptionKey.PROXY.value] or self.config[OptionKey.PROXY.value]
             if key == OptionKey.USERNAME:
                 try:
-                    return self.script_args[OptionKey.USERNAME.value] or self.cl_args.username
+                    return self.args[OptionKey.USERNAME.value]
                 except AttributeError:
                     raise NoUsernameEnteredError
             if key == OptionKey.QUALITY:
-                if self.script_args[OptionKey.QUALITY.value] is not None:
-                    return self.script_args[OptionKey.QUALITY.value].lower()
-                elif self.cl_args.quality:
-                    return self.cl_args.quality
-                elif self.script_args is None and not self.cl.args.quality:
-                    return Quality.ORIGINAL.value
+                if self.args[OptionKey.QUALITY.value] is not None:
+                    return self.args[OptionKey.QUALITY.value]
+                return Quality.ORIGINAL.value
             if key == OptionKey.WAIT_UNTIL_LIVE:
-                return self.script_args[OptionKey.WAIT_UNTIL_LIVE.value]
+                return self.args[OptionKey.WAIT_UNTIL_LIVE.value]
             if key == OptionKey.TIMEOUT:
-                return self.script_args[OptionKey.TIMEOUT.value]
+                return self.args[OptionKey.TIMEOUT.value]
             return None
         except KeyError:
             return None
 
-    def save_script_args(self, script_arg: dict):
-        self.script_args.update(script_arg)
+    def save_arg(self, arg: dict):
+        self.args.update(arg)
 
     def set_program_data_dir(self, program_data_dir: str):
         if not os.path.isabs(program_data_dir):

@@ -38,8 +38,8 @@ class RequestHandler:
         })
 
     def _setup_cookies(self) -> None:
-        sessionid_ss = self.options_handler.get_option_val(OptionKey.SESSIONID_SS)
-        tt_target_idc = self.options_handler.get_option_val(OptionKey.TT_TARGET_IDC)
+        sessionid_ss = self.options_handler.get_arg_val(OptionKey.SESSIONID_SS)
+        tt_target_idc = self.options_handler.get_arg_val(OptionKey.TT_TARGET_IDC)
 
         if sessionid_ss is None and tt_target_idc is None:
             return
@@ -54,7 +54,7 @@ class RequestHandler:
             })
 
     def _setup_proxy(self) -> None:
-        proxy = self.options_handler.get_option_val(OptionKey.PROXY)
+        proxy = self.options_handler.get_arg_val(OptionKey.PROXY)
 
         if proxy:
             self.update_proxy(proxy)

@@ -24,8 +24,8 @@ from tk3u8.request_handler import RequestHandler
 
 
 class Tk3u8:
-    def __init__(self, args: Namespace | None = None):
-        self.options_handler = OptionsHandler(args)
+    def __init__(self):
+        self.options_handler = OptionsHandler()
         self.request_handler = RequestHandler(self.options_handler)
         self.raw_data: dict | None = None
         self.stream_data: dict | None = None
@@ -36,17 +36,11 @@ class Tk3u8:
     def download(
             self,
             username: str | None = None,
-            quality: Quality | None = None,
+            quality: str | None = None,
             wait_until_live: bool = False,
             timeout: int = 10
     ):
-        script_args = [
-            {OptionKey.USERNAME.value: username},
-            {OptionKey.QUALITY.value: quality.value if quality else None},
-            {OptionKey.WAIT_UNTIL_LIVE.value: wait_until_live},
-            {OptionKey.TIMEOUT.value: timeout}
-        ]
-        [self.options_handler.save_script_args(arg) for arg in script_args]
+        self._process_args(username, quality, wait_until_live, timeout)
         self._initialize_data()
 
         stream_link = self._get_stream_link_by_quality()
@@ -65,16 +59,16 @@ class Tk3u8:
             print(f"\nUser @{self.username} is now streaming live.")
             self._start_download(stream_link)
 
-    def set_proxy(self, proxy: str):
-        self.options_handler.save_script_args({OptionKey.PROXY.value: proxy})
-        self.request_handler.update_proxy(proxy)
+    def set_proxy(self, proxy: str | None):
+        self.options_handler.save_arg({OptionKey.PROXY.value: proxy})
+        self.request_handler.update_proxy(self.options_handler.get_arg_val(OptionKey.PROXY))
 
     def set_program_data_dir(self, program_data_dir):
         self.options_handler.set_program_data_dir(program_data_dir)
 
     def _initialize_data(self):
         if not self.username:
-            self.username = self.options_handler.get_option_val(OptionKey.USERNAME)
+            self.username = self.options_handler.get_arg_val(OptionKey.USERNAME)
 
         if not self.raw_data:
             self.raw_data = self._get_raw_data()
@@ -83,10 +77,10 @@ class Tk3u8:
             self.stream_data = self._get_stream_data()
 
         if not self.quality:
-            self.quality = self.options_handler.get_option_val(OptionKey.QUALITY)
+            self.quality = self.options_handler.get_arg_val(OptionKey.QUALITY)
 
         if not self.timeout:
-            self.timeout = self.options_handler.get_option_val(OptionKey.TIMEOUT)
+            self.timeout = self.options_handler.get_arg_val(OptionKey.TIMEOUT)
 
     def _update_data(self):
         self.raw_data = self._get_raw_data()
@@ -184,3 +178,13 @@ class Tk3u8:
             seconds_left -= 1
             time.sleep(1)
         print(f"Checking... {' ' * 20}", end="\r")
+
+    def _process_args(self, username, quality, wait_until_live, timeout) -> None:
+        args = [
+            {OptionKey.USERNAME.value: username},
+            {OptionKey.QUALITY.value: quality},
+            {OptionKey.WAIT_UNTIL_LIVE.value: wait_until_live},
+            {OptionKey.TIMEOUT.value: timeout}
+        ]
+
+        [self.options_handler.save_arg(arg) for arg in args]
