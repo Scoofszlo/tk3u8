@@ -115,6 +115,14 @@ class StreamDataNotFoundError(Exception):
         super().__init__(self.message)
 
 
+class InvalidArgKeyError(Exception):
+    """Custom exception when an invalid key is encountered."""
+
+    def __init__(self, key) -> None:
+        self.message = f"The key '{key}' is invalid or not recognized."
+        super().__init__(self.message)
+
+
 class FileParsingError(Exception):
     """Custom exception for when there is a problem parsing the file"""
 

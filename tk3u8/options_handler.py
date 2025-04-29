@@ -1,7 +1,7 @@
 import os
 import toml
 from tk3u8.constants import PROGRAM_DATA_DIR, OptionKey, Quality
-from tk3u8.exceptions import FileParsingError, NoUsernameEnteredError
+from tk3u8.exceptions import FileParsingError, InvalidArgKeyError, NoUsernameEnteredError
 
 
 class OptionsHandler:
@@ -32,7 +32,7 @@ class OptionsHandler:
                 return self.args[OptionKey.WAIT_UNTIL_LIVE.value]
             if key == OptionKey.TIMEOUT:
                 return self.args[OptionKey.TIMEOUT.value]
-            return None
+            raise InvalidArgKeyError(key)
         except KeyError:
             return None
 
@@ -69,5 +69,3 @@ class OptionsHandler:
                 raw_config[key] = None
 
         return raw_config
-    
-
