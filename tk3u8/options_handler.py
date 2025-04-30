@@ -1,3 +1,4 @@
+from typing import Optional
 import toml
 from tk3u8.constants import OptionKey, Quality
 from tk3u8.exceptions import FileParsingError, InvalidArgKeyError, NoUsernameEnteredError
@@ -5,11 +6,11 @@ from tk3u8.utils.paths import paths_handler
 
 
 class OptionsHandler:
-    def __init__(self):
-        self.args = {}
+    def __init__(self) -> None:
+        self.args: dict = {}
         self.config = self._load_config()
 
-    def get_arg_val(self, key) -> str | None:
+    def get_arg_val(self, key) -> Optional[str | int]:
         try:
             if key == OptionKey.SESSIONID_SS:
                 return self.config[OptionKey.SESSIONID_SS.value]
@@ -34,7 +35,7 @@ class OptionsHandler:
         except KeyError:
             return None
 
-    def save_arg(self, arg: dict):
+    def save_arg(self, arg: dict) -> None:
         self.args.update(arg)
 
     def _load_config(self) -> dict:

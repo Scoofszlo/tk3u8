@@ -5,7 +5,7 @@ from tk3u8.options_handler import OptionsHandler
 
 
 class RequestHandler:
-    def __init__(self, options_handler: OptionsHandler):
+    def __init__(self, options_handler: OptionsHandler) -> None:
         self.options_handler = options_handler
         self.session = requests.Session()
         self._setup_cookies()
@@ -31,15 +31,19 @@ class RequestHandler:
 
         return self.response
 
-    def update_proxy(self, proxy: str):
-        self.session.proxies.update({
-                "http": proxy,
-                "https": proxy
-        })
+    def update_proxy(self, proxy: str | None):
+        if proxy:
+            self.session.proxies.update({
+                    "http": proxy,
+                    "https": proxy
+            })
 
     def _setup_cookies(self) -> None:
         sessionid_ss = self.options_handler.get_arg_val(OptionKey.SESSIONID_SS)
         tt_target_idc = self.options_handler.get_arg_val(OptionKey.TT_TARGET_IDC)
+
+        assert isinstance(sessionid_ss, str)
+        assert isinstance(tt_target_idc, str)
 
         if sessionid_ss is None and tt_target_idc is None:
             return
@@ -55,6 +59,7 @@ class RequestHandler:
 
     def _setup_proxy(self) -> None:
         proxy = self.options_handler.get_arg_val(OptionKey.PROXY)
+        assert isinstance(proxy, (str, type(None)))
 
         if proxy:
             self.update_proxy(proxy)

@@ -1,15 +1,3 @@
-class AutoModeError(Exception):
-    """Custom exception whenever users attempts to use auto mode.
-
-    This exception will be removed once the implementation of this method
-    is done
-    """
-
-    def __init__(self) -> None:
-        self.message = "Auto mode is not yet available."
-        super().__init__(self.message)
-
-
 class RequestFailedError(Exception):
     """Custom exception for failed HTTP requests.
 
@@ -23,18 +11,18 @@ class RequestFailedError(Exception):
 
 
 class ScriptTagNotFoundError(Exception):
-    """Custom exception for failed data extraction from the script tag
+    """Custom exception for failed data extraction from the script tag.
 
-    Raised when the SIGI_STATE script tag isn't found from the webpage
+    Raised when the SIGI_STATE script tag isn't found from the webpage.
     """
 
     def __init__(self) -> None:
-        self.message = "SIGI_STATE script not found"
+        self.message = "SIGI_STATE script not found."
         super().__init__(self.message)
 
 
 class UserNotLiveError(Exception):
-    """Custom exception when user is not live"""
+    """Custom exception when user is not live."""
 
     def __init__(self, username) -> None:
         self.message = f"User @{username} is not live."
@@ -45,7 +33,7 @@ class UserNotFoundError(Exception):
     """Custom exception whenever data extraction from specified user fails.
 
     This exception will be raised whenever the account is private or the
-    account doesn't exist
+    account doesn't exist.
     """
 
     def __init__(self, username) -> None:
@@ -74,7 +62,7 @@ class UnknownStatusCodeError(Exception):
 
     This exception is a weird one, but I still implemented in case that there might be some
     situation that the status integer returns beside 2 or 4 from
-    ["LiveRoom"]["liveRoomUserInfo"]["user"]["status"].This can be useful
+    ["LiveRoom"]["liveRoomUserInfo"]["user"]["status"]. This can be useful
     for debugging if TikTok made some changes in their end.
     """
 
@@ -124,7 +112,7 @@ class InvalidArgKeyError(Exception):
 
 
 class FileParsingError(Exception):
-    """Custom exception for when there is a problem parsing the file"""
+    """Custom exception for when there is a problem parsing the file."""
 
     def __init__(self) -> None:
         self.message = "Error parsing config file."
@@ -132,7 +120,7 @@ class FileParsingError(Exception):
 
 
 class InvalidCookieError(Exception):
-    """Custom exception when user improperly sets cookie in the config file"""
+    """Custom exception when user improperly sets cookie in the config file."""
 
     def __init__(self, message) -> None:
         super().__init__(message)

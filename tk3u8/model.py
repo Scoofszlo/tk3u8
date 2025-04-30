@@ -1,9 +1,8 @@
-from datetime import datetime
 import json
 import re
 import time
-from typing import Dict
 from bs4 import BeautifulSoup
+from datetime import datetime
 from yt_dlp import YoutubeDL
 from tk3u8.constants import OptionKey, Quality, StreamLink
 from tk3u8.exceptions import (
@@ -15,22 +14,22 @@ from tk3u8.exceptions import (
     ScriptTagNotFoundError,
     StreamDataNotFoundError,
     UnknownStatusCodeError,
-    UserNotLiveError,
     UserNotFoundError,
+    UserNotLiveError
 )
-from tk3u8.utils.paths import paths_handler
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.request_handler import RequestHandler
+from tk3u8.utils.paths import paths_handler
 
 
 class Tk3u8:
-    def __init__(self, program_data_dir: str | None = None):
+    def __init__(self, program_data_dir: str | None = None) -> None:
         paths_handler.set_base_dir(program_data_dir)
-        self.raw_data: dict | None = None
-        self.stream_data: dict | None = None
+        self.raw_data: dict = {}
+        self.stream_data: dict = {}
         self.username: str | None = None
         self.quality: str | None = None
-        self.timeout: int | None = None
+        self.timeout: int = 10
         self.options_handler = OptionsHandler()
         self.request_handler = RequestHandler(self.options_handler)
 
@@ -40,7 +39,7 @@ class Tk3u8:
             quality: str | None = None,
             wait_until_live: bool = False,
             timeout: int = 10
-    ):
+    ) -> None:
         self._process_args(username, quality, wait_until_live, timeout)
         self._initialize_data()
 
@@ -60,13 +59,19 @@ class Tk3u8:
             print(f"\nUser @{self.username} is now streaming live.")
             self._start_download(stream_link)
 
-    def set_proxy(self, proxy: str | None):
+    def set_proxy(self, proxy: str | None) -> None:
         self.options_handler.save_arg({OptionKey.PROXY.value: proxy})
-        self.request_handler.update_proxy(self.options_handler.get_arg_val(OptionKey.PROXY))
 
-    def _initialize_data(self):
+        new_proxy = self.options_handler.get_arg_val(OptionKey.PROXY)
+        assert isinstance(new_proxy, (str, type(None)))
+
+        self.request_handler.update_proxy(new_proxy)
+
+    def _initialize_data(self) -> None:
         if not self.username:
-            self.username = self.options_handler.get_arg_val(OptionKey.USERNAME)
+            new_username = self.options_handler.get_arg_val(OptionKey.USERNAME)
+            assert isinstance(new_username, str)
+            self.username = new_username
 
         if not self.raw_data:
             self.raw_data = self._get_raw_data()
@@ -75,12 +80,15 @@ class Tk3u8:
             self.stream_data = self._get_stream_data()
 
         if not self.quality:
-            self.quality = self.options_handler.get_arg_val(OptionKey.QUALITY)
+            new_quality = self.options_handler.get_arg_val(OptionKey.QUALITY)
+            assert isinstance(new_quality, str)
+            self.quality = new_quality
 
-        if not self.timeout:
-            self.timeout = self.options_handler.get_arg_val(OptionKey.TIMEOUT)
+        new_timeout = self.options_handler.get_arg_val(OptionKey.TIMEOUT)
+        assert isinstance(new_timeout, int)
+        self.timeout = new_timeout
 
-    def _update_data(self):
+    def _update_data(self) -> None:
         self.raw_data = self._get_raw_data()
         self.stream_data = self._get_stream_data()
 
@@ -95,10 +103,9 @@ class Tk3u8:
 
             raise InvalidQualityError()
         except AttributeError:
-            print
             raise QualityNotAvailableError()
 
-    def _get_raw_data(self) -> Dict:
+    def _get_raw_data(self) -> dict:
         if not self._is_username_valid(self.username):
             raise InvalidUsernameError(self.username)
 
@@ -113,7 +120,7 @@ class Tk3u8:
         script_content = script_tag.text
         return json.loads(script_content)
 
-    def _get_stream_data(self) -> Dict:
+    def _get_stream_data(self) -> dict:
         if not self._is_user_exists():
             raise UserNotFoundError(self.username)
 
@@ -122,7 +129,7 @@ class Tk3u8:
         except KeyError:
             raise StreamDataNotFoundError(self.username)
 
-    def _start_download(self, stream_link: StreamLink):
+    def _start_download(self, stream_link: StreamLink) -> None:
         print(f"Starting download:\nUsername: @{self.username}\nQuality: {stream_link.quality}\nStream Link: {stream_link.link}\n")
 
         if not stream_link.link:
@@ -167,12 +174,12 @@ class Tk3u8:
             return True
         return False
 
-    def _checking_timeout(self):
+    def _checking_timeout(self) -> None:
         seconds_left = self.timeout
         extra_space = " " * len(str(seconds_left))  # Ensures the entire line is cleared
 
         while seconds_left >= 0:
-            print(f"\Retrying in {seconds_left}{extra_space}", end="\r")
+            print(f"Retrying in {seconds_left}{extra_space}", end="\r")
             seconds_left -= 1
             time.sleep(1)
         print(f"Checking... {' ' * 20}", end="\r")
@@ -185,4 +192,5 @@ class Tk3u8:
             {OptionKey.TIMEOUT.value: timeout}
         ]
 
-        [self.options_handler.save_arg(arg) for arg in args]
+        for arg in args:
+            self.options_handler.save_arg(arg)

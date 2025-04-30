@@ -1,6 +1,5 @@
 import argparse
 from rich_argparse import RichHelpFormatter
-
 from tk3u8.constants import Quality
 
 
@@ -12,18 +11,18 @@ class ArgsHandler():
             cls._instance = super(ArgsHandler, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.parser: argparse.ArgumentParser = argparse.ArgumentParser(
             description="tk3u8 - A TikTok live downloader",
             formatter_class=RichHelpFormatter
         )
-        self.init_args()
+        self._init_args()
 
     def parse_args(self) -> argparse.Namespace:
         args = self.parser.parse_args()
         return args
 
-    def init_args(self) -> None:
+    def _init_args(self) -> None:
         self.parser.add_argument(
             "username",
             help="The username to be used for recording live stream",

@@ -1,7 +1,5 @@
 import os
-
 import toml
-
 from tk3u8.constants import DEFAULT_CONFIG
 
 
@@ -14,7 +12,7 @@ class PathsHandler:
 
         self._initialize_paths()
 
-    def _initialize_paths(self):
+    def _initialize_paths(self) -> None:
         if not os.path.isabs(self.PROGRAM_DATA_DIR):
             self.PROGRAM_DATA_DIR = os.path.abspath(self.PROGRAM_DATA_DIR)
 
