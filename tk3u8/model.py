@@ -10,6 +10,7 @@ from tk3u8.exceptions import (
     InvalidQualityError,
     InvalidUsernameError,
     LinkNotAvailableError,
+    NoUsernameEnteredError,
     QualityNotAvailableError,
     ScriptTagNotFoundError,
     StreamDataNotFoundError,
@@ -70,7 +71,11 @@ class Tk3u8:
     def _initialize_data(self) -> None:
         if not self._username:
             new_username = self._options_handler.get_arg_val(OptionKey.USERNAME)
-            assert isinstance(new_username, str)
+            assert isinstance(new_username, (str, type(None)))
+
+            if not new_username:
+                raise NoUsernameEnteredError()
+
             self._username = new_username
 
         if not self._raw_data:

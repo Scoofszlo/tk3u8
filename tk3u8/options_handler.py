@@ -19,10 +19,7 @@ class OptionsHandler:
             if key == OptionKey.PROXY:
                 return self._args[OptionKey.PROXY.value] or self._config[OptionKey.PROXY.value]
             if key == OptionKey.USERNAME:
-                try:
-                    return self._args[OptionKey.USERNAME.value]
-                except AttributeError:
-                    raise NoUsernameEnteredError
+                return self._args[OptionKey.USERNAME.value]
             if key == OptionKey.QUALITY:
                 if self._args[OptionKey.QUALITY.value] is not None:
                     return self._args[OptionKey.QUALITY.value]
