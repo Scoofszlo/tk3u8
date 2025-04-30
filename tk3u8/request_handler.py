@@ -42,8 +42,8 @@ class RequestHandler:
         sessionid_ss = self._options_handler.get_arg_val(OptionKey.SESSIONID_SS)
         tt_target_idc = self._options_handler.get_arg_val(OptionKey.TT_TARGET_IDC)
 
-        assert isinstance(sessionid_ss, str)
-        assert isinstance(tt_target_idc, str)
+        assert isinstance(sessionid_ss, (str, type(None)))
+        assert isinstance(tt_target_idc, (str, type(None)))
 
         if sessionid_ss is None and tt_target_idc is None:
             return
