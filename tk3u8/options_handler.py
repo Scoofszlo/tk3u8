@@ -1,14 +1,12 @@
-import os
 import toml
-from tk3u8.constants import PROGRAM_DATA_DIR, OptionKey, Quality
+from tk3u8.constants import OptionKey, Quality
 from tk3u8.exceptions import FileParsingError, InvalidArgKeyError, NoUsernameEnteredError
+from tk3u8.utils.paths import paths_handler
 
 
 class OptionsHandler:
     def __init__(self):
         self.args = {}
-        self.PROGRAM_DATA_DIR = PROGRAM_DATA_DIR
-        self.CONFIG_PATH = PROGRAM_DATA_DIR + "/config.toml"
         self.config = self._load_config()
 
     def get_arg_val(self, key) -> str | None:
@@ -39,21 +37,9 @@ class OptionsHandler:
     def save_arg(self, arg: dict):
         self.args.update(arg)
 
-    def set_program_data_dir(self, program_data_dir: str):
-        if not os.path.isabs(program_data_dir):
-            program_data_dir = os.path.abspath(program_data_dir)
-
-        if not os.path.exists(program_data_dir):
-            os.makedirs(program_data_dir, exist_ok=True)
-
-        self.PROGRAM_DATA_DIR = program_data_dir
-        self.CONFIG_PATH = os.path.join(self.PROGRAM_DATA_DIR, "config.toml")
-
-        self.config = self._load_config()
-
     def _load_config(self) -> dict:
         try:
-            with open(self.CONFIG_PATH, 'r') as file:
+            with open(paths_handler.CONFIG_FILE_PATH, 'r') as file:
                 config = self._retouch_config(toml.load(file))
                 return config
         except FileNotFoundError:

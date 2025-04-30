@@ -1,4 +1,3 @@
-from argparse import Namespace
 from datetime import datetime
 import json
 import re
@@ -6,7 +5,7 @@ import time
 from typing import Dict
 from bs4 import BeautifulSoup
 from yt_dlp import YoutubeDL
-from tk3u8.constants import DOWNLOAD_DIR, OptionKey, Quality, StreamLink
+from tk3u8.constants import OptionKey, Quality, StreamLink
 from tk3u8.exceptions import (
     DownloadError,
     InvalidQualityError,
@@ -19,19 +18,21 @@ from tk3u8.exceptions import (
     UserNotLiveError,
     UserNotFoundError,
 )
+from tk3u8.utils.paths import paths_handler
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.request_handler import RequestHandler
 
 
 class Tk3u8:
-    def __init__(self):
-        self.options_handler = OptionsHandler()
-        self.request_handler = RequestHandler(self.options_handler)
+    def __init__(self, program_data_dir: str | None = None):
+        paths_handler.set_base_dir(program_data_dir)
         self.raw_data: dict | None = None
         self.stream_data: dict | None = None
         self.username: str | None = None
         self.quality: str | None = None
         self.timeout: int | None = None
+        self.options_handler = OptionsHandler()
+        self.request_handler = RequestHandler(self.options_handler)
 
     def download(
             self,
@@ -62,9 +63,6 @@ class Tk3u8:
     def set_proxy(self, proxy: str | None):
         self.options_handler.save_arg({OptionKey.PROXY.value: proxy})
         self.request_handler.update_proxy(self.options_handler.get_arg_val(OptionKey.PROXY))
-
-    def set_program_data_dir(self, program_data_dir):
-        self.options_handler.set_program_data_dir(program_data_dir)
 
     def _initialize_data(self):
         if not self.username:
@@ -132,7 +130,7 @@ class Tk3u8:
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
         filename = f"{self.username}-{timestamp}-{stream_link.quality.value.lower()}"
-        filename_with_download_dir = DOWNLOAD_DIR + f"/{self.username}/{filename}.%(ext)s"
+        filename_with_download_dir = paths_handler.DOWNLOAD_DIR + f"/{self.username}/{filename}.%(ext)s"
 
         ydl_opts = {
             'outtmpl': filename_with_download_dir,
