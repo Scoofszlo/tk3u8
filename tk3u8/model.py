@@ -40,7 +40,7 @@ class Tk3u8:
             wait_until_live: bool = False,
             timeout: int = 10
     ) -> None:
-        self._process_args(username, quality, wait_until_live, timeout)
+        self._process_args(username=username, quality=quality, wait_until_live=wait_until_live, timeout=timeout)
         self._initialize_data()
 
         stream_link = self._get_stream_link_by_quality()
@@ -184,13 +184,12 @@ class Tk3u8:
             time.sleep(1)
         print(f"Checking... {' ' * 20}", end="\r")
 
-    def _process_args(self, username, quality, wait_until_live, timeout) -> None:
-        args = [
-            {OptionKey.USERNAME.value: username},
-            {OptionKey.QUALITY.value: quality},
-            {OptionKey.WAIT_UNTIL_LIVE.value: wait_until_live},
-            {OptionKey.TIMEOUT.value: timeout}
-        ]
+    def _process_args(self, **kwargs) -> None:
+        args_dict = {}
 
-        for arg in args:
-            self.options_handler.save_arg(arg)
+        for key, value in kwargs.items():
+            for args in list(OptionKey):
+                if key in args.value:
+                    args_dict.update({key: value})
+
+        self.options_handler.save_arg(args_dict)
