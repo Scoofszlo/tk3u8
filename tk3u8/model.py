@@ -25,13 +25,13 @@ from tk3u8.utils.paths import paths_handler
 class Tk3u8:
     def __init__(self, program_data_dir: str | None = None) -> None:
         paths_handler.set_base_dir(program_data_dir)
-        self.raw_data: dict = {}
-        self.stream_data: dict = {}
-        self.username: str | None = None
-        self.quality: str | None = None
-        self.timeout: int = 10
-        self.options_handler = OptionsHandler()
-        self.request_handler = RequestHandler(self.options_handler)
+        self._raw_data: dict = {}
+        self._stream_data: dict = {}
+        self._username: str | None = None
+        self._quality: str | None = None
+        self._timeout: int = 10
+        self._options_handler = OptionsHandler()
+        self._request_handler = RequestHandler(self._options_handler)
 
     def download(
             self,
@@ -50,66 +50,66 @@ class Tk3u8:
             return
         else:
             if not wait_until_live:
-                raise UserNotLiveError(self.username)
+                raise UserNotLiveError(self._username)
 
-            print(f"User @{username} is currently offline. Awaiting @{self.username} to start streaming.")
+            print(f"User @{username} is currently offline. Awaiting @{self._username} to start streaming.")
             while not self._is_user_live():
                 self._checking_timeout()
                 self._update_data()
-            print(f"\nUser @{self.username} is now streaming live.")
+            print(f"\nUser @{self._username} is now streaming live.")
             self._start_download(stream_link)
 
     def set_proxy(self, proxy: str | None) -> None:
-        self.options_handler.save_arg({OptionKey.PROXY.value: proxy})
+        self._options_handler.save_arg({OptionKey.PROXY.value: proxy})
 
-        new_proxy = self.options_handler.get_arg_val(OptionKey.PROXY)
+        new_proxy = self._options_handler.get_arg_val(OptionKey.PROXY)
         assert isinstance(new_proxy, (str, type(None)))
 
-        self.request_handler.update_proxy(new_proxy)
+        self._request_handler.update_proxy(new_proxy)
 
     def _initialize_data(self) -> None:
-        if not self.username:
-            new_username = self.options_handler.get_arg_val(OptionKey.USERNAME)
+        if not self._username:
+            new_username = self._options_handler.get_arg_val(OptionKey.USERNAME)
             assert isinstance(new_username, str)
-            self.username = new_username
+            self._username = new_username
 
-        if not self.raw_data:
-            self.raw_data = self._get_raw_data()
+        if not self._raw_data:
+            self._raw_data = self._get_raw_data()
 
-        if not self.stream_data:
-            self.stream_data = self._get_stream_data()
+        if not self._stream_data:
+            self._stream_data = self._get_stream_data()
 
-        if not self.quality:
-            new_quality = self.options_handler.get_arg_val(OptionKey.QUALITY)
+        if not self._quality:
+            new_quality = self._options_handler.get_arg_val(OptionKey.QUALITY)
             assert isinstance(new_quality, str)
-            self.quality = new_quality
+            self._quality = new_quality
 
-        new_timeout = self.options_handler.get_arg_val(OptionKey.TIMEOUT)
+        new_timeout = self._options_handler.get_arg_val(OptionKey.TIMEOUT)
         assert isinstance(new_timeout, int)
-        self.timeout = new_timeout
+        self._timeout = new_timeout
 
     def _update_data(self) -> None:
-        self.raw_data = self._get_raw_data()
-        self.stream_data = self._get_stream_data()
+        self._raw_data = self._get_raw_data()
+        self._stream_data = self._get_stream_data()
 
     def _get_stream_link_by_quality(self) -> StreamLink:
         try:
-            if self.quality == Quality.ORIGINAL.value.lower():
-                return StreamLink(Quality.ORIGINAL, self.stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None))
+            if self._quality == Quality.ORIGINAL.value.lower():
+                return StreamLink(Quality.ORIGINAL, self._stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None))
             else:
                 for quality in list(Quality)[1:]:  # Turns them into a list of its members and skips the first one since it is already checked from the if statement
-                    if quality.value.lower() == self.quality:
-                        return StreamLink(quality, self.stream_data.get("data", None).get(self.quality, None).get("main", None).get("hls", None))
+                    if quality.value.lower() == self._quality:
+                        return StreamLink(quality, self._stream_data.get("data", None).get(self._quality, None).get("main", None).get("hls", None))
 
             raise InvalidQualityError()
         except AttributeError:
             raise QualityNotAvailableError()
 
     def _get_raw_data(self) -> dict:
-        if not self._is_username_valid(self.username):
-            raise InvalidUsernameError(self.username)
+        if not self._is_username_valid(self._username):
+            raise InvalidUsernameError(self._username)
 
-        response = self.request_handler.get_data(self.username)
+        response = self._request_handler.get_data(self._username)
 
         soup = BeautifulSoup(response.text, "html.parser")
         script_tag = soup.find("script", {"id": "SIGI_STATE"})
@@ -122,22 +122,22 @@ class Tk3u8:
 
     def _get_stream_data(self) -> dict:
         if not self._is_user_exists():
-            raise UserNotFoundError(self.username)
+            raise UserNotFoundError(self._username)
 
         try:
-            return json.loads(self.raw_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
+            return json.loads(self._raw_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
         except KeyError:
-            raise StreamDataNotFoundError(self.username)
+            raise StreamDataNotFoundError(self._username)
 
     def _start_download(self, stream_link: StreamLink) -> None:
-        print(f"Starting download:\nUsername: @{self.username}\nQuality: {stream_link.quality}\nStream Link: {stream_link.link}\n")
+        print(f"Starting download:\nUsername: @{self._username}\nQuality: {stream_link.quality}\nStream Link: {stream_link.link}\n")
 
         if not stream_link.link:
             raise LinkNotAvailableError()
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-        filename = f"{self.username}-{timestamp}-{stream_link.quality.value.lower()}"
-        filename_with_download_dir = paths_handler.DOWNLOAD_DIR + f"/{self.username}/{filename}.%(ext)s"
+        filename = f"{self._username}-{timestamp}-{stream_link.quality.value.lower()}"
+        filename_with_download_dir = paths_handler.DOWNLOAD_DIR + f"/{self._username}/{filename}.%(ext)s"
 
         ydl_opts = {
             'outtmpl': filename_with_download_dir,
@@ -152,7 +152,7 @@ class Tk3u8:
             raise DownloadError(e)
 
     def _is_user_live(self) -> bool:
-        status = self.raw_data["LiveRoom"]["liveRoomUserInfo"]["user"]["status"]
+        status = self._raw_data["LiveRoom"]["liveRoomUserInfo"]["user"]["status"]
 
         if status == 2:
             return True
@@ -162,7 +162,7 @@ class Tk3u8:
             raise UnknownStatusCodeError(status)
 
     def _is_user_exists(self) -> bool:
-        if self.raw_data.get("LiveRoom"):
+        if self._raw_data.get("LiveRoom"):
             return True
         return False
 
@@ -175,7 +175,7 @@ class Tk3u8:
         return False
 
     def _checking_timeout(self) -> None:
-        seconds_left = self.timeout
+        seconds_left = self._timeout
         extra_space = " " * len(str(seconds_left))  # Ensures the entire line is cleared
 
         while seconds_left >= 0:
@@ -192,4 +192,4 @@ class Tk3u8:
                 if key in args.value:
                     args_dict.update({key: value})
 
-        self.options_handler.save_arg(args_dict)
+        self._options_handler.save_arg(args_dict)
