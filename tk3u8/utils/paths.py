@@ -4,6 +4,13 @@ from tk3u8.constants import DEFAULT_CONFIG
 
 
 class PathsHandler:
+    _instance = None
+
+    def __new__(cls) -> 'PathsHandler':
+        if not cls._instance:
+            cls._instance = super(PathsHandler, cls).__new__(cls)
+        return cls._instance
+
     def set_base_dir(self, base_dir):
         self.PROGRAM_DATA_DIR = base_dir if base_dir else "user_data"
         self.STREAM_DATA_FILE = os.path.join(self.PROGRAM_DATA_DIR, "stream_data.json")
@@ -22,6 +29,3 @@ class PathsHandler:
         if not os.path.isfile(self.CONFIG_FILE_PATH):
             with open(self.CONFIG_FILE_PATH, "w") as file:
                 toml.dump(DEFAULT_CONFIG, file)
-
-
-paths_handler = PathsHandler()

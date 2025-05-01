@@ -1,12 +1,13 @@
 from typing import Optional
 import toml
 from tk3u8.constants import OptionKey, Quality
-from tk3u8.exceptions import FileParsingError, InvalidArgKeyError, NoUsernameEnteredError
-from tk3u8.utils.paths import paths_handler
+from tk3u8.exceptions import FileParsingError, InvalidArgKeyError
+from tk3u8.utils.paths import PathsHandler
 
 
 class OptionsHandler:
     def __init__(self) -> None:
+        self.paths_handler = PathsHandler()
         self._args: dict = {}
         self._config = self._load_config()
 
@@ -46,7 +47,7 @@ class OptionsHandler:
 
     def _load_config(self) -> dict:
         try:
-            with open(paths_handler.CONFIG_FILE_PATH, 'r') as file:
+            with open(self.paths_handler.CONFIG_FILE_PATH, 'r') as file:
                 config = self._retouch_config(toml.load(file))
                 return config
         except FileNotFoundError:

@@ -20,12 +20,13 @@ from tk3u8.exceptions import (
 )
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.request_handler import RequestHandler
-from tk3u8.utils.paths import paths_handler
+from tk3u8.utils.paths import PathsHandler
 
 
 class Tk3u8:
     def __init__(self, program_data_dir: str | None = None) -> None:
-        paths_handler.set_base_dir(program_data_dir)
+        self._paths_handler = PathsHandler()
+        self._paths_handler.set_base_dir(program_data_dir)
         self._raw_data: dict = {}
         self._stream_data: dict = {}
         self._username: str | None = None
@@ -142,7 +143,7 @@ class Tk3u8:
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
         filename = f"{self._username}-{timestamp}-{stream_link.quality.value.lower()}"
-        filename_with_download_dir = paths_handler.DOWNLOAD_DIR + f"/{self._username}/{filename}.%(ext)s"
+        filename_with_download_dir = self._paths_handler.DOWNLOAD_DIR + f"/{self._username}/{filename}.%(ext)s"
 
         ydl_opts = {
             'outtmpl': filename_with_download_dir,
