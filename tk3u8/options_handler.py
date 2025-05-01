@@ -9,7 +9,7 @@ class OptionsHandler:
     def __init__(self) -> None:
         self.paths_handler = PathsHandler()
         self._args: dict = {}
-        self._config = self._load_config()
+        self._config: dict = self._load_config()
 
     def get_arg_val(self, key) -> Optional[str | int]:
         try:

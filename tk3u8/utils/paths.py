@@ -11,7 +11,7 @@ class PathsHandler:
             cls._instance = super(PathsHandler, cls).__new__(cls)
         return cls._instance
 
-    def set_base_dir(self, base_dir):
+    def set_base_dir(self, base_dir) -> None:
         self.PROGRAM_DATA_DIR = base_dir if base_dir else "user_data"
         self.STREAM_DATA_FILE = os.path.join(self.PROGRAM_DATA_DIR, "stream_data.json")
         self.CONFIG_FILE_PATH = os.path.join(self.PROGRAM_DATA_DIR, "config.toml")

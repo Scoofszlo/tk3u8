@@ -31,7 +31,7 @@ class RequestHandler:
 
         return self._response
 
-    def update_proxy(self, proxy: str | None):
+    def update_proxy(self, proxy: str | None) -> None:
         if proxy:
             self._session.proxies.update({
                     "http": proxy,

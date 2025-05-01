@@ -6,7 +6,7 @@ from tk3u8.constants import Quality
 class ArgsHandler():
     _instance = None
 
-    def __new__(cls):
+    def __new__(cls) -> 'ArgsHandler':
         if cls._instance is None:
             cls._instance = super(ArgsHandler, cls).__new__(cls)
         return cls._instance
