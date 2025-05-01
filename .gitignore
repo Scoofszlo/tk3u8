@@ -12,3 +12,4 @@ wheels/
 tests
 user_data
 playground
+.coverage

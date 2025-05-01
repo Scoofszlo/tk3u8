@@ -18,6 +18,7 @@ dev = [
     "mypy>=1.15.0",
     "pip>=25.0.1",
     "pytest>=8.3.5",
+    "pytest-cov>=6.1.1",
     "types-requests>=2.32.0.20250328",
     "types-toml>=0.10.8.20240310",
     "yt-dlp-types>=0.0.15",
