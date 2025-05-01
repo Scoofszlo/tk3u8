@@ -32,8 +32,17 @@ class OptionsHandler:
         except KeyError:
             return None
 
-    def save_arg(self, arg: dict) -> None:
-        self._args.update(arg)
+    def save_args(self, *args, **kwargs) -> None:
+        for arg in args:
+            if isinstance(arg, dict):
+                self._args.update(arg)
+            else:
+                raise TypeError(f"Argument {arg} is not a dict.")
+
+        for key, value in kwargs.items():
+            for option_key in list(OptionKey):
+                if key in option_key.value:
+                    self._args.update({key: value})
 
     def _load_config(self) -> dict:
         try:

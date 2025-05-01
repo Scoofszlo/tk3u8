@@ -41,7 +41,7 @@ class Tk3u8:
             wait_until_live: bool = False,
             timeout: int = 10
     ) -> None:
-        self._process_args(username=username, quality=quality, wait_until_live=wait_until_live, timeout=timeout)
+        self._options_handler.save_args(username=username, quality=quality, wait_until_live=wait_until_live, timeout=timeout)
         self._initialize_data()
 
         stream_link = self._get_stream_link_by_quality()
@@ -61,7 +61,7 @@ class Tk3u8:
             self._start_download(stream_link)
 
     def set_proxy(self, proxy: str | None) -> None:
-        self._options_handler.save_arg({OptionKey.PROXY.value: proxy})
+        self._options_handler.save_args({OptionKey.PROXY.value: proxy})
 
         new_proxy = self._options_handler.get_arg_val(OptionKey.PROXY)
         assert isinstance(new_proxy, (str, type(None)))
@@ -188,13 +188,3 @@ class Tk3u8:
             seconds_left -= 1
             time.sleep(1)
         print(f"Checking... {' ' * 20}", end="\r")
-
-    def _process_args(self, **kwargs) -> None:
-        args_dict = {}
-
-        for key, value in kwargs.items():
-            for args in list(OptionKey):
-                if key in args.value:
-                    args_dict.update({key: value})
-
-        self._options_handler.save_arg(args_dict)
