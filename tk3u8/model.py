@@ -172,7 +172,7 @@ class Tk3u8:
         return False
 
     def _is_username_valid(self, username) -> bool:
-        pattern = r"^[a-z0-9_.]{1,24}$"
+        pattern = r"^[a-z0-9_.]{2,24}$"
         match = re.match(pattern, username)
 
         if match:
