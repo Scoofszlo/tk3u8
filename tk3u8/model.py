@@ -94,23 +94,6 @@ class Tk3u8:
         assert isinstance(new_timeout, int)
         self._timeout = new_timeout
 
-    def _update_data(self) -> None:
-        self._raw_data = self._get_raw_data()
-        self._stream_data = self._get_stream_data()
-
-    def _get_stream_link_by_quality(self) -> StreamLink:
-        try:
-            if self._quality == Quality.ORIGINAL.value.lower():
-                return StreamLink(Quality.ORIGINAL, self._stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None))
-            else:
-                for quality in list(Quality)[1:]:  # Turns them into a list of its members and skips the first one since it is already checked from the if statement
-                    if quality.value.lower() == self._quality:
-                        return StreamLink(quality, self._stream_data.get("data", None).get(self._quality, None).get("main", None).get("hls", None))
-
-            raise InvalidQualityError()
-        except AttributeError:
-            raise QualityNotAvailableError()
-
     def _get_raw_data(self) -> dict:
         if not self._is_username_valid(self._username):
             raise InvalidUsernameError(self._username)
@@ -135,6 +118,19 @@ class Tk3u8:
         except KeyError:
             raise StreamDataNotFoundError(self._username)
 
+    def _get_stream_link_by_quality(self) -> StreamLink:
+        try:
+            if self._quality == Quality.ORIGINAL.value.lower():
+                return StreamLink(Quality.ORIGINAL, self._stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None))
+            else:
+                for quality in list(Quality)[1:]:  # Turns them into a list of its members and skips the first one since it is already checked from the if statement
+                    if quality.value.lower() == self._quality:
+                        return StreamLink(quality, self._stream_data.get("data", None).get(self._quality, None).get("main", None).get("hls", None))
+
+            raise InvalidQualityError()
+        except AttributeError:
+            raise QualityNotAvailableError()
+
     def _start_download(self, stream_link: StreamLink) -> None:
         print(f"Starting download:\nUsername: @{self._username}\nQuality: {stream_link.quality}\nStream Link: {stream_link.link}\n")
 
@@ -157,6 +153,23 @@ class Tk3u8:
         except Exception as e:
             raise DownloadError(e)
 
+    def _update_data(self) -> None:
+        self._raw_data = self._get_raw_data()
+        self._stream_data = self._get_stream_data()
+
+    def _is_username_valid(self, username) -> bool:
+        pattern = r"^[a-z0-9_.]{2,24}$"
+        match = re.match(pattern, username)
+
+        if match:
+            return True
+        return False
+
+    def _is_user_exists(self) -> bool:
+        if self._raw_data.get("LiveRoom"):
+            return True
+        return False
+
     def _is_user_live(self) -> bool:
         status = self._raw_data["LiveRoom"]["liveRoomUserInfo"]["user"]["status"]
 
@@ -166,19 +179,6 @@ class Tk3u8:
             return False
         else:
             raise UnknownStatusCodeError(status)
-
-    def _is_user_exists(self) -> bool:
-        if self._raw_data.get("LiveRoom"):
-            return True
-        return False
-
-    def _is_username_valid(self, username) -> bool:
-        pattern = r"^[a-z0-9_.]{2,24}$"
-        match = re.match(pattern, username)
-
-        if match:
-            return True
-        return False
 
     def _checking_timeout(self) -> None:
         seconds_left = self._timeout
