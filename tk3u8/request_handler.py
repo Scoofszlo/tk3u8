@@ -1,18 +1,16 @@
-from argparse import Namespace
 import requests
-from tk3u8.config import Config
-from tk3u8.constants import ConfigKey
+from tk3u8.constants import OptionKey
 from tk3u8.exceptions import InvalidCookieError, RequestFailedError
+from tk3u8.options_handler import OptionsHandler
 
 
 class RequestHandler:
-    def __init__(self, args: Namespace, config: Config):
-        self.session = requests.Session()
-        self.args = args
-        self.config = config
+    def __init__(self, options_handler: OptionsHandler) -> None:
+        self._options_handler = options_handler
+        self._session = requests.Session()
         self._setup_cookies()
         self._setup_proxy()
-        self.session.headers.update({
+        self._session.headers.update({
             "Sec-Ch-Ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\"",
             "Sec-Ch-Ua-Mobile": "?0", "Sec-Ch-Ua-Platform": "\"Linux\"",
             "Accept-Language": "en-US", "Upgrade-Insecure-Requests": "1",
@@ -23,19 +21,29 @@ class RequestHandler:
             "Priority": "u=0, i",
             "Referer": "https://www.tiktok.com/"
         })
-        self.response: requests.Response
+        self._response: requests.Response
 
     def get_data(self, username) -> requests.Response:
-        self.response = self.session.get(f"https://www.tiktok.com/@{username}/live")
+        self._response = self._session.get(f"https://www.tiktok.com/@{username}/live")
 
-        if self.response.status_code != 200:
-            raise RequestFailedError(status_code=self.response.status_code)
+        if self._response.status_code != 200:
+            raise RequestFailedError(status_code=self._response.status_code)
 
-        return self.response
+        return self._response
+
+    def update_proxy(self, proxy: str | None) -> None:
+        if proxy:
+            self._session.proxies.update({
+                    "http": proxy,
+                    "https": proxy
+            })
 
     def _setup_cookies(self) -> None:
-        sessionid_ss = self.config.get_config(ConfigKey.SESSIONID_SS)
-        tt_target_idc = self.config.get_config(ConfigKey.TT_TARGET_IDC)
+        sessionid_ss = self._options_handler.get_arg_val(OptionKey.SESSIONID_SS)
+        tt_target_idc = self._options_handler.get_arg_val(OptionKey.TT_TARGET_IDC)
+
+        assert isinstance(sessionid_ss, (str, type(None)))
+        assert isinstance(tt_target_idc, (str, type(None)))
 
         if sessionid_ss is None and tt_target_idc is None:
             return
@@ -44,16 +52,14 @@ class RequestHandler:
         elif sessionid_ss is not None and tt_target_idc is None:
             raise InvalidCookieError("The 'sessionid_ss' cookie is set in your config, but 'tt-target-idc' is missing.")
         elif sessionid_ss and tt_target_idc:
-            self.session.cookies.update({
+            self._session.cookies.update({
                 "sessionid_ss": sessionid_ss,
                 "tt-target-idc": tt_target_idc
             })
 
     def _setup_proxy(self) -> None:
-        proxy = self.args.proxy or self.config.get_config(ConfigKey.PROXY)
+        proxy = self._options_handler.get_arg_val(OptionKey.PROXY)
+        assert isinstance(proxy, (str, type(None)))
 
         if proxy:
-            self.session.proxies.update({
-                "http": proxy,
-                "https": proxy
-            })
+            self.update_proxy(proxy)

@@ -6,5 +6,10 @@ if __name__ == "__main__":
     ah = ArgsHandler()
     args = ah.parse_args()
 
-    obj = Tk3u8(args)
-    obj.run()
+    username = args.username
+    quality = args.quality
+    proxy = args.proxy
+
+    tk3u8 = Tk3u8()
+    tk3u8.set_proxy(proxy)
+    tk3u8.download(username=username, quality=quality)

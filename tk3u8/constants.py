@@ -35,16 +35,15 @@ class Mode(Enum):
     MANUAL = "Manual"
 
 
-class ConfigKey(Enum):
+class OptionKey(Enum):
     SESSIONID_SS = "sessionid_ss"
     TT_TARGET_IDC = "tt-target-idc"
     PROXY = "proxy"
+    USERNAME = "username"
+    QUALITY = "quality"
+    WAIT_UNTIL_LIVE = "wait_until_live"
+    TIMEOUT = "timeout"
 
-
-PROGRAM_DATA_DIR = "user_data"
-STREAM_DATA_DIR = PROGRAM_DATA_DIR + "/stream_data.json"
-CONFIG_FILE_PATH = PROGRAM_DATA_DIR + "/config.toml"
-DOWNLOAD_DIR = PROGRAM_DATA_DIR + "/downloads"
 
 # Default configuration settings
 DEFAULT_CONFIG = {
