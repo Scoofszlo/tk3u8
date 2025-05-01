@@ -79,8 +79,14 @@ class Tk3u8:
 
             self._username = new_username
 
+            if not self._is_username_valid(self._username):
+                raise InvalidUsernameError(self._username)
+
         if not self._raw_data:
             self._raw_data = self._get_raw_data()
+
+        if not self._is_user_exists():
+            raise UserNotFoundError(self._username)
 
         if not self._stream_data:
             self._stream_data = self._get_stream_data()
@@ -95,9 +101,6 @@ class Tk3u8:
         self._timeout = new_timeout
 
     def _get_raw_data(self) -> dict:
-        if not self._is_username_valid(self._username):
-            raise InvalidUsernameError(self._username)
-
         response = self._request_handler.get_data(self._username)
 
         soup = BeautifulSoup(response.text, "html.parser")
@@ -110,9 +113,6 @@ class Tk3u8:
         return json.loads(script_content)
 
     def _get_stream_data(self) -> dict:
-        if not self._is_user_exists():
-            raise UserNotFoundError(self._username)
-
         try:
             return json.loads(self._raw_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
         except KeyError:
