@@ -47,13 +47,12 @@ class RequestHandler:
 
         if sessionid_ss is None and tt_target_idc is None:
             return
-        elif sessionid_ss is None and tt_target_idc is not None:
-            raise InvalidCookieError("The 'tt-target-idc' cookie is set in your config, but 'sessionid_ss' is missing.")
-        elif sessionid_ss is not None and tt_target_idc is None:
-            raise InvalidCookieError("The 'sessionid_ss' cookie is set in your config, but 'tt-target-idc' is missing.")
-        elif sessionid_ss and tt_target_idc:
+        if sessionid_ss:
             self._session.cookies.update({
-                "sessionid_ss": sessionid_ss,
+                "sessionid_ss": sessionid_ss
+            })
+        if tt_target_idc:
+            self._session.cookies.update({
                 "tt-target-idc": tt_target_idc
             })
 
