@@ -77,9 +77,9 @@ If there are both proxy address supplied in the command-line arg and in the conf
 
 For most cases, you don't really need to supply proxy and you can just skip this one instead.
 
-### Setting up `sessionid_ss` and `tt-target-idc`
+### Setting up `sessionid_ss` and/or `tt-target-idc`
 
-You can setup both of these two in your `user_data/config.toml` to fix issues related to `StreamDataNotFoundError`.
+To fix issues related to `ScriptTagNotFoundError` and `StreamDataNotFoundError`, you can supply `tt-target-idc` in the config file. If it doesn't work, try to supply both `sessionid_ss` and `tt-target-idc`.
 
 1. In your browser, go to https://tiktok.com and login your account.
 2. Open Inspect Element in your browser.
@@ -92,7 +92,7 @@ You can setup both of these two in your `user_data/config.toml` to fix issues re
 7. Your config should look like this.
     ```toml
     [config]
-    sessionid_ss = "0124124abcdeuj214124mfncb23tgejf"
+    sessionid_ss = "0124124abcdeuj214124mfncb23tgejf"  # Include this if only supplying tt-target-idc doesn't work
     tt-target-idc = "alisg"
     ```
 
@@ -102,13 +102,13 @@ Remember do not share this to anyone as this is a sensitive data tied to your Ti
 
 ### `ScriptTagNotFoundError` or `StreamDataNotFoundError` occurs
 
-Sometimes, the program may raise an `ScriptTagNotFoundError` or `StreamDataNotFoundError`. One of the possible reasons is that you might have repeatedly download live streams in a short amount of time (I'm not really sure with this one due to limited testing done by myself).
+Sometimes, the program may raise an `ScriptTagNotFoundError`. This is due to actual page not being loaded (most likely due to checking of browser requests), in which the program can't extract the crucial data for getting the stream links.
 
-To fix this, you have to supply a `sessionid_ss` and `tt-target-idc` based from your browser's cookies. You will put those in `user_data/config.toml` located in the project's folder. Refer to the guide above for detailed steps.
+To fix this, you have to supply a `tt-target-idc` (or both `tt-target-idc` and `sessionid_ss`). You will put these values in `user_data/config.toml` located in the project's folder. Refer to the guide above for detailed steps.
 
-If this doesn't work, try using other TikTok account and follow the steps again to set both of these, but I don't guarantee that this will work due to limited testing.
+If this doesn't work, try using other TikTok account and follow the steps again to set these.
 
-Alternatively, using VPN may fix this issue.
+Alternatively, using VPN may fix this issue, in which you don't have to set the both of these two values in the config file.
 
 ## License
 
