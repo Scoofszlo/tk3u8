@@ -10,7 +10,7 @@ class RequestFailedError(Exception):
         super().__init__(self.message)
 
 
-class ScriptTagNotFoundError(Exception):
+class SourceDataExtractionError(Exception):
     """Custom exception for failed data extraction from the script tag.
 
     Raised when the SIGI_STATE script tag isn't found from the webpage.

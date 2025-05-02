@@ -12,7 +12,7 @@ from tk3u8.exceptions import (
     LinkNotAvailableError,
     NoUsernameEnteredError,
     QualityNotAvailableError,
-    ScriptTagNotFoundError,
+    SourceDataExtractionError,
     StreamDataNotFoundError,
     UnknownStatusCodeError,
     UserNotFoundError,
@@ -104,7 +104,7 @@ class Tk3u8:
         script_tag = soup.find("script", {"id": "SIGI_STATE"})
 
         if not script_tag:
-            raise ScriptTagNotFoundError()
+            raise SourceDataExtractionError()
 
         script_content = script_tag.text
         return json.loads(script_content)
