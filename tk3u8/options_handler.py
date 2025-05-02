@@ -24,7 +24,7 @@ class OptionsHandler:
             if key == OptionKey.QUALITY:
                 if self._args[OptionKey.QUALITY.value] is not None:
                     return self._args[OptionKey.QUALITY.value]
-                return Quality.ORIGINAL.value
+                return Quality.ORIGINAL.value.lower()
             if key == OptionKey.WAIT_UNTIL_LIVE:
                 return self._args[OptionKey.WAIT_UNTIL_LIVE.value]
             if key == OptionKey.TIMEOUT:
