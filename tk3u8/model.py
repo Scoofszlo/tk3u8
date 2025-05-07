@@ -39,15 +39,15 @@ class Tk3u8:
 
     def download(
             self,
-            username: str | None = None,
-            quality: str | None = None,
+            username: str,
+            quality: str = Quality.ORIGINAL.value,
             wait_until_live: bool = False,
             timeout: int = 10
     ) -> None:
         self._save_args(username=username, quality=quality, wait_until_live=wait_until_live, timeout=timeout)
         self._initialize_data()
 
-        username = cast(str | None, self._get_arg_val(OptionKey.USERNAME))
+        username = cast(str, self._get_arg_val(OptionKey.USERNAME))
         stream_link = self._get_stream_link()
 
         assert isinstance(username, str)
