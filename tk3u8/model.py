@@ -1,6 +1,7 @@
 import json
 import re
 import time
+from typing import Optional, cast
 from bs4 import BeautifulSoup
 from datetime import datetime
 from yt_dlp import YoutubeDL
@@ -46,8 +47,10 @@ class Tk3u8:
         self._save_args(username=username, quality=quality, wait_until_live=wait_until_live, timeout=timeout)
         self._initialize_data()
 
-        username = self._get_arg_val(OptionKey.USERNAME)
+        username = cast(str | None, self._get_arg_val(OptionKey.USERNAME))
         stream_link = self._get_stream_link()
+
+        assert isinstance(username, str)
 
         if self._is_user_live():
             self._start_download(username, stream_link)
@@ -122,5 +125,5 @@ class Tk3u8:
     def _save_args(self, *args, **kwargs) -> None:
         self._options_handler.save_args(*args, **kwargs)
 
-    def _get_arg_val(self, key) -> None:
-        self._options_handler.get_arg_val(key)
+    def _get_arg_val(self, key) -> Optional[str | int]:
+        return self._options_handler.get_arg_val(key)
