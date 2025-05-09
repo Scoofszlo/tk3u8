@@ -17,7 +17,7 @@ from tk3u8.exceptions import (
     WAFChallengeError
 )
 from tk3u8.options_handler import OptionsHandler
-from tk3u8.request_handler import RequestHandler
+from tk3u8.session.request_handler import RequestHandler
 
 
 class StreamMetadataHandler:
