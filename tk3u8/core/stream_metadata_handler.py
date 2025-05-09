@@ -54,7 +54,7 @@ class StreamMetadataHandler:
         if not self._is_username_valid(self._username):
             raise InvalidUsernameError(self._username)
 
-        response = self._request_handler.get_data(self._username)
+        response = self._request_handler.get_data(f"https://www.tiktok.com/@{self._username}/live")
 
         if "Please wait..." in response.text:
             raise WAFChallengeError()

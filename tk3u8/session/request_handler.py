@@ -16,8 +16,8 @@ class RequestHandler:
         })
         self._response: requests.Response
 
-    def get_data(self, username) -> requests.Response:
-        self._response = self._session.get(f"https://www.tiktok.com/@{username}/live")
+    def get_data(self, url: str) -> requests.Response:
+        self._response = self._session.get(url)
 
         if self._response.status_code != 200:
             raise RequestFailedError(status_code=self._response.status_code)
