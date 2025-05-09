@@ -14,6 +14,7 @@ from tk3u8.exceptions import (
     UnknownStatusCodeError,
     UserNotFoundError,
     UserNotLiveError,
+    UserPreparingForLiveError,
     WAFChallengeError
 )
 from tk3u8.options_handler import OptionsHandler
@@ -123,6 +124,8 @@ class StreamMetadataHandler:
     def is_user_live(self) -> bool:
         status = self._source_data["LiveRoom"]["liveRoomUserInfo"]["user"]["status"]
 
+        if status == 1:
+            raise UserPreparingForLiveError(status)
         if status == 2:
             return True
         elif status == 4:
