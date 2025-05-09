@@ -3,7 +3,7 @@ from tk3u8.constants import OptionKey, Quality, StreamLink
 from tk3u8.downloader import Downloader
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.request_handler import RequestHandler
-from tk3u8.stream_metadata_handler import StreamMetadataHandler
+from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
 from tk3u8.utils.paths import PathsHandler
 
 

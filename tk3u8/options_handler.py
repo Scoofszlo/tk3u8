@@ -1,6 +1,6 @@
 from typing import Optional
 import toml
-from tk3u8.constants import OptionKey, Quality
+from tk3u8.constants import OptionKey
 from tk3u8.exceptions import FileParsingError, InvalidArgKeyError
 from tk3u8.utils.paths import PathsHandler
 

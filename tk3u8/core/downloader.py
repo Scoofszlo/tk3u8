@@ -4,7 +4,7 @@ from yt_dlp import YoutubeDL
 from tk3u8.constants import OptionKey, StreamLink
 from tk3u8.exceptions import DownloadError, LinkNotAvailableError, UserNotLiveError
 from tk3u8.options_handler import OptionsHandler
-from tk3u8.stream_metadata_handler import StreamMetadataHandler
+from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
 from tk3u8.utils.paths import PathsHandler
 
 
