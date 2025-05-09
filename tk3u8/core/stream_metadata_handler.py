@@ -2,7 +2,7 @@ import json
 import re
 from bs4 import BeautifulSoup
 from tk3u8.constants import OptionKey, Quality, StreamLink
-from tk3u8.exceptions import InvalidQualityError, InvalidUsernameError, NoUsernameEnteredError, QualityNotAvailableError, SigiStateMissingError, StreamDataUnavailableError, UnknownStatusCodeError, UserNotFoundError, UserNotLiveError, WAFChallengeError
+from tk3u8.exceptions import InvalidQualityError, InvalidUsernameError, NoUsernameEnteredError, QualityNotAvailableError, SigiStateMissingError, StreamDataNotFoundError, UnknownStatusCodeError, UserNotFoundError, UserNotLiveError, WAFChallengeError
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.request_handler import RequestHandler
 
@@ -65,7 +65,7 @@ class StreamMetadataHandler:
         try:
             return json.loads(self._source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
         except KeyError:
-            raise StreamDataUnavailableError(self._username)
+            raise StreamDataNotFoundError(self._username)
 
     def get_stream_link(self) -> StreamLink:
         try:

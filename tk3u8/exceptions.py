@@ -104,7 +104,7 @@ class LinkNotAvailableError(Exception):
         super().__init__(self.message)
 
 
-class StreamDataUnavailableError(Exception):
+class StreamDataNotFoundError(Exception):
     """Custom exception when the stream data can't be scraped."""
 
     def __init__(self, username) -> None:
