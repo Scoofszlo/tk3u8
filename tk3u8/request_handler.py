@@ -1,6 +1,6 @@
 import requests
 from tk3u8.constants import OptionKey
-from tk3u8.exceptions import InvalidCookieError, RequestFailedError
+from tk3u8.exceptions import RequestFailedError
 from tk3u8.options_handler import OptionsHandler
 
 

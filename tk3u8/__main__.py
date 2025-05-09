@@ -1,5 +1,5 @@
 from tk3u8.args_handler import ArgsHandler
-from tk3u8.model import Tk3u8
+from tk3u8.core.model import Tk3u8
 
 
 if __name__ == "__main__":

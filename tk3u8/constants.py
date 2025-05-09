@@ -30,11 +30,6 @@ class Quality(Enum):
     SD = "SD"
 
 
-class Mode(Enum):
-    AUTO = "Auto"
-    MANUAL = "Manual"
-
-
 class OptionKey(Enum):
     SESSIONID_SS = "sessionid_ss"
     TT_TARGET_IDC = "tt-target-idc"

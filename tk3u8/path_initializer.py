@@ -3,12 +3,12 @@ import toml
 from tk3u8.constants import DEFAULT_CONFIG
 
 
-class PathsHandler:
+class PathInitializer:
     _instance = None
 
-    def __new__(cls) -> 'PathsHandler':
+    def __new__(cls) -> 'PathInitializer':
         if not cls._instance:
-            cls._instance = super(PathsHandler, cls).__new__(cls)
+            cls._instance = super(PathInitializer, cls).__new__(cls)
         return cls._instance
 
     def set_base_dir(self, base_dir) -> None:
