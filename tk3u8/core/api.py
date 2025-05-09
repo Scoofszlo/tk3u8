@@ -1,15 +1,15 @@
 from typing import Optional, cast
 from tk3u8.constants import OptionKey, Quality, StreamLink
-from tk3u8.downloader import Downloader
+from tk3u8.core.downloader import Downloader
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.request_handler import RequestHandler
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
-from tk3u8.utils.paths import PathsHandler
+from tk3u8.path_initializer import PathInitializer
 
 
 class Tk3u8:
     def __init__(self, program_data_dir: str | None = None) -> None:
-        self._paths_handler = PathsHandler()
+        self._paths_handler = PathInitializer()
         self._paths_handler.set_base_dir(program_data_dir)
         self._options_handler = OptionsHandler()
         self._request_handler = RequestHandler(self._options_handler)

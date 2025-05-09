@@ -2,12 +2,12 @@ from typing import Optional
 import toml
 from tk3u8.constants import OptionKey
 from tk3u8.exceptions import FileParsingError, InvalidArgKeyError
-from tk3u8.utils.paths import PathsHandler
+from tk3u8.path_initializer import PathInitializer
 
 
 class OptionsHandler:
     def __init__(self) -> None:
-        self.paths_handler = PathsHandler()
+        self.paths_handler = PathInitializer()
         self._args: dict = {}
         self._config: dict = self._load_config()
 

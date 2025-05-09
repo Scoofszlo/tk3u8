@@ -5,7 +5,7 @@ from tk3u8.constants import OptionKey, StreamLink
 from tk3u8.exceptions import DownloadError, LinkNotAvailableError, UserNotLiveError
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
-from tk3u8.utils.paths import PathsHandler
+from tk3u8.path_initializer import PathInitializer
 
 
 class Downloader:
@@ -14,7 +14,7 @@ class Downloader:
             stream_metadata_handler: StreamMetadataHandler,
             options_handler: OptionsHandler
     ) -> None:
-        self._paths_handler = PathsHandler()
+        self._paths_handler = PathInitializer()
         self._options_handler = options_handler
         self._stream_metadata_handler = stream_metadata_handler
 
