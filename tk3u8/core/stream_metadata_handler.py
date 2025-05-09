@@ -17,7 +17,7 @@ from tk3u8.exceptions import (
     WAFChallengeError
 )
 from tk3u8.options_handler import OptionsHandler
-from tk3u8.request_handler import RequestHandler
+from tk3u8.session.request_handler import RequestHandler
 
 
 class StreamMetadataHandler:
@@ -54,7 +54,7 @@ class StreamMetadataHandler:
         if not self._is_username_valid(self._username):
             raise InvalidUsernameError(self._username)
 
-        response = self._request_handler.get_data(self._username)
+        response = self._request_handler.get_data(f"https://www.tiktok.com/@{self._username}/live")
 
         if "Please wait..." in response.text:
             raise WAFChallengeError()
