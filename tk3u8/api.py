@@ -1,25 +1,6 @@
-import json
-import re
-import time
 from typing import Optional, cast
-from bs4 import BeautifulSoup
-from datetime import datetime
-from yt_dlp import YoutubeDL
 from tk3u8.constants import OptionKey, Quality, StreamLink
 from tk3u8.downloader import Downloader
-from tk3u8.exceptions import (
-    DownloadError,
-    InvalidQualityError,
-    InvalidUsernameError,
-    LinkNotAvailableError,
-    NoUsernameEnteredError,
-    QualityNotAvailableError,
-    SourceDataExtractionError,
-    StreamDataNotFoundError,
-    UnknownStatusCodeError,
-    UserNotFoundError,
-    UserNotLiveError
-)
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.request_handler import RequestHandler
 from tk3u8.stream_metadata_handler import StreamMetadataHandler
