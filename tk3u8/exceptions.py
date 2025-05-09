@@ -10,8 +10,17 @@ class RequestFailedError(Exception):
         super().__init__(self.message)
 
 
-class SourceDataExtractionError(Exception):
-    """Custom exception for failed data extraction from the script tag.
+class WAFChallengeError(Exception):
+    """Custom exception when 'Please wait...' message appears when extracting data
+    from source."""
+
+    def __init__(self) -> None:
+        self.message = "Source extraction failed due to WAF. Please try again later."
+        super().__init__(self.message)
+
+
+class SigiStateMissingError(Exception):
+    """Custom exception for failed data extraction from the SIGI_STATE script tag.
 
     Raised when the SIGI_STATE script tag isn't found from the webpage.
     """
