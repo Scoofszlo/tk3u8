@@ -2,7 +2,7 @@ import json
 import re
 from bs4 import BeautifulSoup
 from tk3u8.constants import OptionKey, Quality, StreamLink
-from tk3u8.exceptions import InvalidQualityError, InvalidUsernameError, NoUsernameEnteredError, QualityNotAvailableError, StreamDataUnavailableError, UnknownStatusCodeError, UserNotFoundError, UserNotLiveError, WAFChallengeError
+from tk3u8.exceptions import InvalidQualityError, InvalidUsernameError, NoUsernameEnteredError, QualityNotAvailableError, SigiStateMissingError, StreamDataUnavailableError, UnknownStatusCodeError, UserNotFoundError, UserNotLiveError, WAFChallengeError
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.request_handler import RequestHandler
 
@@ -48,6 +48,9 @@ class StreamMetadataHandler:
 
         soup = BeautifulSoup(response.text, "html.parser")
         script_tag = soup.find("script", {"id": "SIGI_STATE"})
+
+        if not script_tag:
+            raise SigiStateMissingError()
 
         script_content = script_tag.text
         return json.loads(script_content)

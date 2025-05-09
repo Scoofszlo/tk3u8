@@ -19,8 +19,8 @@ class WAFChallengeError(Exception):
         super().__init__(self.message)
 
 
-class SourceDataExtractionError(Exception):
-    """Custom exception for failed data extraction from the script tag.
+class SigiStateMissingError(Exception):
+    """Custom exception for failed data extraction from the SIGI_STATE script tag.
 
     Raised when the SIGI_STATE script tag isn't found from the webpage.
     """
