@@ -1,8 +1,21 @@
 import json
 import re
+from typing import Any
 from bs4 import BeautifulSoup
 from tk3u8.constants import OptionKey, Quality, StreamLink
-from tk3u8.exceptions import InvalidQualityError, InvalidUsernameError, NoUsernameEnteredError, QualityNotAvailableError, SigiStateMissingError, StreamDataNotFoundError, UnknownStatusCodeError, UserNotFoundError, UserNotLiveError, WAFChallengeError
+from tk3u8.exceptions import (
+    HLSLinkNotFoundError,
+    InvalidQualityError,
+    InvalidUsernameError,
+    NoUsernameEnteredError,
+    QualityNotAvailableError,
+    SigiStateMissingError,
+    StreamDataNotFoundError,
+    UnknownStatusCodeError,
+    UserNotFoundError,
+    UserNotLiveError,
+    WAFChallengeError
+)
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.request_handler import RequestHandler
 
@@ -70,11 +83,21 @@ class StreamMetadataHandler:
     def get_stream_link(self) -> StreamLink:
         try:
             if self._quality == Quality.ORIGINAL.value.lower():
-                return StreamLink(Quality.ORIGINAL, self._stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None))
+                link = self._stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None)
+
+                if self._is_link_empty(link):
+                    raise HLSLinkNotFoundError(self._username)
+
+                return StreamLink(Quality.ORIGINAL, link)
             else:
                 for quality in list(Quality)[1:]:  # Turns them into a list of its members and skips the first one since it is already checked from the if statement
                     if quality.value.lower() == self._quality:
-                        return StreamLink(quality, self._stream_data.get("data", None).get(self._quality, None).get("main", None).get("hls", None))
+                        link = self._stream_data.get("data", None).get(self._quality, None).get("main", None).get("hls", None)
+
+                        if self._is_link_empty(link):
+                            raise HLSLinkNotFoundError(self._username)
+
+                        return StreamLink(Quality.ORIGINAL, link)
 
             raise InvalidQualityError()
         except AttributeError:
@@ -106,3 +129,6 @@ class StreamMetadataHandler:
             return False
         else:
             raise UnknownStatusCodeError(status)
+
+    def _is_link_empty(self, link: str | Any) -> bool:
+        return link == "" or link is None
