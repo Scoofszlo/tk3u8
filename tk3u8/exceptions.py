@@ -66,6 +66,15 @@ class NoUsernameEnteredError(Exception):
         super().__init__(self.message)
 
 
+class UserPreparingForLiveError(Exception):
+    """Custom exception when the user is preparing to go live.
+    """
+
+    def __init__(self, username) -> None:
+        self.message = f"User @{username} is preparing to go live. Try again in a minute or two to be able to download the stream."
+        super().__init__(self.message)
+
+
 class UnknownStatusCodeError(Exception):
     """Custom exception whenever the status code returned isn't 2 or 4.
 
