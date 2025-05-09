@@ -7,7 +7,7 @@ from tk3u8.path_initializer import PathInitializer
 
 class OptionsHandler:
     def __init__(self) -> None:
-        self.paths_handler = PathInitializer()
+        self._paths_initializer = PathInitializer()
         self._args: dict = {}
         self._config: dict = self._load_config()
 
@@ -45,7 +45,7 @@ class OptionsHandler:
 
     def _load_config(self) -> dict:
         try:
-            with open(self.paths_handler.CONFIG_FILE_PATH, 'r') as file:
+            with open(self._paths_initializer.CONFIG_FILE_PATH, 'r') as file:
                 config = self._retouch_config(toml.load(file))
                 return config
         except FileNotFoundError:

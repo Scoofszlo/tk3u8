@@ -1,10 +1,10 @@
 from typing import Optional, cast
 from tk3u8.constants import OptionKey, Quality, StreamLink
 from tk3u8.core.downloader import Downloader
-from tk3u8.options_handler import OptionsHandler
-from tk3u8.request_handler import RequestHandler
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
+from tk3u8.options_handler import OptionsHandler
 from tk3u8.path_initializer import PathInitializer
+from tk3u8.request_handler import RequestHandler
 
 
 class Tk3u8:

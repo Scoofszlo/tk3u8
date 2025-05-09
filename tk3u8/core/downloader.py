@@ -14,7 +14,7 @@ class Downloader:
             stream_metadata_handler: StreamMetadataHandler,
             options_handler: OptionsHandler
     ) -> None:
-        self._paths_handler = PathInitializer()
+        self._path_initializer = PathInitializer()
         self._options_handler = options_handler
         self._stream_metadata_handler = stream_metadata_handler
 
@@ -40,7 +40,7 @@ class Downloader:
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
         filename = f"{username}-{timestamp}-{stream_link.quality.value.lower()}"
-        filename_with_download_dir = self._paths_handler.DOWNLOAD_DIR + f"/{username}/{filename}.%(ext)s"
+        filename_with_download_dir = self._path_initializer.DOWNLOAD_DIR + f"/{username}/{filename}.%(ext)s"
 
         ydl_opts = {
             'outtmpl': filename_with_download_dir,
