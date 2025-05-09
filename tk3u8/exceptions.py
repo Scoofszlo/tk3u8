@@ -10,6 +10,15 @@ class RequestFailedError(Exception):
         super().__init__(self.message)
 
 
+class WAFChallengeError(Exception):
+    """Custom exception when 'Please wait...' message appears when extracting data
+    from source."""
+
+    def __init__(self) -> None:
+        self.message = "Source extraction failed due to WAF. Please try again later."
+        super().__init__(self.message)
+
+
 class SourceDataExtractionError(Exception):
     """Custom exception for failed data extraction from the script tag.
 
@@ -95,7 +104,7 @@ class LinkNotAvailableError(Exception):
         super().__init__(self.message)
 
 
-class StreamDataNotFoundError(Exception):
+class StreamDataUnavailableError(Exception):
     """Custom exception when the stream data can't be scraped."""
 
     def __init__(self, username) -> None:
