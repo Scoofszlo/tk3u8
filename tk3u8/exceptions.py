@@ -112,6 +112,15 @@ class StreamDataNotFoundError(Exception):
         super().__init__(self.message)
 
 
+class HLSLinkNotFoundError(Exception):
+    """Custom exception when the HLS stream link isn't available, even though
+    there is a stream going on."""
+
+    def __init__(self, username) -> None:
+        self.message = f"HLS stream link not found for user @{username}."
+        super().__init__(self.message)
+
+
 class InvalidArgKeyError(Exception):
     """Custom exception when an invalid key is encountered."""
 
