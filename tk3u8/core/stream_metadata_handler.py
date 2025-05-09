@@ -2,7 +2,7 @@ import json
 import re
 from bs4 import BeautifulSoup
 from tk3u8.constants import OptionKey, Quality, StreamLink
-from tk3u8.exceptions import InvalidQualityError, InvalidUsernameError, NoUsernameEnteredError, QualityNotAvailableError, SourceDataExtractionError, StreamDataNotFoundError, UnknownStatusCodeError, UserNotFoundError, UserNotLiveError
+from tk3u8.exceptions import InvalidQualityError, InvalidUsernameError, NoUsernameEnteredError, QualityNotAvailableError, StreamDataUnavailableError, UnknownStatusCodeError, UserNotFoundError, UserNotLiveError, WAFChallengeError
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.request_handler import RequestHandler
 
@@ -43,11 +43,11 @@ class StreamMetadataHandler:
 
         response = self._request_handler.get_data(self._username)
 
+        if "Please wait..." in response.text:
+            raise WAFChallengeError()
+
         soup = BeautifulSoup(response.text, "html.parser")
         script_tag = soup.find("script", {"id": "SIGI_STATE"})
-
-        if not script_tag:
-            raise SourceDataExtractionError()
 
         script_content = script_tag.text
         return json.loads(script_content)
@@ -62,7 +62,7 @@ class StreamMetadataHandler:
         try:
             return json.loads(self._source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
         except KeyError:
-            raise StreamDataNotFoundError(self._username)
+            raise StreamDataUnavailableError(self._username)
 
     def get_stream_link(self) -> StreamLink:
         try:
