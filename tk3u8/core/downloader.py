@@ -61,7 +61,7 @@ class Downloader:
         return self._stream_metadata_handler.is_user_live()
 
     def _checking_timeout(self) -> None:
-        seconds_left = self._options_handler.get_arg_val(OptionKey.TIMEOUT.value)
+        seconds_left = self._options_handler.get_option_val(OptionKey.TIMEOUT.value)
         assert isinstance(seconds_left, int)
 
         extra_space = " " * len(str(seconds_left))  # Ensures the entire line is cleared

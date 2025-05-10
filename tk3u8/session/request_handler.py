@@ -32,8 +32,8 @@ class RequestHandler:
             })
 
     def _setup_cookies(self) -> None:
-        sessionid_ss = self._options_handler.get_arg_val(OptionKey.SESSIONID_SS)
-        tt_target_idc = self._options_handler.get_arg_val(OptionKey.TT_TARGET_IDC)
+        sessionid_ss = self._options_handler.get_option_val(OptionKey.SESSIONID_SS)
+        tt_target_idc = self._options_handler.get_option_val(OptionKey.TT_TARGET_IDC)
 
         assert isinstance(sessionid_ss, (str, type(None)))
         assert isinstance(tt_target_idc, (str, type(None)))
@@ -50,7 +50,7 @@ class RequestHandler:
             })
 
     def _setup_proxy(self) -> None:
-        proxy = self._options_handler.get_arg_val(OptionKey.PROXY)
+        proxy = self._options_handler.get_option_val(OptionKey.PROXY)
         assert isinstance(proxy, (str, type(None)))
 
         if proxy:
