@@ -94,6 +94,15 @@ class StreamMetadataHandler:
             raise StreamDataNotFoundError(self._username)
 
     def _get_stream_links(self) -> dict:
+        """
+        This builds the stream links in dict. The qualities are first constructed
+        into a list by getting all the values from Quality enum class except for
+        the first one ("original"), as this doesn't match with the quality
+        specified from the source ("origin").
+
+        After the stream links have been added to the dict, the key "origin" is
+        replaced with "original".
+        """
         stream_links = {}
         qualities = [quality.value.lower() for quality in list(Quality)[1:]]
         qualities.insert(0, "origin")
