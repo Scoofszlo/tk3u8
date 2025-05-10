@@ -5,7 +5,7 @@ from typing import Optional
 
 @dataclass
 class StreamLink:
-    quality: "Quality"
+    quality: str
     link: Optional[str]
 
 

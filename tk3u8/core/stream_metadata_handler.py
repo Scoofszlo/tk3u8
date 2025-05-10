@@ -27,8 +27,17 @@ class StreamMetadataHandler:
         self._options_handler = options_handler
         self._source_data: dict = {}
         self._stream_data: dict = {}
+        self._stream_links: dict = {}
         self._username: str | None = None
         self._quality: str | None = None
+
+    def get_stream_link(self) -> StreamLink:
+        try:
+            if self._quality in self._stream_links:
+                return StreamLink(self._quality, self._stream_links[self._quality])
+            raise InvalidQualityError()
+        except AttributeError:
+            raise QualityNotAvailableError()
 
     def _initialize_data(self) -> None:
         if not self._username:
@@ -45,6 +54,9 @@ class StreamMetadataHandler:
 
         if not self._stream_data:
             self._stream_data = self._get_stream_data()
+
+        if not self._stream_links:
+            self._stream_links = self._get_stream_links()
 
         if not self._quality:
             new_quality = self._options_handler.get_option_val(OptionKey.QUALITY)
@@ -81,28 +93,33 @@ class StreamMetadataHandler:
         except KeyError:
             raise StreamDataNotFoundError(self._username)
 
-    def get_stream_link(self) -> StreamLink:
-        try:
-            if self._quality == Quality.ORIGINAL.value.lower():
-                link = self._stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None)
+    def _get_stream_links(self) -> dict:
+        """
+        This builds the stream links in dict. The qualities are first constructed
+        into a list by getting all the values from Quality enum class except for
+        the first one ("original"), as this doesn't match with the quality
+        specified from the source ("origin").
 
-                if self._is_link_empty(link):
-                    raise HLSLinkNotFoundError(self._username)
+        After the stream links have been added to the dict, the key "origin" is
+        replaced with "original".
+        """
+        stream_links = {}
+        qualities = [quality.value.lower() for quality in list(Quality)[1:]]
+        qualities.insert(0, "origin")
 
-                return StreamLink(Quality.ORIGINAL, link)
-            else:
-                for quality in list(Quality)[1:]:  # Turns them into a list of its members and skips the first one since it is already checked from the if statement
-                    if quality.value.lower() == self._quality:
-                        link = self._stream_data.get("data", None).get(self._quality, None).get("main", None).get("hls", None)
+        for quality in qualities:
+            try:
+                link = self._stream_data["data"][quality]["main"]["hls"]
+            except KeyError:
+                link = None
 
-                        if self._is_link_empty(link):
-                            raise HLSLinkNotFoundError(self._username)
+            stream_links.update({
+                quality: link
+            })
 
-                        return StreamLink(Quality.ORIGINAL, link)
+        stream_links["original"] = stream_links.pop("origin")
 
-            raise InvalidQualityError()
-        except AttributeError:
-            raise QualityNotAvailableError()
+        return stream_links
 
     def _update_data(self) -> None:
         self._source_data = self._get_source_data()
