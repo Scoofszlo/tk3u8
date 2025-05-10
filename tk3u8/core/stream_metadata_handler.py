@@ -34,7 +34,7 @@ class StreamMetadataHandler:
     def get_stream_link(self) -> StreamLink:
         try:
             if self._quality in self._stream_links:
-                return self._stream_links[self._quality]
+                return StreamLink(self._quality, self._stream_links[self._quality])
             raise InvalidQualityError()
         except AttributeError:
             raise QualityNotAvailableError()
@@ -107,6 +107,8 @@ class StreamMetadataHandler:
             stream_links.update({
                 quality: link
             })
+
+        stream_links["original"] = stream_links.pop("origin")
 
         return stream_links
 
