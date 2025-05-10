@@ -31,6 +31,14 @@ class StreamMetadataHandler:
         self._username: str | None = None
         self._quality: str | None = None
 
+    def get_stream_link(self) -> StreamLink:
+        try:
+            if self._quality in self._stream_links:
+                return self._stream_links[self._quality]
+            raise InvalidQualityError()
+        except AttributeError:
+            raise QualityNotAvailableError()
+
     def _initialize_data(self) -> None:
         if not self._username:
             new_username = self._options_handler.get_option_val(OptionKey.USERNAME)
@@ -98,14 +106,6 @@ class StreamMetadataHandler:
             })
 
         return stream_links
-
-    def get_stream_link(self) -> StreamLink:
-        try:
-            if self._quality in self._stream_links:
-                return self._stream_links[self._quality]
-            raise InvalidQualityError()
-        except AttributeError:
-            raise QualityNotAvailableError()
 
     def _update_data(self) -> None:
         self._source_data = self._get_source_data()
