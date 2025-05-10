@@ -95,14 +95,17 @@ class StreamMetadataHandler:
 
     def _get_stream_links(self) -> dict:
         stream_links = {}
+        qualities = [quality.value.lower() for quality in list(Quality)[1:]]
+        qualities.insert(0, "origin")
 
-        stream_links.update({
-            Quality.ORIGINAL.value.lower(): self._stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None)
-        })
+        for quality in qualities:
+            try:
+                link = self._stream_data["data"][quality]["main"]["hls"]
+            except KeyError:
+                link = None
 
-        for quality in list(Quality)[1:]:
             stream_links.update({
-                quality.value.lower(): self._stream_data.get("data", None).get(quality.value.lower(), None).get("main", None).get("hls", None)
+                quality: link
             })
 
         return stream_links
