@@ -13,20 +13,17 @@ class OptionsHandler:
 
     def get_arg_val(self, key) -> Optional[str | int]:
         try:
-            if key == OptionKey.SESSIONID_SS:
-                return self._config[OptionKey.SESSIONID_SS.value]
-            if key == OptionKey.TT_TARGET_IDC:
-                return self._config[OptionKey.TT_TARGET_IDC.value]
-            if key == OptionKey.PROXY:
-                return self._args[OptionKey.PROXY.value] or self._config[OptionKey.PROXY.value]
-            if key == OptionKey.USERNAME:
-                return self._args[OptionKey.USERNAME.value]
-            if key == OptionKey.QUALITY:
-                return self._args[OptionKey.QUALITY.value.lower()]
-            if key == OptionKey.WAIT_UNTIL_LIVE:
-                return self._args[OptionKey.WAIT_UNTIL_LIVE.value]
-            if key == OptionKey.TIMEOUT:
-                return self._args[OptionKey.TIMEOUT.value]
+            key_map = {
+                OptionKey.SESSIONID_SS: lambda: self._config[OptionKey.SESSIONID_SS.value],
+                OptionKey.TT_TARGET_IDC: lambda: self._config[OptionKey.TT_TARGET_IDC.value],
+                OptionKey.PROXY: lambda: self._args[OptionKey.PROXY.value] or self._config[OptionKey.PROXY.value],
+                OptionKey.USERNAME: lambda: self._args[OptionKey.USERNAME.value],
+                OptionKey.QUALITY: lambda: self._args[OptionKey.QUALITY.value.lower()],
+                OptionKey.WAIT_UNTIL_LIVE: lambda: self._args[OptionKey.WAIT_UNTIL_LIVE.value],
+                OptionKey.TIMEOUT: lambda: self._args[OptionKey.TIMEOUT.value],
+            }
+            if key in key_map:
+                return key_map[key]()
             raise InvalidArgKeyError(key)
         except KeyError:
             return None
