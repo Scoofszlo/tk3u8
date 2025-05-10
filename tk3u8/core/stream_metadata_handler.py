@@ -101,23 +101,8 @@ class StreamMetadataHandler:
 
     def get_stream_link(self) -> StreamLink:
         try:
-            if self._quality == Quality.ORIGINAL.value.lower():
-                link = self._stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None)
-
-                if self._is_link_empty(link):
-                    raise HLSLinkNotFoundError(self._username)
-
-                return StreamLink(Quality.ORIGINAL, link)
-            else:
-                for quality in list(Quality)[1:]:  # Turns them into a list of its members and skips the first one since it is already checked from the if statement
-                    if quality.value.lower() == self._quality:
-                        link = self._stream_data.get("data", None).get(self._quality, None).get("main", None).get("hls", None)
-
-                        if self._is_link_empty(link):
-                            raise HLSLinkNotFoundError(self._username)
-
-                        return StreamLink(Quality.ORIGINAL, link)
-
+            if self._quality in self._stream_links:
+                return self._stream_links[self._quality]
             raise InvalidQualityError()
         except AttributeError:
             raise QualityNotAvailableError()
