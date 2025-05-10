@@ -27,6 +27,7 @@ class StreamMetadataHandler:
         self._options_handler = options_handler
         self._source_data: dict = {}
         self._stream_data: dict = {}
+        self._stream_links: dict = {}
         self._username: str | None = None
         self._quality: str | None = None
 
@@ -45,6 +46,9 @@ class StreamMetadataHandler:
 
         if not self._stream_data:
             self._stream_data = self._get_stream_data()
+
+        if not self._stream_links:
+            self._stream_links = self._get_stream_links()
 
         if not self._quality:
             new_quality = self._options_handler.get_option_val(OptionKey.QUALITY)
@@ -80,6 +84,20 @@ class StreamMetadataHandler:
             return json.loads(self._source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
         except KeyError:
             raise StreamDataNotFoundError(self._username)
+
+    def _get_stream_links(self) -> dict:
+        stream_links = {}
+
+        stream_links.update({
+            Quality.ORIGINAL.value.lower(): self._stream_data.get("data", None).get("origin", None).get("main", None).get("hls", None)
+        })
+
+        for quality in list(Quality)[1:]:
+            stream_links.update({
+                quality.value.lower(): self._stream_data.get("data", None).get(quality.value.lower(), None).get("main", None).get("hls", None)
+            })
+
+        return stream_links
 
     def get_stream_link(self) -> StreamLink:
         try:
