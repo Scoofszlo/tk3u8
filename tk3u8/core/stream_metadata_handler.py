@@ -32,7 +32,7 @@ class StreamMetadataHandler:
 
     def _initialize_data(self) -> None:
         if not self._username:
-            new_username = self._options_handler.get_arg_val(OptionKey.USERNAME)
+            new_username = self._options_handler.get_option_val(OptionKey.USERNAME)
             assert isinstance(new_username, (str, type(None)))
 
             if not new_username:
@@ -47,7 +47,7 @@ class StreamMetadataHandler:
             self._stream_data = self._get_stream_data()
 
         if not self._quality:
-            new_quality = self._options_handler.get_arg_val(OptionKey.QUALITY)
+            new_quality = self._options_handler.get_option_val(OptionKey.QUALITY)
             assert isinstance(new_quality, str)
             self._quality = new_quality
 
