@@ -39,7 +39,7 @@ class Downloader:
             raise LinkNotAvailableError()
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-        filename = f"{username}-{timestamp}-{stream_link.quality.value.lower()}"
+        filename = f"{username}-{timestamp}-{stream_link.quality}"
         filename_with_download_dir = self._path_initializer.DOWNLOAD_DIR + f"/{username}/{filename}.%(ext)s"
 
         ydl_opts = {
