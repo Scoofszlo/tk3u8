@@ -21,18 +21,18 @@ class StatusCode(Enum):
 
 
 class Quality(Enum):
-    ORIGINAL = "Original"
-    UHD_60 = "UHD_60"
-    UHD = "UHD"
-    HD_60 = "HD_60"
-    HD = "HD"
-    LD = "LD"
-    SD = "SD"
+    ORIGINAL = "original"
+    UHD_60 = "uhd_60"
+    UHD = "uhd"
+    HD_60 = "hd_60"
+    HD = "hd"
+    LD = "ld"
+    SD = "sd"
 
 
 class OptionKey(Enum):
     SESSIONID_SS = "sessionid_ss"
-    TT_TARGET_IDC = "tt-target-idc"
+    TT_TARGET_IDC = "tt_target_idc"
     PROXY = "proxy"
     USERNAME = "username"
     QUALITY = "quality"
@@ -43,9 +43,9 @@ class OptionKey(Enum):
 # Default configuration settings
 DEFAULT_CONFIG = {
     "config": {
-        "sessionid_ss": "",
-        "tt-target-idc": "",
-        "proxy": ""
+        OptionKey.SESSIONID_SS.value: "",
+        OptionKey.TT_TARGET_IDC.value: "",
+        OptionKey.PROXY.value: ""
     }
 }
 
