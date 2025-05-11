@@ -43,9 +43,9 @@ class OptionKey(Enum):
 # Default configuration settings
 DEFAULT_CONFIG = {
     "config": {
-        "sessionid_ss": "",
-        "tt-target-idc": "",
-        "proxy": ""
+        OptionKey.SESSIONID_SS.value: "",
+        OptionKey.TT_TARGET_IDC.value: "",
+        OptionKey.PROXY.value: ""
     }
 }
 
