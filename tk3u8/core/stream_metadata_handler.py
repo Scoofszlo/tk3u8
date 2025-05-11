@@ -113,6 +113,11 @@ class StreamMetadataHandler:
             except KeyError:
                 link = None
 
+            # Link can be an empty string. Based on my testing, this errpr
+            # will most likely to happen for those who live in the US region.
+            if link == "":
+                raise HLSLinkNotFoundError(self._username)
+
             stream_links.update({
                 quality: link
             })
