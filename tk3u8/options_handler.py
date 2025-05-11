@@ -18,7 +18,7 @@ class OptionsHandler:
                 OptionKey.TT_TARGET_IDC: lambda: self._config_values[OptionKey.TT_TARGET_IDC.value],
                 OptionKey.PROXY: lambda: self._args_values[OptionKey.PROXY.value] or self._config_values[OptionKey.PROXY.value],
                 OptionKey.USERNAME: lambda: self._args_values[OptionKey.USERNAME.value],
-                OptionKey.QUALITY: lambda: self._args_values[OptionKey.QUALITY.value.lower()],
+                OptionKey.QUALITY: lambda: self._args_values[OptionKey.QUALITY.value],
                 OptionKey.WAIT_UNTIL_LIVE: lambda: self._args_values[OptionKey.WAIT_UNTIL_LIVE.value],
                 OptionKey.TIMEOUT: lambda: self._args_values[OptionKey.TIMEOUT.value],
             }

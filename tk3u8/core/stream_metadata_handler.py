@@ -104,7 +104,7 @@ class StreamMetadataHandler:
         replaced with "original".
         """
         stream_links = {}
-        qualities = [quality.value.lower() for quality in list(Quality)[1:]]
+        qualities = [quality.value for quality in list(Quality)[1:]]
         qualities.insert(0, "origin")
 
         for quality in qualities:

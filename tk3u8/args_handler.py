@@ -29,8 +29,8 @@ class ArgsHandler():
         )
         self._parser.add_argument(
             "-q",
-            choices=[quality.value.lower() for quality in Quality],
-            default=Quality.ORIGINAL.value.lower(),
+            choices=[quality.value for quality in Quality],
+            default=Quality.ORIGINAL.value,
             dest="quality",
             help="Specify the quality of the video to download. Default: original"
         )
