@@ -32,7 +32,7 @@ class Quality(Enum):
 
 class OptionKey(Enum):
     SESSIONID_SS = "sessionid_ss"
-    TT_TARGET_IDC = "tt-target-idc"
+    TT_TARGET_IDC = "tt_target_idc"
     PROXY = "proxy"
     USERNAME = "username"
     QUALITY = "quality"
