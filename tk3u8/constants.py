@@ -21,13 +21,13 @@ class StatusCode(Enum):
 
 
 class Quality(Enum):
-    ORIGINAL = "Original"
-    UHD_60 = "UHD_60"
-    UHD = "UHD"
-    HD_60 = "HD_60"
-    HD = "HD"
-    LD = "LD"
-    SD = "SD"
+    ORIGINAL = "original"
+    UHD_60 = "uhd_60"
+    UHD = "uhd"
+    HD_60 = "hd_60"
+    HD = "hd"
+    LD = "ld"
+    SD = "sd"
 
 
 class OptionKey(Enum):
