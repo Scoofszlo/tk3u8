@@ -63,16 +63,16 @@ If the user is not live, the program will raise an error:
 tk3u8.exceptions.UserNotLiveError: User @username is not live.
 ```
 
-For complete guide on how to use the program, head over to the [Usage](wiki/usage) guide.
+For complete guide on how to use the program, head over to the [Usage](https://github.com/Scoofszlo/tk3u8/wiki/Usage) guide.
 
 ## Documentation
 
 The project documentation is available at the [wiki](https://github.com/Scoofszlo/tk3u8/wiki) of this repository. These includes detailed step-by-step installation,  usage guide, configuration guide, and some information about common issues and how to fix them. Here are some of the specific links for each one:
 
-- [Installation Guide](wiki/installation)
-- [Usage Guide](wiki/usage)
-- [Configuration Guide](./configuration)
-- [Issues](wiki/issues) - Recommended to check for those who are having regular issues with `WAFChallengeError`, `StreamLinkNotFoundError`, and `StreamDataNotFoundError` errors.
+- [Installation Guide](https://github.com/Scoofszlo/tk3u8/wiki/Installation)
+- [Usage Guide](https://github.com/Scoofszlo/tk3u8/wiki/Usage)
+- [Configuration Guide](https://github.com/Scoofszlo/tk3u8/wiki/Configuration)
+- [Issues](https://github.com/Scoofszlo/tk3u8/wiki/Issues) - Recommended to check for those who are having regular issues with `WAFChallengeError`, `StreamLinkNotFoundError`, and `StreamDataNotFoundError` errors.
 
 ## License
 
