@@ -1,6 +1,6 @@
 [project]
 name = "tk3u8"
-version = "0.1.1"
+version = "0.2.0"
 description = "A TikTok live downloader, written in Python."
 license-files = ["LICENSE"]
 readme = "README.md"
