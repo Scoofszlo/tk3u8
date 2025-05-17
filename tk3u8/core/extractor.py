@@ -57,7 +57,7 @@ class Extractor:
         return stream_links
 
 
-class APIExtractor(Extractor):
+class WebpageExtractor(Extractor):
     def get_source_data(self) -> dict:
         if not hlp.is_username_valid(self._username):
             raise InvalidUsernameError(self._username)

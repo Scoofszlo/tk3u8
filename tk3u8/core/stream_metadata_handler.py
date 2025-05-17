@@ -1,5 +1,5 @@
 from tk3u8.constants import OptionKey, StreamLink
-from tk3u8.core.extractor import APIExtractor
+from tk3u8.core.extractor import WebpageExtractor
 from tk3u8.exceptions import (
     InvalidQualityError,
     NoUsernameEnteredError,
@@ -16,7 +16,7 @@ class StreamMetadataHandler:
     def __init__(self, request_handler: RequestHandler, options_handler: OptionsHandler):
         self._request_handler = request_handler
         self._options_handler = options_handler
-        self._extractor_classes = [APIExtractor]
+        self._extractor_classes = [WebpageExtractor]
         self._source_data: dict = {}
         self._stream_data: dict = {}
         self._stream_links: dict = {}
