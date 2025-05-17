@@ -2,6 +2,7 @@ from datetime import datetime
 import time
 from yt_dlp import YoutubeDL
 from tk3u8.constants import OptionKey, StreamLink
+from tk3u8.core import helper as hlp
 from tk3u8.exceptions import DownloadError, LinkNotAvailableError, UserNotLiveError
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
@@ -19,14 +20,16 @@ class Downloader:
         self._stream_metadata_handler = stream_metadata_handler
 
     def download(self, username: str, stream_link: StreamLink, wait_until_live: bool):
-        if self._is_user_live():
+        source_data = self._stream_metadata_handler._source_data
+
+        if hlp.is_user_live(source_data):
             self._start_download(username, stream_link)
         else:
             if not wait_until_live:
                 raise UserNotLiveError(username)
 
             print(f"User @{username} is currently offline. Awaiting @{username} to start streaming.")
-            while not self._is_user_live():
+            while not hlp.is_user_live(source_data):
                 self._checking_timeout()
                 self._update_data()
             print(f"\nUser @{username} is now streaming live.")
@@ -55,10 +58,7 @@ class Downloader:
             raise DownloadError(e)
 
     def _update_data(self) -> None:
-        self._stream_metadata_handler._update_data()
-
-    def _is_user_live(self):
-        return self._stream_metadata_handler.is_user_live()
+        self._stream_metadata_handler.update_data()
 
     def _checking_timeout(self) -> None:
         seconds_left = self._options_handler.get_option_val(OptionKey.TIMEOUT.value)
