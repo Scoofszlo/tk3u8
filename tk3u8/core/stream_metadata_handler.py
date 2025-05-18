@@ -64,9 +64,9 @@ class StreamMetadataHandler:
                 HLSLinkNotFoundError
             ) as e:
                 if idx != len(self._extractor_classes) - 1:
-                    print(f"Extractor #{idx} failed due to {type(e).__name__}. Trying next extractor method (Extractor #{idx+2})")
+                    print(f"Extractor #{idx+1} failed due to {type(e).__name__}. Trying next extractor method (Extractor #{idx+2})")
                 else:
-                    print(f"Extractor #{idx} failed due to {type(e).__name__}. No more extractors to be used. The program will now exit.")
+                    print(f"Extractor #{idx+1} failed due to {type(e).__name__}. No more extractors to be used. The program will now exit.")
                     exit()
 
     def update_data(self) -> None:
