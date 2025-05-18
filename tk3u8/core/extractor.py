@@ -1,4 +1,4 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 import json
 
 from bs4 import BeautifulSoup
@@ -9,20 +9,19 @@ from tk3u8.exceptions import HLSLinkNotFoundError, InvalidUsernameError, SigiSta
 from tk3u8.session.request_handler import RequestHandler
 
 
-class Extractor:
+class Extractor(ABC):
     def __init__(self, username: str, request_handler: RequestHandler):
         self._request_handler = request_handler
         self._username = username
 
     @abstractmethod
-    def get_source_data(self):
+    def get_source_data(self) -> dict:
         pass
 
     @abstractmethod
-    def get_stream_data(self):
+    def get_stream_data(self, source_data: dict) -> dict:
         pass
 
-    @abstractmethod
     def get_stream_links(self, stream_data: dict) -> dict:
         """
         This builds the stream links in dict. The qualities are first constructed
@@ -57,6 +56,31 @@ class Extractor:
         return stream_links
 
 
+class APIExtractor(Extractor):
+    def get_source_data(self) -> dict:
+        if not hlp.is_username_valid(self._username):
+            raise InvalidUsernameError(self._username)
+
+        response = self._request_handler.get_data(f"https://www.tiktok.com/api-live/user/room?aid=1988&sourceType=54&uniqueId={self._username}")
+
+        soup = BeautifulSoup(response.text, "html.parser")
+        content = soup.text
+
+        return json.loads(content)
+
+    def get_stream_data(self, source_data: dict) -> dict:
+        if not hlp.is_user_exists(APIExtractor, source_data):
+            raise UserNotFoundError(self._username)
+
+        if not hlp.is_user_live(source_data):
+            raise UserNotLiveError(self._username)
+
+        try:
+            return json.loads(source_data["data"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
+        except KeyError:
+            raise StreamDataNotFoundError(self._username)
+
+
 class WebpageExtractor(Extractor):
     def get_source_data(self) -> dict:
         if not hlp.is_username_valid(self._username):
@@ -76,8 +100,8 @@ class WebpageExtractor(Extractor):
         script_content = script_tag.text
         return json.loads(script_content)
 
-    def get_stream_data(self, source_data: dict):
-        if not hlp.is_user_exists(source_data):
+    def get_stream_data(self, source_data: dict) -> dict:
+        if not hlp.is_user_exists(WebpageExtractor, source_data):
             raise UserNotFoundError(self._username)
 
         if not hlp.is_user_live(source_data):

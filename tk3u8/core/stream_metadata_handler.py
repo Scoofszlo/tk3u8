@@ -1,6 +1,7 @@
 from tk3u8.constants import OptionKey, StreamLink
-from tk3u8.core.extractor import WebpageExtractor
+from tk3u8.core.extractor import APIExtractor, WebpageExtractor
 from tk3u8.exceptions import (
+    HLSLinkNotFoundError,
     InvalidQualityError,
     NoUsernameEnteredError,
     QualityNotAvailableError,
@@ -16,7 +17,7 @@ class StreamMetadataHandler:
     def __init__(self, request_handler: RequestHandler, options_handler: OptionsHandler):
         self._request_handler = request_handler
         self._options_handler = options_handler
-        self._extractor_classes = [WebpageExtractor]
+        self._extractor_classes = [APIExtractor, WebpageExtractor]
         self._source_data: dict = {}
         self._stream_data: dict = {}
         self._stream_links: dict = {}
@@ -24,6 +25,8 @@ class StreamMetadataHandler:
         self._quality: str | None = None
 
     def get_stream_link(self) -> StreamLink:
+        assert isinstance(self._quality, str)
+
         try:
             if self._quality in self._stream_links:
                 return StreamLink(self._quality, self._stream_links[self._quality])
@@ -45,34 +48,32 @@ class StreamMetadataHandler:
             try:
                 extractor = extractor_class(self._username, self._request_handler)
 
-                if not self._source_data:
-                    self._source_data = extractor.get_source_data()
+                self._source_data = extractor.get_source_data()
+                self._stream_data = extractor.get_stream_data(self._source_data)
+                self._stream_links = extractor.get_stream_links(self._stream_data)
 
-                if not self._stream_data:
-                    self._stream_data = extractor.get_stream_data(self._source_data)
-
-                if not self._stream_links:
-                    self._stream_links = extractor.get_stream_links(self._stream_data)
-
-                if not self._quality:
-                    new_quality = self._options_handler.get_option_val(OptionKey.QUALITY)
-                    assert isinstance(new_quality, str)
-                    self._quality = new_quality
+                new_quality = self._options_handler.get_option_val(OptionKey.QUALITY)
+                assert isinstance(new_quality, str)
+                self._quality = new_quality
 
                 break
             except (
                 WAFChallengeError,
                 SigiStateMissingError,
-                StreamDataNotFoundError
+                StreamDataNotFoundError,
+                HLSLinkNotFoundError
             ) as e:
                 if idx != len(self._extractor_classes) - 1:
-                    print(f"Extractor #{idx} failed due to {e}. Trying next extractor method (Extractor #{idx+2})")
+                    print(f"Extractor #{idx} failed due to {type(e).__name__}. Trying next extractor method (Extractor #{idx+2})")
                 else:
-                    print(f"Extractor #{idx} failed due to {e}. No more extractors to be used. The program will now exit.")
+                    print(f"Extractor #{idx} failed due to {type(e).__name__}. No more extractors to be used. The program will now exit.")
+                    exit()
 
     def update_data(self) -> None:
+        assert isinstance(self._username, str)
+
         for extractor_class in self._extractor_classes:
             extractor = extractor_class(self._username, self._request_handler)
 
             self._source_data = extractor.get_source_data()
-            self._stream_data = extractor.get_stream_data()
+            self._stream_data = extractor.get_stream_data(self._source_data)
