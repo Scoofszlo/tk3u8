@@ -158,3 +158,10 @@ class DownloadError(Exception):
 
     def __init__(self, e) -> None:
         super().__init__(f"Download failed with error: {e}")
+
+
+class InvalidExtractorError(Exception):
+    """Custom exception raised when an invalid extractor is used."""
+
+    def __init__(self) -> None:
+        super().__init__("The specified extractor is invalid or has failed.")

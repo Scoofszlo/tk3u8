@@ -35,7 +35,7 @@ class Tk3u8:
             wait_until_live=wait_until_live,
             timeout=timeout
         )
-        self._stream_metadata_handler._initialize_data()
+        self._stream_metadata_handler.initialize_data()
 
         username = cast(str, self._stream_metadata_handler._username)
         stream_link = self._stream_metadata_handler.get_stream_link()
