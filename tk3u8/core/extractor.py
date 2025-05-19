@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 from tk3u8.constants import Quality
 from tk3u8.core import helper as hlp
-from tk3u8.exceptions import HLSLinkNotFoundError, InvalidUsernameError, SigiStateMissingError, StreamDataNotFoundError, UserNotFoundError, UserNotLiveError, WAFChallengeError
+from tk3u8.exceptions import HLSLinkNotFoundError, InvalidUsernameError, SigiStateMissingError, StreamDataNotFoundError, UserNotFoundError, WAFChallengeError
 from tk3u8.session.request_handler import RequestHandler
 
 
@@ -77,9 +77,6 @@ class APIExtractor(Extractor):
         if not hlp.is_user_exists(APIExtractor, source_data):
             raise UserNotFoundError(self._username)
 
-        if not hlp.is_user_live(source_data):
-            raise UserNotLiveError(self._username)
-
         try:
             return json.loads(source_data["data"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
         except KeyError:
@@ -108,9 +105,6 @@ class WebpageExtractor(Extractor):
     def get_stream_data(self, source_data: dict) -> dict:
         if not hlp.is_user_exists(WebpageExtractor, source_data):
             raise UserNotFoundError(self._username)
-
-        if not hlp.is_user_live(source_data):
-            raise UserNotLiveError(self._username)
 
         try:
             return json.loads(source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
