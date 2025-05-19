@@ -9,7 +9,8 @@ if __name__ == "__main__":
     username = args.username
     quality = args.quality
     proxy = args.proxy
+    wait_until_live = args.wait_until_live
 
     tk3u8 = Tk3u8()
     tk3u8.set_proxy(proxy)
-    tk3u8.download(username=username, quality=quality)
+    tk3u8.download(username=username, quality=quality, wait_until_live=wait_until_live)
