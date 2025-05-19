@@ -10,17 +10,22 @@ from tk3u8.session.request_handler import RequestHandler
 
 
 class Extractor(ABC):
+    """
+    Abstract base class for extracting streaming data for a given username.
+    Subclasses must implement methods to fetch source data and extract stream data.
+    """
+
     def __init__(self, username: str, request_handler: RequestHandler):
         self._request_handler = request_handler
         self._username = username
 
     @abstractmethod
     def get_source_data(self) -> dict:
-        pass
+        """Fetch the raw source data for the user."""
 
     @abstractmethod
     def get_stream_data(self, source_data: dict) -> dict:
-        pass
+        """Gets the stream data from the extracted source data."""
 
     def get_stream_links(self, stream_data: dict) -> dict:
         """
