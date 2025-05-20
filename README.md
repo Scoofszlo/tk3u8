@@ -48,6 +48,8 @@ tk3u8 is a Python program that helps you download live streams from TikTok. The 
     -q {original,uhd_60,uhd,hd_60,hd,ld,sd}
                             Specify the quality of the video to download. Default: original
     --proxy PROXY           The proxy server to use for downloading. Sample format: 127.0.0.1:8080
+    --wait_until_live       Let the program wait until the user goes live to start downloading stream
+    --timeout TIMEOUT       Set the timeout in seconds before rechecking if the user is live.
     ```
 
 ## Quickstart
