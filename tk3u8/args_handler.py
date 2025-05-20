@@ -44,3 +44,9 @@ class ArgsHandler():
             help="Let the program wait until the user goes live to start downloading stream",
             default=False
         )
+        self._parser.add_argument(
+            "--timeout",
+            help="Set the timeout in seconds before rechecking if the user is live.",
+            type=int,
+            default=30
+        )
