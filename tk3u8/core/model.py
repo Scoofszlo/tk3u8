@@ -27,7 +27,7 @@ class Tk3u8:
             username: str,
             quality: str = Quality.ORIGINAL.value,
             wait_until_live: bool = False,
-            timeout: int = 10
+            timeout: int = 30
     ) -> None:
         self._options_handler.save_args_values(
             username=username,

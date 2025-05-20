@@ -38,3 +38,15 @@ class ArgsHandler():
             "--proxy",
             help="The proxy server to use for downloading. Sample format: 127.0.0.1:8080"
         )
+        self._parser.add_argument(
+            "--wait_until_live",
+            action="store_true",
+            help="Let the program wait until the user goes live to start downloading stream",
+            default=False
+        )
+        self._parser.add_argument(
+            "--timeout",
+            help="Set the timeout in seconds before rechecking if the user is live.",
+            type=int,
+            default=30
+        )
