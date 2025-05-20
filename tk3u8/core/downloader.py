@@ -32,6 +32,7 @@ class Downloader:
             while not hlp.is_user_live(source_data):
                 self._checking_timeout()
                 self._update_data()
+                source_data = self._stream_metadata_handler._source_data
             print(f"\nUser @{username} is now streaming live.")
             self._start_download(username, stream_link)
 
