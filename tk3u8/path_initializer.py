@@ -6,10 +6,15 @@ from tk3u8.constants import DEFAULT_CONFIG
 class PathInitializer:
     _instance = None
 
-    def __new__(cls) -> 'PathInitializer':
+    def __new__(cls, *args, **kwargs) -> 'PathInitializer':
         if not cls._instance:
             cls._instance = super(PathInitializer, cls).__new__(cls)
         return cls._instance
+
+    def __init__(self, base_dir=None):
+        if not hasattr(self, "_initialized"):  # Prevent re-initialization in singleton
+            self.set_base_dir(base_dir)
+            self._initialized = True
 
     def set_base_dir(self, base_dir) -> None:
         self.PROGRAM_DATA_DIR = base_dir if base_dir else "user_data"
