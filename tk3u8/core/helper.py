@@ -32,7 +32,7 @@ def is_user_exists(extractor: Union[type[WebpageExtractor], type[APIExtractor]],
 def is_user_live(status_code: int) -> bool:
     if status_code == 1:
         raise UserPreparingForLiveError(status_code)
-    if status_code == 2:
+    elif status_code == 2:
         return True
     elif status_code == 4:
         return False
