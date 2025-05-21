@@ -4,14 +4,11 @@ import json
 from bs4 import BeautifulSoup
 
 from tk3u8.constants import Quality
-from tk3u8.core import helper as hlp
 from tk3u8.exceptions import (
     HLSLinkNotFoundError,
-    InvalidUsernameError,
     LiveStatusCodeNotFoundError,
     SigiStateMissingError,
     StreamDataNotFoundError,
-    UserNotFoundError,
     WAFChallengeError
 )
 from tk3u8.session.request_handler import RequestHandler
@@ -75,9 +72,6 @@ class Extractor(ABC):
 
 class APIExtractor(Extractor):
     def get_source_data(self) -> dict:
-        if not hlp.is_username_valid(self._username):
-            raise InvalidUsernameError(self._username)
-
         response = self._request_handler.get_data(f"https://www.tiktok.com/api-live/user/room?aid=1988&sourceType=54&uniqueId={self._username}")
 
         soup = BeautifulSoup(response.text, "html.parser")
@@ -86,9 +80,6 @@ class APIExtractor(Extractor):
         return json.loads(content)
 
     def get_stream_data(self, source_data: dict) -> dict:
-        if not hlp.is_user_exists(APIExtractor, source_data):
-            raise UserNotFoundError(self._username)
-
         try:
             return json.loads(source_data["data"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
         except KeyError:
@@ -103,9 +94,6 @@ class APIExtractor(Extractor):
 
 class WebpageExtractor(Extractor):
     def get_source_data(self) -> dict:
-        if not hlp.is_username_valid(self._username):
-            raise InvalidUsernameError(self._username)
-
         response = self._request_handler.get_data(f"https://www.tiktok.com/@{self._username}/live")
 
         if "Please wait..." in response.text:
@@ -121,9 +109,6 @@ class WebpageExtractor(Extractor):
         return json.loads(script_content)
 
     def get_stream_data(self, source_data: dict) -> dict:
-        if not hlp.is_user_exists(WebpageExtractor, source_data):
-            raise UserNotFoundError(self._username)
-
         try:
             return json.loads(source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
         except KeyError:
