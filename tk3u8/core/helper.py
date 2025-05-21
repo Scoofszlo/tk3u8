@@ -1,6 +1,6 @@
 import re
-from typing import Any, Union
-from tk3u8.core.extractor import APIExtractor, WebpageExtractor
+from typing import Any
+from tk3u8.core.extractor import APIExtractor, Extractor, WebpageExtractor
 from tk3u8.exceptions import InvalidExtractorError, UnknownStatusCodeError, UserPreparingForLiveError
 
 
@@ -13,7 +13,7 @@ def is_username_valid(username) -> bool:
     return False
 
 
-def is_user_exists(extractor: Union[type[WebpageExtractor], type[APIExtractor]], source_data: dict) -> bool:
+def is_user_exists(extractor: type[Extractor], source_data: dict) -> bool:
     if extractor == WebpageExtractor:
         if source_data.get("LiveRoom"):
             return True

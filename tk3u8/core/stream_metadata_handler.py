@@ -1,5 +1,6 @@
+from typing import List
 from tk3u8.constants import OptionKey, StreamLink
-from tk3u8.core.extractor import APIExtractor, WebpageExtractor
+from tk3u8.core.extractor import APIExtractor, Extractor, WebpageExtractor
 from tk3u8.core.helper import is_user_exists, is_user_live, is_username_valid
 from tk3u8.exceptions import (
     HLSLinkNotFoundError,
@@ -21,7 +22,7 @@ class StreamMetadataHandler:
     def __init__(self, request_handler: RequestHandler, options_handler: OptionsHandler):
         self._request_handler = request_handler
         self._options_handler = options_handler
-        self._extractor_classes = [APIExtractor, WebpageExtractor]
+        self._extractor_classes: List[type[Extractor]] = [APIExtractor, WebpageExtractor]
         self._source_data: dict = {}
         self._stream_data: dict = {}
         self._stream_links: dict = {}
