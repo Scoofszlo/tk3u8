@@ -84,8 +84,8 @@ class UnknownStatusCodeError(Exception):
     for debugging if TikTok made some changes in their end.
     """
 
-    def __init__(self, status) -> None:
-        self.message = f"Invalid status. (Status: {status} {type(status)})"
+    def __init__(self, status_code) -> None:
+        self.message = f"Invalid status code. (Status code: {status_code} {type(status_code)})"
         super().__init__(self.message)
 
 
