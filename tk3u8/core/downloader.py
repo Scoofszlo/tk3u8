@@ -20,21 +20,22 @@ class Downloader:
         self._stream_metadata_handler = stream_metadata_handler
 
     def download(self, username: str, stream_link: StreamLink, wait_until_live: bool):
-        source_data = self._stream_metadata_handler._source_data
+        live_status_code = self._stream_metadata_handler._live_status_code
+        assert isinstance(live_status_code, int)
 
-        if hlp.is_user_live(source_data):
-            self._start_download(username, stream_link)
-        else:
+        if not hlp.is_user_live(live_status_code):
             if not wait_until_live:
                 raise UserNotLiveError(username)
 
             print(f"User @{username} is currently offline. Awaiting @{username} to start streaming.")
-            while not hlp.is_user_live(source_data):
+            while not hlp.is_user_live(live_status_code):
                 self._checking_timeout()
                 self._update_data()
-                source_data = self._stream_metadata_handler._source_data
+                live_status_code = self._stream_metadata_handler._live_status_code
+                assert isinstance(live_status_code, int)
             print(f"\nUser @{username} is now streaming live.")
-            self._start_download(username, stream_link)
+
+        self._start_download(username, stream_link)
 
     def _start_download(self, username: str, stream_link: StreamLink) -> None:
         print(f"Starting download:\nUsername: @{username}\nQuality: {stream_link.quality}\nStream Link: {stream_link.link}\n")
