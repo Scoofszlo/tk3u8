@@ -29,20 +29,15 @@ def is_user_exists(extractor: Union[type[WebpageExtractor], type[APIExtractor]],
         raise InvalidExtractorError()
 
 
-def is_user_live(source_data: dict) -> bool:
-    try:
-        status = source_data["LiveRoom"]["liveRoomUserInfo"]["user"]["status"]
-    except KeyError:
-        status = source_data["data"]["user"]["status"]
-
-    if status == 1:
-        raise UserPreparingForLiveError(status)
-    if status == 2:
+def is_user_live(status_code: int) -> bool:
+    if status_code == 1:
+        raise UserPreparingForLiveError(status_code)
+    if status_code == 2:
         return True
-    elif status == 4:
+    elif status_code == 4:
         return False
     else:
-        raise UnknownStatusCodeError(status)
+        raise UnknownStatusCodeError(status_code)
 
 
 def _is_link_empty(link: str | Any) -> bool:
