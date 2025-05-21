@@ -72,10 +72,12 @@ class Downloader:
         seconds_left = self._options_handler.get_option_val(OptionKey.TIMEOUT)
         assert isinstance(seconds_left, int)
 
-        extra_space = " " * len(str(seconds_left))  # Ensures the entire line is cleared
+        seconds_left_len = len(str(seconds_left))
+        seconds_extra_space = " " * seconds_left_len
+        checking_extra_space = 8 + seconds_left_len
 
         while seconds_left >= 0:
-            print(f"Retrying in {seconds_left}{extra_space}", end="\r")
+            print(f"Retrying in {seconds_left} seconds{seconds_extra_space}", end="\r")
             seconds_left -= 1
             time.sleep(1)
-        print(f"Checking... {' ' * 20}", end="\r")
+        print(f"Checking... {' ' * (checking_extra_space)}", end="\r")
