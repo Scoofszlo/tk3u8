@@ -28,11 +28,17 @@ class Downloader:
                 raise UserNotLiveError(username)
 
             print(f"User @{username} is currently offline. Awaiting @{username} to start streaming.")
-            while not hlp.is_user_live(live_status_code):
-                self._checking_timeout()
-                self._update_data()
-                live_status_code = self._stream_metadata_handler._live_status_code
-                assert isinstance(live_status_code, int)
+
+            try:
+                while not hlp.is_user_live(live_status_code):
+                    self._checking_timeout()
+                    self._update_data()
+                    live_status_code = self._stream_metadata_handler._live_status_code
+                    assert isinstance(live_status_code, int)
+            except KeyboardInterrupt:
+                print("Checking cancelled by user. Exiting...")
+                exit(0)
+
             print(f"\nUser @{username} is now streaming live.")
 
         self._start_download(username, stream_link)
