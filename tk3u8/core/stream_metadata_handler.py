@@ -1,5 +1,6 @@
 from tk3u8.constants import OptionKey, StreamLink
 from tk3u8.core.extractor import APIExtractor, WebpageExtractor
+from tk3u8.core.helper import is_user_live
 from tk3u8.exceptions import (
     HLSLinkNotFoundError,
     InvalidQualityError,
@@ -7,6 +8,7 @@ from tk3u8.exceptions import (
     QualityNotAvailableError,
     SigiStateMissingError,
     StreamDataNotFoundError,
+    UserNotLiveError,
     WAFChallengeError
 )
 from tk3u8.options_handler import OptionsHandler
@@ -50,8 +52,12 @@ class StreamMetadataHandler:
                 extractor = extractor_class(self._username, self._request_handler)
 
                 self._source_data = extractor.get_source_data()
-                self._stream_data = extractor.get_stream_data(self._source_data)
                 self._live_status_code = extractor.get_live_status_code(self._source_data)
+
+                if not is_user_live(self._live_status_code):
+                    raise UserNotLiveError(self._username)
+
+                self._stream_data = extractor.get_stream_data(self._source_data)
                 self._stream_links = extractor.get_stream_links(self._stream_data)
 
                 new_quality = self._options_handler.get_option_val(OptionKey.QUALITY)
