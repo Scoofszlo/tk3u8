@@ -9,8 +9,7 @@ from tk3u8.session.request_handler import RequestHandler
 
 class Tk3u8:
     def __init__(self, program_data_dir: str | None = None) -> None:
-        self._paths_handler = PathInitializer()
-        self._paths_handler.set_base_dir(program_data_dir)
+        self._paths_handler = PathInitializer(program_data_dir)
         self._options_handler = OptionsHandler()
         self._request_handler = RequestHandler(self._options_handler)
         self._stream_metadata_handler = StreamMetadataHandler(
