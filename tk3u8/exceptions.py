@@ -84,8 +84,8 @@ class UnknownStatusCodeError(Exception):
     for debugging if TikTok made some changes in their end.
     """
 
-    def __init__(self, status) -> None:
-        self.message = f"Invalid status. (Status: {status} {type(status)})"
+    def __init__(self, status_code) -> None:
+        self.message = f"Invalid status code. (Status code: {status_code} {type(status_code)})"
         super().__init__(self.message)
 
 
@@ -118,6 +118,14 @@ class StreamDataNotFoundError(Exception):
 
     def __init__(self, username) -> None:
         self.message = f"Stream data can't be retrieved from user @{username}. Please try again."
+        super().__init__(self.message)
+
+
+class LiveStatusCodeNotFoundError(Exception):
+    """Custom exception when the live status code failed to be retrieved."""
+
+    def __init__(self, username) -> None:
+        self.message = f"Live status code could not be retrieved from user @{username}."
         super().__init__(self.message)
 
 
