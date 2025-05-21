@@ -121,6 +121,14 @@ class StreamDataNotFoundError(Exception):
         super().__init__(self.message)
 
 
+class LiveStatusCodeNotFoundError(Exception):
+    """Custom exception when the live status code failed to be retrieved."""
+
+    def __init__(self, username) -> None:
+        self.message = f"Live status code could not be retrieved from user @{username}."
+        super().__init__(self.message)
+
+
 class HLSLinkNotFoundError(Exception):
     """Custom exception when the HLS stream link isn't available, even though
     there is a stream going on."""

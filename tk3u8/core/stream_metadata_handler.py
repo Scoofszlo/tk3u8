@@ -21,6 +21,7 @@ class StreamMetadataHandler:
         self._source_data: dict = {}
         self._stream_data: dict = {}
         self._stream_links: dict = {}
+        self._live_status_code: int | None = None
         self._username: str | None = None
         self._quality: str | None = None
 
@@ -50,6 +51,7 @@ class StreamMetadataHandler:
 
                 self._source_data = extractor.get_source_data()
                 self._stream_data = extractor.get_stream_data(self._source_data)
+                self._live_status_code = extractor.get_live_status_code(self._source_data)
                 self._stream_links = extractor.get_stream_links(self._stream_data)
 
                 new_quality = self._options_handler.get_option_val(OptionKey.QUALITY)
@@ -77,3 +79,4 @@ class StreamMetadataHandler:
 
             self._source_data = extractor.get_source_data()
             self._stream_data = extractor.get_stream_data(self._source_data)
+            self._live_status_code = extractor.get_live_status_code(self._source_data)
