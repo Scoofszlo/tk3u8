@@ -4,6 +4,10 @@ from tk3u8.constants import DEFAULT_CONFIG
 
 
 class PathInitializer:
+    """
+    Singleton class to initialize and manage important file and directory
+    paths for the application
+    """
     _instance = None
 
     def __new__(cls, *args, **kwargs) -> 'PathInitializer':
@@ -12,11 +16,13 @@ class PathInitializer:
         return cls._instance
 
     def __init__(self, base_dir=None):
-        if not hasattr(self, "_initialized"):  # Prevent re-initialization in singleton
+        # Prevent re-initialization if already initialized
+        if not hasattr(self, "_initialized"):
             self._set_base_dir(base_dir)
             self._initialized = True
 
     def _set_base_dir(self, base_dir) -> None:
+        # Set up main directory and file paths
         self.PROGRAM_DATA_DIR = base_dir if base_dir else "user_data"
         self.STREAM_DATA_FILE = os.path.join(self.PROGRAM_DATA_DIR, "stream_data.json")
         self.CONFIG_FILE_PATH = os.path.join(self.PROGRAM_DATA_DIR, "config.toml")
