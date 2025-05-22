@@ -73,9 +73,9 @@ class StreamMetadataHandler:
         for extractor_class in self._extractor_classes:
             extractor = extractor_class(self._username, self._request_handler)
 
-            self._source_data = extractor.get_source_data()
+            self._source_data = self._get_and_validate_source_data(extractor, extractor_class)
+            self._live_status_code = self._get_and_validate_live_status_code(extractor)
             self._stream_data = extractor.get_stream_data(self._source_data)
-            self._live_status_code = extractor.get_live_status_code(self._source_data)
 
     def _get_username(self) -> str:
         username = self._options_handler.get_option_val(OptionKey.USERNAME)
