@@ -1,13 +1,16 @@
+from typing import List
 from tk3u8.constants import OptionKey, StreamLink
-from tk3u8.core.extractor import APIExtractor, WebpageExtractor
-from tk3u8.core.helper import is_user_live
+from tk3u8.core.extractor import APIExtractor, Extractor, WebpageExtractor
+from tk3u8.core.helper import is_user_exists, is_user_live, is_username_valid
 from tk3u8.exceptions import (
     HLSLinkNotFoundError,
     InvalidQualityError,
+    InvalidUsernameError,
     NoUsernameEnteredError,
     QualityNotAvailableError,
     SigiStateMissingError,
     StreamDataNotFoundError,
+    UserNotFoundError,
     UserNotLiveError,
     WAFChallengeError
 )
@@ -19,7 +22,7 @@ class StreamMetadataHandler:
     def __init__(self, request_handler: RequestHandler, options_handler: OptionsHandler):
         self._request_handler = request_handler
         self._options_handler = options_handler
-        self._extractor_classes = [APIExtractor, WebpageExtractor]
+        self._extractor_classes: List[type[Extractor]] = [APIExtractor, WebpageExtractor]
         self._source_data: dict = {}
         self._stream_data: dict = {}
         self._stream_links: dict = {}
@@ -45,6 +48,9 @@ class StreamMetadataHandler:
             if not new_username:
                 raise NoUsernameEnteredError()
 
+            if not is_username_valid(new_username):
+                raise InvalidUsernameError(new_username)
+
             self._username = new_username
 
         for idx, extractor_class in enumerate(self._extractor_classes):
@@ -52,6 +58,10 @@ class StreamMetadataHandler:
                 extractor = extractor_class(self._username, self._request_handler)
 
                 self._source_data = extractor.get_source_data()
+
+                if not is_user_exists(extractor_class, self._source_data):
+                    raise UserNotFoundError(self._username)
+
                 self._live_status_code = extractor.get_live_status_code(self._source_data)
 
                 if not is_user_live(self._live_status_code):
