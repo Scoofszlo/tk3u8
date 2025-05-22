@@ -42,37 +42,17 @@ class StreamMetadataHandler:
 
     def initialize_data(self) -> None:
         if not self._username:
-            new_username = self._options_handler.get_option_val(OptionKey.USERNAME)
-            assert isinstance(new_username, (str, type(None)))
-
-            if not new_username:
-                raise NoUsernameEnteredError()
-
-            if not is_username_valid(new_username):
-                raise InvalidUsernameError(new_username)
-
-            self._username = new_username
+            self._username = self._get_username()
 
         for idx, extractor_class in enumerate(self._extractor_classes):
             try:
                 extractor = extractor_class(self._username, self._request_handler)
 
-                self._source_data = extractor.get_source_data()
-
-                if not is_user_exists(extractor_class, self._source_data):
-                    raise UserNotFoundError(self._username)
-
-                self._live_status_code = extractor.get_live_status_code(self._source_data)
-
-                if not is_user_live(self._live_status_code):
-                    raise UserNotLiveError(self._username)
-
+                self._source_data = self._get_and_validate_source_data(extractor, extractor_class)
+                self._live_status_code = self._get_and_validate_live_status_code(extractor)
                 self._stream_data = extractor.get_stream_data(self._source_data)
                 self._stream_links = extractor.get_stream_links(self._stream_data)
-
-                new_quality = self._options_handler.get_option_val(OptionKey.QUALITY)
-                assert isinstance(new_quality, str)
-                self._quality = new_quality
+                self._quality = self._get_and_validate_quality()
 
                 break
             except (
@@ -96,3 +76,37 @@ class StreamMetadataHandler:
             self._source_data = extractor.get_source_data()
             self._stream_data = extractor.get_stream_data(self._source_data)
             self._live_status_code = extractor.get_live_status_code(self._source_data)
+
+    def _get_username(self) -> str:
+        username = self._options_handler.get_option_val(OptionKey.USERNAME)
+        assert isinstance(username, (str, type(None)))
+
+        if not username:
+            raise NoUsernameEnteredError()
+
+        if not is_username_valid(username):
+            raise InvalidUsernameError(username)
+
+        return username
+
+    def _get_and_validate_source_data(self, extractor: Extractor, extractor_class: type[Extractor]) -> dict:
+        source_data: dict = extractor.get_source_data()
+
+        if not is_user_exists(extractor_class, source_data):
+            raise UserNotFoundError(self._username)
+
+        return source_data
+
+    def _get_and_validate_live_status_code(self, extractor: Extractor) -> int:
+        live_status_code: int = extractor.get_live_status_code(self._source_data)
+
+        if not is_user_live(live_status_code):
+            raise UserNotLiveError(self._username)
+
+        return live_status_code
+
+    def _get_and_validate_quality(self):
+        quality = self._options_handler.get_option_val(OptionKey.QUALITY)
+        assert isinstance(quality, str)
+
+        return quality
