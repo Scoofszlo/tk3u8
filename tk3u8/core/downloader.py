@@ -3,7 +3,7 @@ import time
 from yt_dlp import YoutubeDL
 from tk3u8.constants import OptionKey, StreamLink
 from tk3u8.core import helper as hlp
-from tk3u8.exceptions import DownloadError, LinkNotAvailableError, UserNotLiveError
+from tk3u8.exceptions import DownloadError, UserNotLiveError
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
 from tk3u8.path_initializer import PathInitializer
@@ -19,7 +19,7 @@ class Downloader:
         self._options_handler = options_handler
         self._stream_metadata_handler = stream_metadata_handler
 
-    def download(self, username: str, stream_link: StreamLink, wait_until_live: bool):
+    def download(self, username: str, wait_until_live: bool):
         live_status_code = self._stream_metadata_handler._live_status_code
         assert isinstance(live_status_code, int)
 
@@ -41,13 +41,13 @@ class Downloader:
 
             print(f"\nUser @{username} is now streaming live.")
 
+        stream_link = self._stream_metadata_handler.get_stream_link()
+        assert isinstance(stream_link, StreamLink)
+
         self._start_download(username, stream_link)
 
     def _start_download(self, username: str, stream_link: StreamLink) -> None:
         print(f"Starting download:\nUsername: @{username}\nQuality: {stream_link.quality}\nStream Link: {stream_link.link}\n")
-
-        if not stream_link.link:
-            raise LinkNotAvailableError()
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
         filename = f"{username}-{timestamp}-{stream_link.quality}"
