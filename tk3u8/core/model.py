@@ -37,11 +37,9 @@ class Tk3u8:
         self._stream_metadata_handler.initialize_data()
 
         username = cast(str, self._stream_metadata_handler._username)
-        stream_link = self._stream_metadata_handler.get_stream_link()
-
         assert isinstance(username, str)
 
-        self._downloader.download(username=username, stream_link=stream_link, wait_until_live=wait_until_live)
+        self._downloader.download(username=username, wait_until_live=wait_until_live)
 
     def set_proxy(self, proxy: str | None) -> None:
         self._options_handler.save_args_values({OptionKey.PROXY.value: proxy})

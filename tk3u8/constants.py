@@ -1,12 +1,11 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
 
 
 @dataclass
 class StreamLink:
     quality: str
-    link: Optional[str]
+    link: str
 
 
 class StatusCode(Enum):
