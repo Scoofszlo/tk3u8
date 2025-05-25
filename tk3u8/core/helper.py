@@ -1,5 +1,4 @@
 import re
-from typing import Any
 from tk3u8.core.extractor import APIExtractor, Extractor, WebpageExtractor
 from tk3u8.exceptions import InvalidExtractorError, UnknownStatusCodeError, UserPreparingForLiveError
 
@@ -38,7 +37,3 @@ def is_user_live(status_code: int) -> bool:
         return False
     else:
         raise UnknownStatusCodeError(status_code)
-
-
-def _is_link_empty(link: str | Any) -> bool:
-    return link == "" or link is None
