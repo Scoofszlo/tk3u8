@@ -29,6 +29,12 @@ class StreamMetadataHandler:
         self._username: str | None = None
         self._quality: str | None = None
 
+    def initialize_data(self) -> None:
+        self._process_data()
+
+    def update_data(self) -> None:
+        self._process_data()
+
     def get_username(self) -> str:
         assert isinstance(self._username, str)
 
@@ -48,24 +54,6 @@ class StreamMetadataHandler:
             raise InvalidQualityError()
         except AttributeError:
             raise QualityNotAvailableError()
-
-    def initialize_data(self) -> None:
-        self._process_data()
-
-    def update_data(self) -> None:
-        self._process_data()
-
-    def _get_username(self) -> str:
-        username = self._options_handler.get_option_val(OptionKey.USERNAME)
-        assert isinstance(username, (str, type(None)))
-
-        if not username:
-            raise NoUsernameEnteredError()
-
-        if not is_username_valid(username):
-            raise InvalidUsernameError(username)
-
-        return username
 
     def _process_data(self) -> None:
         if not self._username:
@@ -97,6 +85,18 @@ class StreamMetadataHandler:
                 else:
                     print(f"Extractor #{idx+1} ({extractor.__class__.__name__}) failed due to {type(e).__name__}. No more extractors to be used. The program will now exit.")
                     exit()
+
+    def _get_username(self) -> str:
+        username = self._options_handler.get_option_val(OptionKey.USERNAME)
+        assert isinstance(username, (str, type(None)))
+
+        if not username:
+            raise NoUsernameEnteredError()
+
+        if not is_username_valid(username):
+            raise InvalidUsernameError(username)
+
+        return username
 
     def _get_and_validate_source_data(self, extractor: Extractor, extractor_class: type[Extractor]) -> dict:
         source_data: dict = extractor.get_source_data()
