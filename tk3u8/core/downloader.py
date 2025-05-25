@@ -2,7 +2,6 @@ from datetime import datetime
 import time
 from yt_dlp import YoutubeDL
 from tk3u8.constants import LiveStatus, OptionKey, StreamLink
-from tk3u8.core import helper as hlp
 from tk3u8.exceptions import DownloadError, UserNotLiveError, UserPreparingForLiveError
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler

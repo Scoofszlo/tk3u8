@@ -1,7 +1,7 @@
 from typing import List
 from tk3u8.constants import LiveStatus, OptionKey, StreamLink
 from tk3u8.core.extractor import APIExtractor, Extractor, WebpageExtractor
-from tk3u8.core.helper import is_user_exists, is_user_live, is_username_valid
+from tk3u8.core.helper import is_user_exists, is_username_valid
 from tk3u8.exceptions import (
     HLSLinkNotFoundError,
     InvalidQualityError,

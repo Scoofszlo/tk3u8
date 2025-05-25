@@ -1,6 +1,4 @@
 import re
-from typing import Any
-from tk3u8.constants import LiveStatus
 from tk3u8.core.extractor import APIExtractor, Extractor, WebpageExtractor
 from tk3u8.exceptions import InvalidExtractorError, UnknownStatusCodeError, UserPreparingForLiveError
 
