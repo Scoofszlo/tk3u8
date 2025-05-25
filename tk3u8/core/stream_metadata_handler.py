@@ -1,5 +1,5 @@
 from typing import List
-from tk3u8.constants import OptionKey, StreamLink
+from tk3u8.constants import LiveStatus, OptionKey, StreamLink
 from tk3u8.core.extractor import APIExtractor, Extractor, WebpageExtractor
 from tk3u8.core.helper import is_user_exists, is_user_live, is_username_valid
 from tk3u8.exceptions import (
@@ -25,7 +25,7 @@ class StreamMetadataHandler:
         self._source_data: dict = {}
         self._stream_data: dict = {}
         self._stream_links: dict = {}
-        self._live_status_code: int | None = None
+        self._live_status: int | LiveStatus = None
         self._username: str | None = None
         self._quality: str | None = None
 
@@ -66,9 +66,9 @@ class StreamMetadataHandler:
                 extractor = extractor_class(self._username, self._request_handler)
 
                 self._source_data = self._get_and_validate_source_data(extractor, extractor_class)
-                self._live_status_code = extractor.get_live_status_code(self._source_data)
+                self._live_status = extractor.get_live_status(self._source_data)
 
-                if not is_user_live(self._live_status_code):
+                if self._live_status in (LiveStatus.OFFLINE, LiveStatus.PREPARING_TO_GO_LIVE):
                     break
 
                 self._stream_data = extractor.get_stream_data(self._source_data)
