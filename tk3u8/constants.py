@@ -29,6 +29,12 @@ class Quality(Enum):
     SD = "sd"
 
 
+class LiveStatus(Enum):
+    LIVE = "live"
+    PREPARING_TO_GO_LIVE = "preparting_to_go_live"
+    OFFLINE = "offline"
+
+
 class OptionKey(Enum):
     SESSIONID_SS = "sessionid_ss"
     TT_TARGET_IDC = "tt_target_idc"
