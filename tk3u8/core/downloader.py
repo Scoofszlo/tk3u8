@@ -1,9 +1,9 @@
 from datetime import datetime
 import time
 from yt_dlp import YoutubeDL
-from tk3u8.constants import OptionKey, StreamLink
+from tk3u8.constants import LiveStatus, OptionKey, StreamLink
 from tk3u8.core import helper as hlp
-from tk3u8.exceptions import DownloadError, UserNotLiveError
+from tk3u8.exceptions import DownloadError, UserNotLiveError, UserPreparingForLiveError
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
 from tk3u8.path_initializer import PathInitializer
@@ -22,24 +22,27 @@ class Downloader:
     def download(self):
         username = self._stream_metadata_handler._username
         wait_until_live = self._options_handler.get_option_val(OptionKey.WAIT_UNTIL_LIVE)
-        live_status_code = self._stream_metadata_handler._live_status_code
+        live_status = self._stream_metadata_handler._live_status
 
         assert isinstance(username, str)
         assert isinstance(wait_until_live, int)
-        assert isinstance(live_status_code, int)
+        assert isinstance(live_status, LiveStatus)
 
-        if not hlp.is_user_live(live_status_code):
+        if live_status in (LiveStatus.OFFLINE, LiveStatus.PREPARING_TO_GO_LIVE):
             if not wait_until_live:
-                raise UserNotLiveError(username)
+                if live_status == LiveStatus.OFFLINE:
+                    raise UserNotLiveError(username)
+                elif live_status == LiveStatus.PREPARING_TO_GO_LIVE:
+                    raise UserPreparingForLiveError(username)
 
             print(f"User @{username} is currently offline. Awaiting @{username} to start streaming.")
 
             try:
-                while not hlp.is_user_live(live_status_code):
+                while not live_status == LiveStatus.LIVE:
                     self._checking_timeout()
                     self._update_data()
-                    live_status_code = self._stream_metadata_handler._live_status_code
-                    assert isinstance(live_status_code, int)
+                    live_status = self._stream_metadata_handler._live_status
+                    assert isinstance(live_status, LiveStatus)
             except KeyboardInterrupt:
                 print("Checking cancelled by user. Exiting...")
                 exit(0)
