@@ -1,4 +1,3 @@
-from typing import cast
 from tk3u8.constants import OptionKey, Quality
 from tk3u8.core.downloader import Downloader
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
@@ -35,11 +34,7 @@ class Tk3u8:
             timeout=timeout
         )
         self._stream_metadata_handler.initialize_data()
-
-        username = cast(str, self._stream_metadata_handler._username)
-        assert isinstance(username, str)
-
-        self._downloader.download(username=username, wait_until_live=wait_until_live)
+        self._downloader.download()
 
     def set_proxy(self, proxy: str | None) -> None:
         self._options_handler.save_args_values({OptionKey.PROXY.value: proxy})

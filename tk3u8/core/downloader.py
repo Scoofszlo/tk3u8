@@ -19,8 +19,13 @@ class Downloader:
         self._options_handler = options_handler
         self._stream_metadata_handler = stream_metadata_handler
 
-    def download(self, username: str, wait_until_live: bool):
+    def download(self):
+        username = self._stream_metadata_handler._username
+        wait_until_live = self._options_handler.get_option_val(OptionKey.WAIT_UNTIL_LIVE)
         live_status_code = self._stream_metadata_handler._live_status_code
+
+        assert isinstance(username, str)
+        assert isinstance(wait_until_live, int)
         assert isinstance(live_status_code, int)
 
         if not hlp.is_user_live(live_status_code):
@@ -42,7 +47,6 @@ class Downloader:
             print(f"\nUser @{username} is now streaming live.")
 
         stream_link = self._stream_metadata_handler.get_stream_link()
-        assert isinstance(stream_link, StreamLink)
 
         self._start_download(username, stream_link)
 
