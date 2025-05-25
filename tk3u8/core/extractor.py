@@ -3,7 +3,8 @@ import json
 
 from bs4 import BeautifulSoup
 
-from tk3u8.constants import Quality
+from tk3u8.constants import LiveStatus, Quality
+from tk3u8.core.helper import get_live_status
 from tk3u8.exceptions import (
     HLSLinkNotFoundError,
     LiveStatusCodeNotFoundError,
@@ -33,8 +34,11 @@ class Extractor(ABC):
         """Gets the stream data from the extracted source data."""
 
     @abstractmethod
-    def get_live_status_code(self, source_data: dict) -> int:
-        """Gets the live status code from the extracted source data."""
+    def get_live_status(self, source_data: dict) -> LiveStatus:
+        """
+        Gets the live status code from the extracted source data, then returns
+        a LiveStatus constant.
+        """
 
     def get_stream_links(self, stream_data: dict) -> dict:
         """
@@ -85,9 +89,11 @@ class APIExtractor(Extractor):
         except KeyError:
             raise StreamDataNotFoundError(self._username)
 
-    def get_live_status_code(self, source_data: dict) -> int:
+    def get_live_status(self, source_data: dict) -> LiveStatus:
         try:
-            return source_data["data"]["user"]["status"]
+            status_code = source_data["data"]["user"]["status"]
+
+            return get_live_status(status_code)
         except KeyError:
             raise LiveStatusCodeNotFoundError(self._username)
 
@@ -114,8 +120,10 @@ class WebpageExtractor(Extractor):
         except KeyError:
             raise StreamDataNotFoundError(self._username)
 
-    def get_live_status_code(self, source_data: dict) -> int:
+    def get_live_status(self, source_data: dict) -> LiveStatus:
         try:
-            return source_data["LiveRoom"]["liveRoomUserInfo"]["user"]["status"]
+            status_code = source_data["LiveRoom"]["liveRoomUserInfo"]["user"]["status"]
+
+            return get_live_status(status_code)
         except KeyError:
             raise LiveStatusCodeNotFoundError(self._username)
