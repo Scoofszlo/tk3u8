@@ -29,6 +29,16 @@ class StreamMetadataHandler:
         self._username: str | None = None
         self._quality: str | None = None
 
+    def get_username(self) -> str:
+        assert isinstance(self._username, str)
+
+        return self._username
+
+    def get_live_status(self) -> LiveStatus:
+        assert isinstance(self._live_status, LiveStatus)
+
+        return self._live_status
+
     def get_stream_link(self) -> StreamLink:
         assert isinstance(self._quality, str)
 
