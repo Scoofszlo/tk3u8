@@ -25,7 +25,7 @@ class StreamMetadataHandler:
         self._source_data: dict = {}
         self._stream_data: dict = {}
         self._stream_links: dict = {}
-        self._live_status: int | LiveStatus = None
+        self._live_status: LiveStatus | None = None
         self._username: str | None = None
         self._quality: str | None = None
 
