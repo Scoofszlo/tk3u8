@@ -1,5 +1,6 @@
 import re
 from typing import Any
+from tk3u8.constants import LiveStatus
 from tk3u8.core.extractor import APIExtractor, Extractor, WebpageExtractor
 from tk3u8.exceptions import InvalidExtractorError, UnknownStatusCodeError, UserPreparingForLiveError
 
@@ -36,6 +37,17 @@ def is_user_live(status_code: int) -> bool:
         return True
     elif status_code == 4:
         return False
+    else:
+        raise UnknownStatusCodeError(status_code)
+
+
+def get_live_status(status_code: int) -> bool:
+    if status_code == 1:
+        return LiveStatus.PREPARING_TO_GO_LIVE
+    elif status_code == 2:
+        return LiveStatus.LIVE
+    elif status_code == 4:
+        return LiveStatus.OFFLINE
     else:
         raise UnknownStatusCodeError(status_code)
 
