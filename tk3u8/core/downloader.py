@@ -19,9 +19,9 @@ class Downloader:
         self._stream_metadata_handler = stream_metadata_handler
 
     def download(self):
-        username = self._stream_metadata_handler._username
+        username = self._stream_metadata_handler.get_username()
         wait_until_live = self._options_handler.get_option_val(OptionKey.WAIT_UNTIL_LIVE)
-        live_status = self._stream_metadata_handler._live_status
+        live_status = self._stream_metadata_handler.get_live_status()
 
         assert isinstance(username, str)
         assert isinstance(wait_until_live, int)
