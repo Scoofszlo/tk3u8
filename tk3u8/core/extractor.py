@@ -13,6 +13,10 @@ from tk3u8.exceptions import (
     WAFChallengeError
 )
 from tk3u8.session.request_handler import RequestHandler
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class Extractor(ABC):
@@ -63,6 +67,7 @@ class Extractor(ABC):
             # Link can be an empty string. Based on my testing, this errpr
             # will most likely to happen for those who live in the US region.
             if link == "":
+                logger.exception(f"{HLSLinkNotFoundError.__name__}: {HLSLinkNotFoundError(self._username)}")
                 raise HLSLinkNotFoundError(self._username)
 
             stream_links.update({
@@ -70,6 +75,8 @@ class Extractor(ABC):
             })
 
         stream_links["original"] = stream_links.pop("origin")
+
+        logger.debug(f"Retrieved stream links for user @{self._username}: {stream_links}")
 
         return stream_links
 
@@ -81,6 +88,7 @@ class Extractor(ABC):
         elif status_code == 4:
             return LiveStatus.OFFLINE
         else:
+            logger.exception(f"{UnknownStatusCodeError.__name__}: {UnknownStatusCodeError(status_code)}")
             raise UnknownStatusCodeError(status_code)
 
 
@@ -89,22 +97,30 @@ class APIExtractor(Extractor):
         response = self._request_handler.get_data(f"https://www.tiktok.com/api-live/user/room?aid=1988&sourceType=54&uniqueId={self._username}")
 
         soup = BeautifulSoup(response.text, "html.parser")
-        content = soup.text
+        content = json.loads(soup.text)
 
-        return json.loads(content)
+        logger.debug(f"Fetched content for user @{self._username}: {content}")
+
+        return content
 
     def get_stream_data(self, source_data: dict) -> dict:
         try:
-            return json.loads(source_data["data"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
+            stream_data = json.loads(source_data["data"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
+            logger.debug(f"Extracted stream_data for user @{self._username}: {stream_data}")
+
+            return stream_data
         except KeyError:
+            logger.exception(f"{StreamDataNotFoundError.__name__}: {StreamDataNotFoundError(self._username)}")
             raise StreamDataNotFoundError(self._username)
 
     def get_live_status(self, source_data: dict) -> LiveStatus:
         try:
             status_code = source_data["data"]["user"]["status"]
+            logger.debug(f"Extracted status_code for user @{self._username}: {status_code}")
 
             return self._get_live_status(status_code)
         except KeyError:
+            logger.exception(f"{LiveStatusCodeNotFoundError.__name__}: {LiveStatusCodeNotFoundError(self._username)}")
             raise LiveStatusCodeNotFoundError(self._username)
 
 
@@ -113,27 +129,38 @@ class WebpageExtractor(Extractor):
         response = self._request_handler.get_data(f"https://www.tiktok.com/@{self._username}/live")
 
         if "Please wait..." in response.text:
+            logger.exception(f"{WAFChallengeError.__name__}: {WAFChallengeError}")
             raise WAFChallengeError()
 
         soup = BeautifulSoup(response.text, "html.parser")
         script_tag = soup.find("script", {"id": "SIGI_STATE"})
 
         if not script_tag:
+            logger.exception(f"{SigiStateMissingError.__name__}: {SigiStateMissingError}")
             raise SigiStateMissingError()
 
-        script_content = script_tag.text
-        return json.loads(script_content)
+        content = json.loads(script_tag.text)
+
+        logger.debug(f"Fetched content for user @{self._username}: {content}")
+
+        return content
 
     def get_stream_data(self, source_data: dict) -> dict:
         try:
-            return json.loads(source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
+            stream_data = json.loads(source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
+            logger.debug(f"Extracted stream_data for user @{self._username}: {stream_data}")
+
+            return stream_data
         except KeyError:
+            logger.exception(f"{StreamDataNotFoundError.__name__}: {StreamDataNotFoundError(self._username)}")
             raise StreamDataNotFoundError(self._username)
 
     def get_live_status(self, source_data: dict) -> LiveStatus:
         try:
             status_code = source_data["LiveRoom"]["liveRoomUserInfo"]["user"]["status"]
+            logger.debug(f"Extracted status_code for user @{self._username}: {status_code}")
 
             return self._get_live_status(status_code)
         except KeyError:
+            logger.exception(f"{LiveStatusCodeNotFoundError.__name__}: {LiveStatusCodeNotFoundError(self._username)}")
             raise LiveStatusCodeNotFoundError(self._username)

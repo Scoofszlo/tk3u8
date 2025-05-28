@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 import time
 from yt_dlp import YoutubeDL
 from tk3u8.constants import LiveStatus, OptionKey, StreamLink
@@ -6,6 +7,9 @@ from tk3u8.exceptions import DownloadError, UserNotLiveError, UserPreparingForLi
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
 from tk3u8.path_initializer import PathInitializer
+
+
+logger = logging.getLogger(__name__)
 
 
 class Downloader:
@@ -53,7 +57,9 @@ class Downloader:
         self._start_download(username, stream_link)
 
     def _start_download(self, username: str, stream_link: StreamLink) -> None:
-        print(f"Starting download:\nUsername: @{username}\nQuality: {stream_link.quality}\nStream Link: {stream_link.link}\n")
+        starting_download_msg = f"Starting download for user @{username} (quality: {stream_link.quality}, stream Link: {stream_link.link})"
+        print(starting_download_msg, "\n")
+        logger.debug(starting_download_msg)
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
         filename = f"{username}-{timestamp}-{stream_link.quality}"
@@ -67,8 +73,12 @@ class Downloader:
         try:
             with YoutubeDL(ydl_opts) as ydl:  # type: ignore[arg-type]
                 ydl.download([stream_link.link])
-                print(f"\nFinished downloading {filename}.mp4")
+
+                finished_downloading_msg = f"Finished downloading {filename}.mp4 (saved at: {filename_with_download_dir.replace('%(ext)s', 'mp4')}"
+                print(finished_downloading_msg)
+                logger.debug(finished_downloading_msg)
         except Exception as e:
+            logger.exception(f"{DownloadError.__name__}: {DownloadError(e)}")
             raise DownloadError(e)
 
     def _update_data(self) -> None:

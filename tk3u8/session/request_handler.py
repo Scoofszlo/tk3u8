@@ -1,8 +1,12 @@
+import logging
 import requests
 from tk3u8.constants import OptionKey
 from tk3u8.exceptions import RequestFailedError
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.session.helper import get_random_user_agent
+
+
+logger = logging.getLogger(__name__)
 
 
 class RequestHandler:
@@ -20,6 +24,7 @@ class RequestHandler:
         self._response = self._session.get(url)
 
         if self._response.status_code != 200:
+            logger.exception(f"{RequestFailedError.__name__}: {RequestFailedError(self._response.status_code)}")
             raise RequestFailedError(status_code=self._response.status_code)
 
         return self._response
@@ -31,6 +36,8 @@ class RequestHandler:
                     "https": proxy
             })
 
+            logger.debug(f"Proxy updated to: {proxy}")
+
     def _setup_cookies(self) -> None:
         sessionid_ss = self._options_handler.get_option_val(OptionKey.SESSIONID_SS)
         tt_target_idc = self._options_handler.get_option_val(OptionKey.TT_TARGET_IDC)
@@ -40,14 +47,18 @@ class RequestHandler:
 
         if sessionid_ss is None and tt_target_idc is None:
             return
+
         if sessionid_ss:
             self._session.cookies.update({
                 "sessionid_ss": sessionid_ss
             })
+            logger.debug(f"'sessionid_ss' cookie set to: {sessionid_ss}")
+
         if tt_target_idc:
             self._session.cookies.update({
                 "tt-target-idc": tt_target_idc
             })
+            logger.debug(f"'tt-target-idc' cookie set to: {tt_target_idc}")
 
     def _setup_proxy(self) -> None:
         proxy = self._options_handler.get_option_val(OptionKey.PROXY)
