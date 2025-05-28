@@ -1,9 +1,9 @@
 import logging
+import random
 import requests
-from tk3u8.constants import OptionKey
+from tk3u8.constants import USER_AGENT_LIST, OptionKey
 from tk3u8.exceptions import RequestFailedError
 from tk3u8.options_handler import OptionsHandler
-from tk3u8.session.helper import get_random_user_agent
 
 
 logger = logging.getLogger(__name__)
@@ -16,7 +16,7 @@ class RequestHandler:
         self._setup_cookies()
         self._setup_proxy()
         self._session.headers.update({
-            "User-Agent": get_random_user_agent()
+            "User-Agent": self.get_random_user_agent()
         })
         self._response: requests.Response
 
@@ -66,3 +66,9 @@ class RequestHandler:
 
         if proxy:
             self.update_proxy(proxy)
+
+    def get_random_user_agent(self) -> str:
+        random_ua = random.choice(USER_AGENT_LIST)
+
+        logger.debug(f"Random User-Agent selected: {random_ua}")
+        return random_ua
