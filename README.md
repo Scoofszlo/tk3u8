@@ -32,12 +32,13 @@ tk3u8 is a Python program that helps you download live streams from TikTok. The 
     ```
 8. Run the program.
     ```sh
-    uv run -m tk3u8 -h
+    uv run cli.py -h
     ```
     When installed properly, the output should look like this:
     ```text
-    Usage: __main__.py [-h] [-q {original,uhd_60,uhd,hd_60,hd,ld,sd}] [--proxy PROXY] username
-
+    Usage: cli.py [-h] [-q {original,uhd_60,uhd,hd_60,hd,ld,sd}] [--proxy PROXY] username
+                  [--wait_until_live] [--timeout TIMEOUT] username
+    
     tk3u8 - A TikTok live downloader
 
     Positional Arguments:
@@ -53,11 +54,11 @@ tk3u8 is a Python program that helps you download live streams from TikTok. The 
     ```
 
 ## Quickstart
-After installation, you can now use the project's folder, open the terminal there and run, for example,`uv run -m tk3u8 -h` every time.
+After installation, you can now use the project's folder, open the terminal there and run, for example,`uv run cli.py -h` every time.
 
 To download a live stream from a user, simply run:
 ```sh
-uv run -m tk3u8 username
+uv run cli.py username
 ```
 
 If the user is not live, the program will raise an error:
