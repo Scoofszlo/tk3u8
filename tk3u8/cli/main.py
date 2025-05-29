@@ -15,8 +15,9 @@ def start_cli() -> None:
     proxy = args.proxy
     wait_until_live = args.wait_until_live
     timeout = args.timeout
+    log_level = args.log_level
 
-    _setup_logging()
+    _setup_logging(log_level)
 
     tk3u8 = Tk3u8()
     tk3u8.set_proxy(proxy)
@@ -28,7 +29,10 @@ def start_cli() -> None:
     )
 
 
-def _setup_logging() -> None:
+def _setup_logging(log_level: str | None) -> None:
+    if not log_level:
+        return
+
     logger.setLevel(logging.DEBUG)
 
     log_directory = os.path.join("user_data", "logs")
@@ -40,6 +44,6 @@ def _setup_logging() -> None:
     log_file = os.path.join(log_directory, log_filename)
 
     file_handler = logging.FileHandler(log_file, encoding='utf-8')
-    file_handler.setLevel(logging.DEBUG)
+    file_handler.setLevel(log_level)
     file_handler.setFormatter(logging.Formatter('%(asctime)s | %(levelname)s | %(name)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S%z'))
     logger.addHandler(file_handler)
