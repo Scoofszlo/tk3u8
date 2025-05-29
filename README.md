@@ -36,8 +36,8 @@ tk3u8 is a Python program that helps you download live streams from TikTok. The 
     ```
     When installed properly, the output should look like this:
     ```text
-    Usage: cli.py [-h] [-q {original,uhd_60,uhd,hd_60,hd,ld,sd}] [--proxy PROXY] username
-                  [--wait_until_live] [--timeout TIMEOUT] username
+    Usage: cli.py [-h] [-q {original,uhd_60,uhd,hd_60,hd,ld,sd}] [--proxy PROXY]
+                  [--wait_until_live] [--timeout TIMEOUT] [--log_level {DEBUG,ERROR}] username
     
     tk3u8 - A TikTok live downloader
 
@@ -51,6 +51,8 @@ tk3u8 is a Python program that helps you download live streams from TikTok. The 
     --proxy PROXY           The proxy server to use for downloading. Sample format: 127.0.0.1:8080
     --wait_until_live       Let the program wait until the user goes live to start downloading stream
     --timeout TIMEOUT       Set the timeout in seconds before rechecking if the user is live.
+    --log_level {DEBUG,ERROR}
+                            Set the logging level (default: no logging if not used)
     ```
 
 ## Quickstart
