@@ -50,3 +50,9 @@ class ArgsHandler():
             type=int,
             default=30
         )
+        self._parser.add_argument(
+            "--log_level",
+            help="Set the logging level (default: no logging if not used)",
+            choices=["DEBUG", "ERROR"],
+            dest="log_level"
+        )
