@@ -40,23 +40,11 @@ class Downloader:
                     raise UserPreparingForLiveError(username)
 
             offline_msg = f"User [b]@{username}[/b] is [red]currently offline[/red]. Awaiting [b]@{username}[/b] to start streaming..."
-
-            with Live(render_lines(offline_msg)) as live:
-                try:
-                    while not live_status == LiveStatus.LIVE:
-                        self._checking_timeout(live, offline_msg)
-                        self._update_data()
-                        live_status = self._stream_metadata_handler._live_status
-                        assert isinstance(live_status, LiveStatus)
-                    live.update(render_lines())
-                except KeyboardInterrupt:
-                    live.update(render_lines(offline_msg, "Checking cancelled by user. Exiting..."))
-                    exit(0)
+            self._wait_until_live(offline_msg, live_status)
 
         console.print(f"User [b]@{username}[/b] is now [b][green]streaming live.[/b][/green]")
 
         stream_link = self._stream_metadata_handler.get_stream_link()
-
         self._start_download(username, stream_link)
 
     def _start_download(self, username: str, stream_link: StreamLink) -> None:
@@ -83,6 +71,18 @@ class Downloader:
         except Exception as e:
             logger.exception(f"{DownloadError.__name__}: {DownloadError(e)}")
             raise DownloadError(e)
+
+    def _wait_until_live(self, offline_msg: str, live_status: LiveStatus):
+        with Live(render_lines(offline_msg)) as live:
+            try:
+                while not live_status == LiveStatus.LIVE:
+                    self._checking_timeout(live, offline_msg)
+                    self._update_data()
+                    live_status = self._stream_metadata_handler.get_live_status()
+                live.update(render_lines())
+            except KeyboardInterrupt:
+                live.update(render_lines(offline_msg, "Checking cancelled by user. Exiting..."))
+                exit(0)
 
     def _update_data(self) -> None:
         self._stream_metadata_handler.update_data()
