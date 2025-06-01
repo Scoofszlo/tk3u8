@@ -3,6 +3,7 @@ import logging
 import time
 from yt_dlp import YoutubeDL
 from tk3u8.constants import LiveStatus, OptionKey, StreamLink
+from tk3u8.cli.console import console, Live, render_lines
 from tk3u8.exceptions import DownloadError, UserNotLiveError, UserPreparingForLiveError
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
@@ -38,27 +39,29 @@ class Downloader:
                 elif live_status == LiveStatus.PREPARING_TO_GO_LIVE:
                     raise UserPreparingForLiveError(username)
 
-            print(f"User @{username} is currently offline. Awaiting @{username} to start streaming.")
+            offline_msg = f"User [b]@{username}[/b] is [red]currently offline[/red]. Awaiting [b]@{username}[/b] to start streaming..."
 
-            try:
-                while not live_status == LiveStatus.LIVE:
-                    self._checking_timeout()
-                    self._update_data()
-                    live_status = self._stream_metadata_handler._live_status
-                    assert isinstance(live_status, LiveStatus)
-            except KeyboardInterrupt:
-                print("Checking cancelled by user. Exiting...")
-                exit(0)
+            with Live(render_lines(offline_msg)) as live:
+                try:
+                    while not live_status == LiveStatus.LIVE:
+                        self._checking_timeout(live, offline_msg)
+                        self._update_data()
+                        live_status = self._stream_metadata_handler._live_status
+                        assert isinstance(live_status, LiveStatus)
+                    live.update(render_lines())
+                except KeyboardInterrupt:
+                    live.update(render_lines(offline_msg, "Checking cancelled by user. Exiting..."))
+                    exit(0)
 
-            print(f"\nUser @{username} is now streaming live.")
+        console.print(f"User [b]@{username}[/b] is now [b][green]streaming live.[/b][/green]")
 
         stream_link = self._stream_metadata_handler.get_stream_link()
 
         self._start_download(username, stream_link)
 
     def _start_download(self, username: str, stream_link: StreamLink) -> None:
-        starting_download_msg = f"Starting download for user @{username} (quality: {stream_link.quality}, stream Link: {stream_link.link})"
-        print(starting_download_msg, "\n")
+        starting_download_msg = f"Starting download for user [b]@{username}[/b] [grey50](quality: {stream_link.quality}, stream Link: {stream_link.link})[/grey50]"
+        console.print(starting_download_msg, end="\n\n")
         logger.debug(starting_download_msg)
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
@@ -84,16 +87,15 @@ class Downloader:
     def _update_data(self) -> None:
         self._stream_metadata_handler.update_data()
 
-    def _checking_timeout(self) -> None:
+    def _checking_timeout(self, live: Live, offline_msg: str) -> None:
         seconds_left = self._options_handler.get_option_val(OptionKey.TIMEOUT)
         assert isinstance(seconds_left, int)
 
         seconds_left_len = len(str(seconds_left))
         seconds_extra_space = " " * seconds_left_len
-        checking_extra_space = 8 + seconds_left_len
 
-        while seconds_left >= 0:
-            print(f"Retrying in {seconds_left} seconds{seconds_extra_space}", end="\r")
-            seconds_left -= 1
+        for remaining in range(seconds_left, -1, -1):
+            live.update(render_lines(offline_msg, f"[bold yellow]Retrying in {remaining} seconds{seconds_extra_space}"))
             time.sleep(1)
-        print(f"Checking... {' ' * (checking_extra_space)}", end="\r")
+
+        live.update(render_lines(offline_msg, "Checking..."))

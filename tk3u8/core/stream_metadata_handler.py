@@ -1,6 +1,7 @@
 import logging
 from typing import List
 from tk3u8.constants import LiveStatus, OptionKey, StreamLink
+from tk3u8.cli.console import console
 from tk3u8.core.extractor import APIExtractor, Extractor, WebpageExtractor
 from tk3u8.core.helper import is_user_exists, is_username_valid
 from tk3u8.exceptions import (
@@ -34,7 +35,8 @@ class StreamMetadataHandler:
         self._quality: str | None = None
 
     def initialize_data(self) -> None:
-        self._process_data()
+        with console.status("Processing data..."):
+            self._process_data()
 
     def update_data(self) -> None:
         self._process_data()
