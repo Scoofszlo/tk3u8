@@ -6,6 +6,7 @@ from tk3u8 import logger
 
 def setup_logging(log_level: str | None) -> None:
     if not log_level:
+        logger.setLevel(logging.CRITICAL + 1)  # Avoid printing of log messages
         return
 
     logger.setLevel(logging.DEBUG)
