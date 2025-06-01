@@ -1,5 +1,6 @@
 from datetime import datetime
 import logging
+import os
 import time
 from yt_dlp import YoutubeDL
 from tk3u8.constants import LiveStatus, OptionKey, StreamLink
@@ -54,7 +55,7 @@ class Downloader:
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
         filename = f"{username}-{timestamp}-{stream_link.quality}"
-        filename_with_download_dir = self._path_initializer.DOWNLOAD_DIR + f"/{username}/{filename}.%(ext)s"
+        filename_with_download_dir = os.path.join(self._path_initializer.DOWNLOAD_DIR, f"{username}", f"{filename}.%(ext)s")
 
         ydl_opts = {
             'outtmpl': filename_with_download_dir,
