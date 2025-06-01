@@ -1,5 +1,6 @@
 from datetime import datetime
 import logging
+import os
 import time
 from yt_dlp import YoutubeDL
 from tk3u8.constants import LiveStatus, OptionKey, StreamLink
@@ -54,7 +55,7 @@ class Downloader:
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M")
         filename = f"{username}-{timestamp}-{stream_link.quality}"
-        filename_with_download_dir = self._path_initializer.DOWNLOAD_DIR + f"/{username}/{filename}.%(ext)s"
+        filename_with_download_dir = os.path.join(self._path_initializer.DOWNLOAD_DIR, f"{username}", f"{filename}.%(ext)s")
 
         ydl_opts = {
             'outtmpl': filename_with_download_dir,
@@ -65,8 +66,8 @@ class Downloader:
             with YoutubeDL(ydl_opts) as ydl:  # type: ignore[arg-type]
                 ydl.download([stream_link.link])
 
-                finished_downloading_msg = f"Finished downloading {filename}.mp4 (saved at: {filename_with_download_dir.replace('%(ext)s', 'mp4')}"
-                print(finished_downloading_msg)
+                finished_downloading_msg = f"[green]Finished downloading[/green] [b]{filename}.mp4[/b] [grey50](saved at: {filename_with_download_dir.replace('%(ext)s', 'mp4')})[/grey50]"
+                console.print("\n" + finished_downloading_msg)
                 logger.debug(finished_downloading_msg)
         except Exception as e:
             logger.exception(f"{DownloadError.__name__}: {DownloadError(e)}")
