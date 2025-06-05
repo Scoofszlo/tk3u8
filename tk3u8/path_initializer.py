@@ -24,7 +24,6 @@ class PathInitializer:
     def _set_base_dir(self, base_dir) -> None:
         # Set up main directory and file paths
         self.PROGRAM_DATA_DIR = base_dir if base_dir else "user_data"
-        self.STREAM_DATA_FILE = os.path.join(self.PROGRAM_DATA_DIR, "stream_data.json")
         self.CONFIG_FILE_PATH = os.path.join(self.PROGRAM_DATA_DIR, "config.toml")
         self.DOWNLOAD_DIR = os.path.join(self.PROGRAM_DATA_DIR, "downloads")
 
