@@ -25,7 +25,7 @@ class PathInitializer:
     def _set_base_dir(self, base_dir) -> None:
         # Set up main directory and file paths
         self.PROGRAM_DATA_DIR = base_dir if base_dir else self._get_default_base_path()
-        self.CONFIG_FILE_PATH = os.path.join(self.PROGRAM_DATA_DIR, "config.toml")
+        self.CONFIG_FILE_PATH = os.path.join(self.PROGRAM_DATA_DIR, "tk3u8.conf")
         self.DOWNLOAD_DIR = os.path.join(self.PROGRAM_DATA_DIR, "downloads")
 
         self._initialize_paths()
