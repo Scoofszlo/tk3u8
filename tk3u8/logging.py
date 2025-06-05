@@ -1,6 +1,8 @@
 from datetime import datetime
 import logging
 import os
+
+from platformdirs import user_data_path
 from tk3u8 import logger
 
 
@@ -11,7 +13,7 @@ def setup_logging(log_level: str | None) -> None:
 
     logger.setLevel(logging.DEBUG)
 
-    log_directory = os.path.join("user_data", "logs")
+    log_directory = os.path.join(user_data_path(), "tk3u8", "logs")
 
     if not os.path.exists(log_directory):
         os.mkdir(log_directory)
