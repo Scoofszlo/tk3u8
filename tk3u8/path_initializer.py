@@ -1,6 +1,6 @@
 import os
 import toml
-from platformdirs import user_data_path
+from platformdirs import user_data_path, user_downloads_path
 from tk3u8.constants import DEFAULT_CONFIG
 
 
@@ -26,7 +26,7 @@ class PathInitializer:
         # Set up main directory and file paths
         self.PROGRAM_DATA_DIR = base_dir if base_dir else self._get_default_base_path()
         self.CONFIG_FILE_PATH = os.path.join(self.PROGRAM_DATA_DIR, "tk3u8.conf")
-        self.DOWNLOAD_DIR = os.path.join(self.PROGRAM_DATA_DIR, "downloads")
+        self.DOWNLOAD_DIR = os.path.join(user_downloads_path(), "tk3u8")
 
         self._initialize_paths()
 
