@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import List, Optional
 from tk3u8.constants import LiveStatus, OptionKey, StreamLink
 from tk3u8.cli.console import console
 from tk3u8.core.extractor import APIExtractor, Extractor, WebpageExtractor
@@ -34,9 +34,9 @@ class StreamMetadataHandler:
         self._username: str | None = None
         self._quality: str | None = None
 
-    def initialize_data(self) -> None:
+    def initialize_data(self, username: str, quality: str) -> None:
         with console.status("Processing data..."):
-            self._process_data()
+            self._process_data(username, quality)
 
     def update_data(self) -> None:
         self._process_data()
@@ -52,8 +52,6 @@ class StreamMetadataHandler:
         return self._live_status
 
     def get_stream_link(self) -> StreamLink:
-        assert isinstance(self._quality, str)
-
         try:
             if self._quality in self._stream_links:
                 stream_link = StreamLink(self._quality, self._stream_links[self._quality])
@@ -66,9 +64,12 @@ class StreamMetadataHandler:
             logger.exception(f"{QualityNotAvailableError.__name__}: {QualityNotAvailableError}")
             raise QualityNotAvailableError()
 
-    def _process_data(self) -> None:
-        if not self._username:
-            self._username = self._get_username()
+    def _process_data(self, username: Optional[str] = None, quality: Optional[str] = None) -> None:
+        if username:
+            self._username = self._validate_username(username)
+
+        if quality:
+            self._quality = self._validate_quality(quality)
 
         logger.debug(f"Processing data for user @{self._username}")
 
@@ -87,7 +88,6 @@ class StreamMetadataHandler:
 
                 self._stream_data = extractor.get_stream_data(self._source_data)
                 self._stream_links = extractor.get_stream_links(self._stream_data)
-                self._quality = self._get_and_validate_quality()
 
                 break
             except (
@@ -106,10 +106,7 @@ class StreamMetadataHandler:
                     logger.error(error_msg)
                     exit()
 
-    def _get_username(self) -> str:
-        username = self._options_handler.get_option_val(OptionKey.USERNAME)
-        assert isinstance(username, (str, type(None)))
-
+    def _validate_username(self, username: str) -> str:
         if not username:
             logger.exception(f"{NoUsernameEnteredError.__name__}: {NoUsernameEnteredError()}")
             raise NoUsernameEnteredError()
@@ -131,10 +128,7 @@ class StreamMetadataHandler:
 
         return source_data
 
-    def _get_and_validate_quality(self) -> str:
-        quality = self._options_handler.get_option_val(OptionKey.QUALITY)
-        assert isinstance(quality, str)
-
+    def _validate_quality(self, quality: str) -> str:
         logger.debug(f"Selected quality: {quality}")
 
         return quality

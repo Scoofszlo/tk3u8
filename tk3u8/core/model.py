@@ -33,12 +33,10 @@ class Tk3u8:
             timeout: int = 30
     ) -> None:
         self._options_handler.save_args_values(
-            username=username,
-            quality=quality,
             wait_until_live=wait_until_live,
             timeout=timeout
         )
-        self._stream_metadata_handler.initialize_data()
+        self._stream_metadata_handler.initialize_data(username, quality)
         self._downloader.download()
 
     def set_proxy(self, proxy: str | None) -> None:
