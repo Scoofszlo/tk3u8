@@ -32,11 +32,10 @@ class StreamMetadataHandler:
         self._stream_links: dict = {}
         self._live_status: LiveStatus | None = None
         self._username: str | None = None
-        self._quality: str | None = None
 
-    def initialize_data(self, username: str, quality: str) -> None:
+    def initialize_data(self, username: str) -> None:
         with console.status("Processing data..."):
-            self._process_data(username, quality)
+            self._process_data(username)
 
     def update_data(self) -> None:
         self._process_data()
@@ -51,10 +50,10 @@ class StreamMetadataHandler:
 
         return self._live_status
 
-    def get_stream_link(self) -> StreamLink:
+    def get_stream_link(self, quality: str) -> StreamLink:
         try:
-            if self._quality in self._stream_links:
-                stream_link = StreamLink(self._quality, self._stream_links[self._quality])
+            if quality in self._stream_links:
+                stream_link = StreamLink(quality, self._stream_links[quality])
                 logger.debug(f"Chosen stream link: {stream_link}")
 
                 return stream_link
@@ -64,12 +63,9 @@ class StreamMetadataHandler:
             logger.exception(f"{QualityNotAvailableError.__name__}: {QualityNotAvailableError}")
             raise QualityNotAvailableError()
 
-    def _process_data(self, username: Optional[str] = None, quality: Optional[str] = None) -> None:
+    def _process_data(self, username: Optional[str] = None):
         if username:
             self._username = self._validate_username(username)
-
-        if quality:
-            self._quality = self._validate_quality(quality)
 
         logger.debug(f"Processing data for user @{self._username}")
 
@@ -127,8 +123,3 @@ class StreamMetadataHandler:
             raise UserNotFoundError(self._username)
 
         return source_data
-
-    def _validate_quality(self, quality: str) -> str:
-        logger.debug(f"Selected quality: {quality}")
-
-        return quality

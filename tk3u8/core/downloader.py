@@ -24,7 +24,7 @@ class Downloader:
         self._options_handler = options_handler
         self._stream_metadata_handler = stream_metadata_handler
 
-    def download(self):
+    def download(self, quality: str):
         username = self._stream_metadata_handler.get_username()
         wait_until_live = self._options_handler.get_option_val(OptionKey.WAIT_UNTIL_LIVE)
         live_status = self._stream_metadata_handler.get_live_status()
@@ -45,7 +45,7 @@ class Downloader:
 
         console.print(f"User [b]@{username}[/b] is now [b][green]streaming live.[/b][/green]")
 
-        stream_link = self._stream_metadata_handler.get_stream_link()
+        stream_link = self._stream_metadata_handler.get_stream_link(quality)
         self._start_download(username, stream_link)
 
     def _start_download(self, username: str, stream_link: StreamLink) -> None:
