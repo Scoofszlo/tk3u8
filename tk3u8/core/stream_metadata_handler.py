@@ -1,6 +1,6 @@
 import logging
 from typing import List, Optional
-from tk3u8.constants import LiveStatus, OptionKey, StreamLink
+from tk3u8.constants import LiveStatus, StreamLink
 from tk3u8.cli.console import console
 from tk3u8.core.extractor import APIExtractor, Extractor, WebpageExtractor
 from tk3u8.core.helper import is_user_exists, is_username_valid
@@ -67,6 +67,7 @@ class StreamMetadataHandler:
         if username:
             self._username = self._validate_username(username)
 
+        assert isinstance(self._username, str)
         logger.debug(f"Processing data for user @{self._username}")
 
         for idx, extractor_class in enumerate(self._extractor_classes):
