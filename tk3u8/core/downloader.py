@@ -53,7 +53,7 @@ class Downloader:
         console.print(starting_download_msg, end="\n\n")
         logger.debug(starting_download_msg)
 
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"{username}-{timestamp}-{stream_link.quality}"
         filename_with_download_dir = os.path.join(self._path_initializer.DOWNLOAD_DIR, f"{username}", f"{filename}.%(ext)s")
 
