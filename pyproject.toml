@@ -44,8 +44,10 @@ dev = [
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-packages = ["tk3u8"]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["tk3u8*"]
+namespaces = false
 
 [project.scripts]
 tk3u8 = "tk3u8.cli:start_cli"
