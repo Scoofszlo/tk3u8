@@ -1,5 +1,6 @@
 import argparse
 from rich_argparse import RichHelpFormatter
+from tk3u8.cli.utils import display_version
 from tk3u8.constants import Quality
 
 
@@ -55,4 +56,10 @@ class ArgsHandler():
             help="Set the logging level (default: no logging if not used)",
             choices=["DEBUG", "ERROR"],
             dest="log_level"
+        )
+        self._parser.add_argument(
+            "-v", "--version",
+            help="Show the program's version",
+            action="version",
+            version=display_version()
         )
