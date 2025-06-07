@@ -1,6 +1,6 @@
 [project]
 name = "tk3u8"
-version = "0.3.0"
+dynamic = ["version"]
 description = "A TikTok live downloader, written in Python."
 license-files = ["LICENSE"]
 readme = "README.md"
@@ -50,6 +50,9 @@ build-backend = "setuptools.build_meta"
 where = ["."]
 include = ["tk3u8*"]
 namespaces = false
+
+[tool.setuptools_scm]
+version_file = "tk3u8/_version.py"
 
 [project.scripts]
 tk3u8 = "tk3u8.cli:start_cli"
