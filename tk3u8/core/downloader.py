@@ -5,7 +5,7 @@ import time
 from yt_dlp import YoutubeDL
 from tk3u8.constants import LiveStatus, OptionKey, StreamLink
 from tk3u8.cli.console import console, Live, render_lines
-from tk3u8.exceptions import DownloadError, UserNotLiveError, UserPreparingForLiveError
+from tk3u8.exceptions import DownloadError, QualityNotAvailableError, UserNotLiveError, UserPreparingForLiveError
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
 from tk3u8.path_initializer import PathInitializer
@@ -46,6 +46,11 @@ class Downloader:
         console.print(f"User [b]@{username}[/b] is now [b][green]streaming live.[/b][/green]")
 
         stream_link = self._stream_metadata_handler.get_stream_link(quality)
+        if not self._is_stream_link_available(stream_link):
+            console.print(f"[grey50]Cannot proceed with downloading. The chosen quality [b]({quality})[/b] is not available for download.[/grey50]")
+            logger.error(f"{QualityNotAvailableError.__name__}: {QualityNotAvailableError()}")
+            exit(0)
+
         self._start_download(username, stream_link)
 
     def _start_download(self, username: str, stream_link: StreamLink) -> None:
@@ -100,3 +105,8 @@ class Downloader:
             time.sleep(1)
 
         live.update(render_lines(offline_msg, "Checking..."))
+
+    def _is_stream_link_available(self, stream_link: StreamLink):
+        if stream_link.link is None:
+            return False
+        return True
