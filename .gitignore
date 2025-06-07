@@ -15,3 +15,6 @@ tests
 user_data
 playground
 .coverage
+
+# setuptools_scm
+_version.py
