@@ -1,6 +1,6 @@
 # tk3u8
 
-tk3u8 is a Python program that helps you download live streams from TikTok. The project was based and built from <b>Michele0303's [tiktok-live-recorder](https://github.com/Michele0303/tiktok-live-recorder)</b>, and modified for ease of use and ffmpeg to utilize <b>yt-dlp</b> as a downloader. Credits to them!
+tk3u8 is a Python program that helps you download live streams from TikTok. The project was based and built from <b>Michele0303's [tiktok-live-recorder](https://github.com/Michele0303/tiktok-live-recorder)</b>, and modified for ease of use and to utilize <b>yt-dlp</b> and <b>ffmpeg</b> as a downloader. Credits to them!
 
 
 ## Requirements
