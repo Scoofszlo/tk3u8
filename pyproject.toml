@@ -28,6 +28,24 @@ keywords = [
     "tiktok-recorder",
     "tiktok-live-stream"
 ]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Operating System :: OS Independent",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "Topic :: Internet",
+    "Topic :: Multimedia",
+    "Topic :: Utilities",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Multimedia :: Video :: Capture"
+]
+
+[project.urls]
+Source = "https://github.com/Scoofszlo/tk3u8"
+Documentation = "https://github.com/Scoofszlo/tk3u8/wiki"
+Issues = "https://github.com/Scoofszlo/tk3u8/issues"
+Changelog = "https://github.com/Scoofszlo/tk3u8/releases"
 
 [dependency-groups]
 dev = [
