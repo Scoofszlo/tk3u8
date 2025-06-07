@@ -52,3 +52,6 @@ namespaces = false
 
 [project.scripts]
 tk3u8 = "tk3u8.cli:start_cli"
+
+[tool.uv]
+default-groups = []
