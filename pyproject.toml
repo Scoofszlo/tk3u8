@@ -41,6 +41,9 @@ classifiers = [
     "Topic :: Multimedia :: Video :: Capture"
 ]
 
+[project.scripts]
+tk3u8 = "tk3u8.cli:start_cli"
+
 [project.urls]
 Source = "https://github.com/Scoofszlo/tk3u8"
 Documentation = "https://github.com/Scoofszlo/tk3u8/wiki"
@@ -72,9 +75,6 @@ namespaces = false
 [tool.setuptools_scm]
 version_file = "tk3u8/_version.py"
 version_scheme = "no-guess-dev"
-
-[project.scripts]
-tk3u8 = "tk3u8.cli:start_cli"
 
 [tool.uv]
 default-groups = []
