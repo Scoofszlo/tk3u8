@@ -45,6 +45,9 @@ class OptionKey(Enum):
     TIMEOUT = "timeout"
 
 
+APP_NAME = "tk3u8"
+
+
 # Default configuration settings
 DEFAULT_CONFIG = {
     "config": {
