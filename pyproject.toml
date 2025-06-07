@@ -53,6 +53,7 @@ namespaces = false
 
 [tool.setuptools_scm]
 version_file = "tk3u8/_version.py"
+version_scheme = "no-guess-dev"
 
 [project.scripts]
 tk3u8 = "tk3u8.cli:start_cli"
