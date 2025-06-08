@@ -15,6 +15,7 @@ from tk3u8.exceptions import (
     UserNotFoundError,
     WAFChallengeError
 )
+from tk3u8.messages import messages
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.session.request_handler import RequestHandler
 
@@ -34,7 +35,7 @@ class StreamMetadataHandler:
         self._username: str | None = None
 
     def initialize_data(self, username: str) -> None:
-        with console.status("Processing data..."):
+        with console.status(messages.processing_data):
             self._process_data(username)
 
     def update_data(self) -> None:
@@ -68,10 +69,13 @@ class StreamMetadataHandler:
             self._username = self._validate_username(username)
 
         assert isinstance(self._username, str)
-        logger.debug(f"Processing data for user @{self._username}")
+        logger.debug(messages.processing_data_for_user.format(username=self._username))
 
         for idx, extractor_class in enumerate(self._extractor_classes):
-            logger.debug(f"Trying extractor #{idx+1}: {extractor_class.__name__}")
+            logger.debug(messages.trying_extractor.format(
+                pos=idx+1,
+                extractor_class_name=extractor_class.__name__
+            ))
 
             try:
                 extractor = extractor_class(self._username, self._request_handler)
@@ -80,7 +84,6 @@ class StreamMetadataHandler:
                 self._live_status = extractor.get_live_status(self._source_data)
 
                 if self._live_status in (LiveStatus.OFFLINE, LiveStatus.PREPARING_TO_GO_LIVE):
-                    logger.debug(f"User @{self._username} is not live (status: {self._live_status}). Stopping extraction")
                     break
 
                 self._stream_data = extractor.get_stream_data(self._source_data)
@@ -94,23 +97,34 @@ class StreamMetadataHandler:
                 HLSLinkNotFoundError
             ) as e:
                 if idx != len(self._extractor_classes) - 1:
-                    error_msg = f"Extractor #{idx+1} ({extractor.__class__.__name__}) failed due to {type(e).__name__}. Trying next extractor method (Extractor #{idx+2})"
-                    print(error_msg)
+                    error_msg = messages.current_extractor_failed.format(
+                        current_extr_pos=idx+1,
+                        current_extr_name=extractor.__class__.__name__,
+                        exc_name=type(e).__name__,
+                        next_extr_pos=idx+2
+                    )
+                    console.print(error_msg)
                     logger.error(error_msg)
                 else:
-                    error_msg = f"Extractor #{idx+1} ({extractor.__class__.__name__}) failed due to {type(e).__name__}. No more extractors to be used. The program will now exit."
-                    print(error_msg)
+                    error_msg = messages.last_extractor_failed.format(
+                        current_extr_pos=idx+1,
+                        current_extr_name=extractor.__class__.__name__,
+                        exc_name=type(e).__name__,
+                    )
+                    console.print(error_msg)
                     logger.error(error_msg)
                     exit()
 
     def _validate_username(self, username: str) -> str:
         if not username:
             logger.exception(f"{NoUsernameEnteredError.__name__}: {NoUsernameEnteredError()}")
-            raise NoUsernameEnteredError()
+            console.print(messages.no_username_entered)
+            exit(0)
 
         if not is_username_valid(username):
             logger.exception(f"{InvalidUsernameError.__name__}: {InvalidUsernameError(username)}")
-            raise InvalidUsernameError(username)
+            console.print(messages.invalid_username.format(username=username))
+            exit(0)
 
         logger.debug(f"Entered username: {username}")
 
@@ -121,6 +135,7 @@ class StreamMetadataHandler:
 
         if not is_user_exists(extractor_class, source_data):
             logger.exception(f"{UserNotFoundError.__name__}: {UserNotFoundError(self._username)}")
-            raise UserNotFoundError(self._username)
+            console.print(messages.account_not_found.format(username=self._username))
+            exit(0)
 
         return source_data

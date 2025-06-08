@@ -5,7 +5,8 @@ import time
 from yt_dlp import YoutubeDL
 from tk3u8.constants import LiveStatus, OptionKey, StreamLink
 from tk3u8.cli.console import console, Live, render_lines
-from tk3u8.exceptions import DownloadError, QualityNotAvailableError, UserNotLiveError, UserPreparingForLiveError
+from tk3u8.exceptions import DownloadError, QualityNotAvailableError
+from tk3u8.messages import messages
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
 from tk3u8.path_initializer import PathInitializer
@@ -36,25 +37,30 @@ class Downloader:
         if live_status in (LiveStatus.OFFLINE, LiveStatus.PREPARING_TO_GO_LIVE):
             if not wait_until_live:
                 if live_status == LiveStatus.OFFLINE:
-                    raise UserNotLiveError(username)
+                    console.print(messages.user_offline.format(username=username))
+                    exit(0)
                 elif live_status == LiveStatus.PREPARING_TO_GO_LIVE:
-                    raise UserPreparingForLiveError(username)
+                    console.print(messages.preparing_to_go_live.format(username=username))
+                    exit(0)
 
-            offline_msg = f"User [b]@{username}[/b] is [red]currently offline[/red]. Awaiting [b]@{username}[/b] to start streaming..."
+            offline_msg = messages.awaiting_to_go_live.format(username=username)
             self._wait_until_live(offline_msg, live_status)
 
-        console.print(f"User [b]@{username}[/b] is now [b][green]streaming live.[/b][/green]")
+        console.print(messages.user_is_now_live.format(username=username))
 
         stream_link = self._stream_metadata_handler.get_stream_link(quality)
         if not self._is_stream_link_available(stream_link):
-            console.print(f"[grey50]Cannot proceed with downloading. The chosen quality [b]({quality})[/b] is not available for download.[/grey50]")
+            console.print(messages.quality_not_available.format(quality=quality))
             logger.error(f"{QualityNotAvailableError.__name__}: {QualityNotAvailableError()}")
             exit(0)
 
         self._start_download(username, stream_link)
 
     def _start_download(self, username: str, stream_link: StreamLink) -> None:
-        starting_download_msg = f"Starting download for user [b]@{username}[/b] [grey50](quality: {stream_link.quality}, stream Link: {stream_link.link})[/grey50]"
+        starting_download_msg = messages.starting_download.format(
+            username=username,
+            stream_link=stream_link
+        )
         console.print(starting_download_msg, end="\n\n")
         logger.debug(starting_download_msg)
 
@@ -71,7 +77,10 @@ class Downloader:
             with YoutubeDL(ydl_opts) as ydl:  # type: ignore[arg-type]
                 ydl.download([stream_link.link])
 
-                finished_downloading_msg = f"[green]Finished downloading[/green] [b]{filename}.mp4[/b] [grey50](saved at: {filename_with_download_dir.replace('%(ext)s', 'mp4')})[/grey50]"
+                finished_downloading_msg = messages.finished_downloading.format(
+                    filename=filename,
+                    filename_with_download_dir=filename_with_download_dir.replace('%(ext)s', 'mp4'),
+                )
                 console.print("\n" + finished_downloading_msg)
                 logger.debug(finished_downloading_msg)
         except Exception as e:
@@ -87,7 +96,7 @@ class Downloader:
                     live_status = self._stream_metadata_handler.get_live_status()
                 live.update(render_lines())
             except KeyboardInterrupt:
-                live.update(render_lines(offline_msg, "Checking cancelled by user. Exiting..."))
+                live.update(render_lines(offline_msg, messages.cancelled_checking_live))
                 exit(0)
 
     def _update_data(self) -> None:
@@ -101,10 +110,13 @@ class Downloader:
         seconds_extra_space = " " * seconds_left_len
 
         for remaining in range(seconds_left, -1, -1):
-            live.update(render_lines(offline_msg, f"[bold yellow]Retrying in {remaining} seconds{seconds_extra_space}"))
+            live.update(render_lines(offline_msg, messages.retrying_to_check_live.format(
+                remaining=remaining,
+                seconds_extra_space=seconds_extra_space
+            )))
             time.sleep(1)
 
-        live.update(render_lines(offline_msg, "Checking..."))
+        live.update(render_lines(offline_msg, messages.ongoing_checking_live))
 
     def _is_stream_link_available(self, stream_link: StreamLink):
         if stream_link.link is None:

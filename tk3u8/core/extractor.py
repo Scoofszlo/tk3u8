@@ -12,6 +12,7 @@ from tk3u8.exceptions import (
     UnknownStatusCodeError,
     WAFChallengeError
 )
+from tk3u8.messages import messages
 from tk3u8.session.request_handler import RequestHandler
 import logging
 
@@ -76,7 +77,10 @@ class Extractor(ABC):
 
         stream_links["original"] = stream_links.pop("origin")
 
-        logger.debug(f"Retrieved stream links for user @{self._username}: {stream_links}")
+        logger.debug(messages.retrieved_stream_links.format(
+            username=self._username,
+            stream_links=stream_links
+        ))
 
         return stream_links
 
@@ -99,14 +103,20 @@ class APIExtractor(Extractor):
         soup = BeautifulSoup(response.text, "html.parser")
         content = json.loads(soup.text)
 
-        logger.debug(f"Fetched content for user @{self._username}: {content}")
+        logger.debug(messages.fetched_content.format(
+            username=self._username,
+            content=content
+        ))
 
         return content
 
     def get_stream_data(self, source_data: dict) -> dict:
         try:
             stream_data = json.loads(source_data["data"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
-            logger.debug(f"Extracted stream_data for user @{self._username}: {stream_data}")
+            logger.debug(messages.extracted_stream_data.format(
+                username=self._username,
+                stream_data=stream_data
+            ))
 
             return stream_data
         except KeyError:
@@ -116,7 +126,10 @@ class APIExtractor(Extractor):
     def get_live_status(self, source_data: dict) -> LiveStatus:
         try:
             status_code = source_data["data"]["user"]["status"]
-            logger.debug(f"Extracted status_code for user @{self._username}: {status_code}")
+            logger.debug(messages.extracted_status_code.format(
+                username=self._username,
+                status_code=status_code
+            ))
 
             return self._get_live_status(status_code)
         except KeyError:
@@ -141,14 +154,20 @@ class WebpageExtractor(Extractor):
 
         content = json.loads(script_tag.text)
 
-        logger.debug(f"Fetched content for user @{self._username}: {content}")
+        logger.debug(messages.fetched_content.format(
+            username=self._username,
+            content=content
+        ))
 
         return content
 
     def get_stream_data(self, source_data: dict) -> dict:
         try:
             stream_data = json.loads(source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
-            logger.debug(f"Extracted stream_data for user @{self._username}: {stream_data}")
+            logger.debug(messages.extracted_stream_data.format(
+                username=self._username,
+                stream_data=stream_data
+            ))
 
             return stream_data
         except KeyError:
@@ -158,7 +177,10 @@ class WebpageExtractor(Extractor):
     def get_live_status(self, source_data: dict) -> LiveStatus:
         try:
             status_code = source_data["LiveRoom"]["liveRoomUserInfo"]["user"]["status"]
-            logger.debug(f"Extracted status_code for user @{self._username}: {status_code}")
+            logger.debug(messages.extracted_status_code.format(
+                username=self._username,
+                status_code=status_code
+            ))
 
             return self._get_live_status(status_code)
         except KeyError:
