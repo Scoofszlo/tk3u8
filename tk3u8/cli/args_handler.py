@@ -40,7 +40,7 @@ class ArgsHandler():
             help="The proxy server to use for downloading. Sample format: 127.0.0.1:8080"
         )
         self._parser.add_argument(
-            "--wait_until_live",
+            "--wait-until-live",
             action="store_true",
             help="Let the program wait until the user goes live to start downloading stream",
             default=False
@@ -52,7 +52,7 @@ class ArgsHandler():
             default=30
         )
         self._parser.add_argument(
-            "--log_level",
+            "--log-level",
             help="Set the logging level (default: no logging if not used)",
             choices=["DEBUG", "ERROR"],
             dest="log_level"
