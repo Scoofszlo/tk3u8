@@ -45,6 +45,32 @@ class OptionKey(Enum):
     TIMEOUT = "timeout"
 
 
+@dataclass
+class Messages:
+    user_offline: str = "User [b]@{username}[/b] is [red]currently offline[/red]."
+    preparing_to_go_live: str = "User [b]@{username}[/b] is preparing to go live. Try again in a minute or two to be able to download the stream."
+    user_is_now_live: str = "User [b]@{username}[/b] is now [b][green]streaming live[/b][/green]."
+    awaiting_to_go_live: str = "User [b]@{username}[/b] is [red]currently offline[/red]. Awaiting [b]@{username}[/b] to start streaming..."
+    quality_not_available: str = "[grey50]Cannot proceed with downloading. The chosen quality [b]({quality})[/b] is not available for download.[/grey50]"
+    starting_download: str = "Starting download for user [b]@{username}[/b] [grey50](quality: {stream_link.quality}, stream Link: {stream_link.link})[/grey50]"
+    finished_downloading: str = "[green]Finished downloading[/green] [b]{filename}.mp4[/b] [grey50](saved at: {filename_with_download_dir})[/grey50]"
+    cancelled_checking_live: str = "Checking cancelled by user. Exiting..."
+    retrying_to_check_live: str = "[bold yellow]Retrying in {remaining} seconds{seconds_extra_space}"
+    ongoing_checking_live: str = "Checking..."
+    processing_data: str = "Processing data..."
+    processing_data_for_user: str = "Processing data for user @{username}"
+    trying_extractor: str = "Trying extractor #{pos}: {extractor_class_name}"
+    current_extractor_failed: str = "[grey50]Extractor #{current_extr_pos} ({current_extr_name}) failed due to [b]{exc_name}[/b]. Trying next extractor method (Extractor #{next_extr_pos})[grey50]"
+    last_extractor_failed: str = "[grey50]Extractor #{current_extr_pos} ({current_extr_name}) failed due to [b]{exc_name}[/b]. No more extractors to be used. The program will now exit.[grey50]"
+    invalid_username: str = "The username [b]{username}[/b] is [red]invalid[/red]. Ensure the username is at least 2 characters long, contains only lowercase letters, numbers, underscores, and/or periods, and is up to 24 characters in length."
+    no_username_entered: str = "No username was entered. Please provide a valid username."
+    account_not_found: str = "User [b]@{username}[/b] is likely a private account, or it doesn't exist at all."
+    fetched_content: str = "Fetched content for user @{username}: {content}"
+    retrieved_stream_links: str = "Retrieved stream links for user @{username}: {stream_links}"
+    extracted_stream_data: str = "Extracted stream_data for user @{username}: {stream_data}"
+    extracted_status_code: str = "Extracted status_code for user @{username}: {status_code}"
+
+
 APP_NAME = "tk3u8"
 
 
