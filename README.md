@@ -28,7 +28,7 @@ tk3u8 is a Python program that helps you download live streams from TikTok. The 
     ```
 7. Use the latest published release. (Skip this step if you want to use all of latest changes and updates from this repository.)
     ```sh
-    git checkout tags/v0.3.0
+    git checkout tags/v0.3.1
     ```
 8. Run the program.
     ```sh
@@ -37,22 +37,24 @@ tk3u8 is a Python program that helps you download live streams from TikTok. The 
     When installed properly, the output should look like this:
     ```text
     Usage: tk3u8 [-h] [-q {original,uhd_60,uhd,hd_60,hd,ld,sd}] [--proxy PROXY]
-                  [--wait_until_live] [--timeout TIMEOUT] [--log_level {DEBUG,ERROR}] username
-    
+                 [--wait-until-live] [--timeout TIMEOUT] [--log-level {DEBUG,ERROR}] 
+                 [-v] username
+
     tk3u8 - A TikTok live downloader
 
     Positional Arguments:
-    username                The username to be used for recording live stream
+      username              The username to be used for recording live stream
 
     Options:
-    -h, --help              show this help message and exit
-    -q {original,uhd_60,uhd,hd_60,hd,ld,sd}
+      -h, --help            show this help message and exit
+      -q {original,uhd_60,uhd,hd_60,hd,ld,sd}
                             Specify the quality of the video to download. Default: original
-    --proxy PROXY           The proxy server to use for downloading. Sample format: 127.0.0.1:8080
-    --wait_until_live       Let the program wait until the user goes live to start downloading stream
-    --timeout TIMEOUT       Set the timeout in seconds before rechecking if the user is live.
-    --log_level {DEBUG,ERROR}
+      --proxy PROXY         The proxy server to use for downloading. Sample format: 127.0.0.1:8080
+      --wait-until-live     Let the program wait until the user goes live to start downloading stream
+      --timeout TIMEOUT     Set the timeout in seconds before rechecking if the user is live.
+      --log-level {DEBUG,ERROR}
                             Set the logging level (default: no logging if not used)
+      -v, --version         Show the program's version
     ```
 
 ## Quickstart
