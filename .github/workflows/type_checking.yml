@@ -30,4 +30,4 @@ jobs:
           uv pip install mypy toml types-toml types-requests yt-dlp-types
 
       - name: Run mypy
-        run: uv run mypy tk3u8 --check-untyped-defs
+        run: uv run mypy tk3u8 --check-untyped-defs --disallow-incomplete-defs --disallow-untyped-defs
