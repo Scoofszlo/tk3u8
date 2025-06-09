@@ -1,3 +1,6 @@
+from tk3u8.constants import OptionKey
+
+
 class RequestFailedError(Exception):
     """Custom exception for failed HTTP requests.
 
@@ -33,7 +36,7 @@ class SigiStateMissingError(Exception):
 class UserNotLiveError(Exception):
     """Custom exception when user is not live."""
 
-    def __init__(self, username) -> None:
+    def __init__(self, username: str) -> None:
         self.message = f"User @{username} is not live."
         super().__init__(self.message)
 
@@ -45,7 +48,7 @@ class UserNotFoundError(Exception):
     account doesn't exist.
     """
 
-    def __init__(self, username) -> None:
+    def __init__(self, username: str) -> None:
         self.message = f"The user account @{username} is likely a private account, or it doesn't exist at all."
         super().__init__(self.message)
 
@@ -53,7 +56,7 @@ class UserNotFoundError(Exception):
 class InvalidUsernameError(Exception):
     """Custom exception whenever username entered is invalid."""
 
-    def __init__(self, username) -> None:
+    def __init__(self, username: str) -> None:
         self.message = (
             f"The username @{username} is invalid. Ensure the username is at least "
             "2 characters long, contains only lowercase letters, numbers, underscores, "
@@ -74,7 +77,7 @@ class UserPreparingForLiveError(Exception):
     """Custom exception when the user is preparing to go live.
     """
 
-    def __init__(self, username) -> None:
+    def __init__(self, username: str) -> None:
         self.message = f"User @{username} is preparing to go live. Try again in a minute or two to be able to download the stream."
         super().__init__(self.message)
 
@@ -88,7 +91,7 @@ class UnknownStatusCodeError(Exception):
     for debugging if TikTok made some changes in their end.
     """
 
-    def __init__(self, status_code) -> None:
+    def __init__(self, status_code: int) -> None:
         self.message = f"Invalid status code. (Status code: {status_code} {type(status_code)})"
         super().__init__(self.message)
 
@@ -120,7 +123,7 @@ class LinkNotAvailableError(Exception):
 class StreamDataNotFoundError(Exception):
     """Custom exception when the stream data can't be scraped."""
 
-    def __init__(self, username) -> None:
+    def __init__(self, username: str) -> None:
         self.message = f"Stream data can't be retrieved from user @{username}. Please try again."
         super().__init__(self.message)
 
@@ -128,7 +131,7 @@ class StreamDataNotFoundError(Exception):
 class LiveStatusCodeNotFoundError(Exception):
     """Custom exception when the live status code failed to be retrieved."""
 
-    def __init__(self, username) -> None:
+    def __init__(self, username: str) -> None:
         self.message = f"Live status code could not be retrieved from user @{username}."
         super().__init__(self.message)
 
@@ -137,7 +140,7 @@ class HLSLinkNotFoundError(Exception):
     """Custom exception when the HLS stream link isn't available, even though
     there is a stream going on."""
 
-    def __init__(self, username) -> None:
+    def __init__(self, username: str) -> None:
         self.message = f"HLS stream link not found for user @{username}."
         super().__init__(self.message)
 
@@ -145,7 +148,7 @@ class HLSLinkNotFoundError(Exception):
 class InvalidArgKeyError(Exception):
     """Custom exception when an invalid key is encountered."""
 
-    def __init__(self, key) -> None:
+    def __init__(self, key: OptionKey) -> None:
         self.message = f"The key '{key}' is invalid or not recognized."
         super().__init__(self.message)
 
@@ -161,14 +164,14 @@ class FileParsingError(Exception):
 class InvalidCookieError(Exception):
     """Custom exception when user improperly sets cookie in the config file."""
 
-    def __init__(self, message) -> None:
+    def __init__(self, message: str) -> None:
         super().__init__(message)
 
 
 class DownloadError(Exception):
     """Custom exception when there is an issue downloading with yt-dlp."""
 
-    def __init__(self, e) -> None:
+    def __init__(self, e: Exception) -> None:
         super().__init__(f"Download failed with error: {e}")
 
 

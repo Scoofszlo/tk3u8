@@ -1,4 +1,5 @@
 import os
+from typing import Any
 import toml
 from platformdirs import user_data_path, user_downloads_path
 from tk3u8.constants import DEFAULT_CONFIG
@@ -11,18 +12,18 @@ class PathInitializer:
     """
     _instance = None
 
-    def __new__(cls, *args, **kwargs) -> 'PathInitializer':
+    def __new__(cls, *args: dict, **kwargs: Any) -> 'PathInitializer':
         if not cls._instance:
             cls._instance = super(PathInitializer, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self, base_dir=None):
+    def __init__(self, base_dir: str | None = None):
         # Prevent re-initialization if already initialized
         if not hasattr(self, "_initialized"):
             self._set_base_dir(base_dir)
             self._initialized = True
 
-    def _set_base_dir(self, base_dir) -> None:
+    def _set_base_dir(self, base_dir: str | None) -> None:
         # Set up main directory and file paths
         self.PROGRAM_DATA_DIR = base_dir if base_dir else self._get_default_base_path()
         self.CONFIG_FILE_PATH = os.path.join(self.PROGRAM_DATA_DIR, "tk3u8.conf")

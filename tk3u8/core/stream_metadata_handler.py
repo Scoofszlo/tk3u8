@@ -64,7 +64,7 @@ class StreamMetadataHandler:
             logger.exception(f"{QualityNotAvailableError.__name__}: {QualityNotAvailableError}")
             raise QualityNotAvailableError()
 
-    def _process_data(self, username: Optional[str] = None):
+    def _process_data(self, username: Optional[str] = None) -> None:
         if username:
             self._username = self._validate_username(username)
 
@@ -132,6 +132,8 @@ class StreamMetadataHandler:
 
     def _get_and_validate_source_data(self, extractor: Extractor, extractor_class: type[Extractor]) -> dict:
         source_data: dict = extractor.get_source_data()
+
+        assert isinstance(self._username, str)
 
         if not is_user_exists(extractor_class, source_data):
             logger.exception(f"{UserNotFoundError.__name__}: {UserNotFoundError(self._username)}")

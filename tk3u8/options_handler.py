@@ -11,7 +11,7 @@ class OptionsHandler:
         self._args_values: dict = {}
         self._config_values: dict = self._load_config_values()
 
-    def get_option_val(self, key) -> Optional[str | int]:
+    def get_option_val(self, key: OptionKey) -> Optional[str | int]:
         try:
             key_map = {
                 OptionKey.SESSIONID_SS: lambda: self._config_values[OptionKey.SESSIONID_SS.value],
@@ -26,7 +26,7 @@ class OptionsHandler:
         except KeyError:
             return None
 
-    def save_args_values(self, *args, **kwargs) -> None:
+    def save_args_values(self, *args: dict, **kwargs: str | int) -> None:
         for arg in args:
             if isinstance(arg, dict):
                 self._args_values.update(arg)

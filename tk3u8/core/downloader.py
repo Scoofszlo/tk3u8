@@ -25,7 +25,7 @@ class Downloader:
         self._options_handler = options_handler
         self._stream_metadata_handler = stream_metadata_handler
 
-    def download(self, quality: str):
+    def download(self, quality: str) -> None:
         username = self._stream_metadata_handler.get_username()
         wait_until_live = self._options_handler.get_option_val(OptionKey.WAIT_UNTIL_LIVE)
         live_status = self._stream_metadata_handler.get_live_status()
@@ -87,7 +87,7 @@ class Downloader:
             logger.exception(f"{DownloadError.__name__}: {DownloadError(e)}")
             raise DownloadError(e)
 
-    def _wait_until_live(self, offline_msg: str, live_status: LiveStatus):
+    def _wait_until_live(self, offline_msg: str, live_status: LiveStatus) -> None:
         with Live(render_lines(offline_msg)) as live:
             try:
                 while not live_status == LiveStatus.LIVE:
@@ -118,7 +118,7 @@ class Downloader:
 
         live.update(render_lines(offline_msg, messages.ongoing_checking_live))
 
-    def _is_stream_link_available(self, stream_link: StreamLink):
+    def _is_stream_link_available(self, stream_link: StreamLink) -> bool:
         if stream_link.link is None:
             return False
         return True

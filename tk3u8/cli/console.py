@@ -6,7 +6,7 @@ from rich.table import Table
 console = Console()
 
 
-def render_lines(*args):
+def render_lines(*args: str) -> Table:
     table = Table.grid()
     for message in args:
         table.add_row(message)
