@@ -1,9 +1,9 @@
 import re
 from tk3u8.core.extractor import APIExtractor, Extractor, WebpageExtractor
-from tk3u8.exceptions import InvalidExtractorError, UnknownStatusCodeError, UserPreparingForLiveError
+from tk3u8.exceptions import InvalidExtractorError
 
 
-def is_username_valid(username) -> bool:
+def is_username_valid(username: str) -> bool:
     pattern = r"^[a-z0-9_.]{2,24}$"
     match = re.match(pattern, username)
 
@@ -26,14 +26,3 @@ def is_user_exists(extractor: type[Extractor], source_data: dict) -> bool:
 
     else:
         raise InvalidExtractorError()
-
-
-def is_user_live(status_code: int) -> bool:
-    if status_code == 1:
-        raise UserPreparingForLiveError(status_code)
-    elif status_code == 2:
-        return True
-    elif status_code == 4:
-        return False
-    else:
-        raise UnknownStatusCodeError(status_code)
