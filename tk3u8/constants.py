@@ -62,7 +62,11 @@ class Messages:
     trying_extractor: str = "Trying extractor #{pos}: {extractor_class_name}"
     current_extractor_failed: str = "[grey50]Extractor #{current_extr_pos} ({current_extr_name}) failed due to [b]{exc_name}[/b]. Trying next extractor method (Extractor #{next_extr_pos})[grey50]"
     last_extractor_failed: str = "[grey50]Extractor #{current_extr_pos} ({current_extr_name}) failed due to [b]{exc_name}[/b]. No more extractors to be used. The program will now exit.[grey50]"
-    invalid_username: str = "The username [b]{username}[/b] is [red]invalid[/red]. Ensure the username is at least 2 characters long, contains only lowercase letters, numbers, underscores, and/or periods, and is up to 24 characters in length."
+    invalid_username: str = (
+        "The username [b]{username}[/b] is [red]invalid[/red]. Ensure the username is at least 2wd "
+        "characters long, contains only lowercase letters, numbers, underscores, and/or periods, "
+        "and is up to 24 characters in length."
+    )
     no_username_entered: str = "No username was entered. Please provide a valid username."
     account_not_found: str = "User [b]@{username}[/b] is likely a private account, or it doesn't exist at all."
     fetched_content: str = "Fetched content for user @{username}: {content}"

@@ -54,7 +54,11 @@ class InvalidUsernameError(Exception):
     """Custom exception whenever username entered is invalid."""
 
     def __init__(self, username) -> None:
-        self.message = f"The username @{username} is invalid. Ensure the username is at least 2 characters long, contains only lowercase letters, numbers, underscores, and/or periods, and is up to 24 characters in length."
+        self.message = (
+            f"The username @{username} is invalid. Ensure the username is at least "
+            "2 characters long, contains only lowercase letters, numbers, underscores, "
+            "and/or periods, and is up to 24 characters in length."
+        )
         super().__init__(self.message)
 
 
