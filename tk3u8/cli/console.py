@@ -1,5 +1,5 @@
 from rich.console import Console
-from rich.live import Live
+from rich.live import Live  # noqa: F401
 from rich.table import Table
 
 
