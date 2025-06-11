@@ -1,8 +1,17 @@
 from typing import Optional
 import toml
 from tk3u8.constants import OptionKey
-from tk3u8.exceptions import FileParsingError, InvalidArgKeyError
+from tk3u8.exceptions import FileParsingError
 from tk3u8.path_initializer import PathInitializer
+
+
+DEFAULT_VALUES = {
+    OptionKey.SESSIONID_SS: None,
+    OptionKey.TT_TARGET_IDC: None,
+    OptionKey.PROXY: None,
+    OptionKey.WAIT_UNTIL_LIVE: False,
+    OptionKey.TIMEOUT: 30
+}
 
 
 class OptionsHandler:
@@ -12,19 +21,15 @@ class OptionsHandler:
         self._config_values: dict = self._load_config_values()
 
     def get_option_val(self, key: OptionKey) -> Optional[str | int]:
-        try:
-            key_map = {
-                OptionKey.SESSIONID_SS: lambda: self._config_values[OptionKey.SESSIONID_SS.value],
-                OptionKey.TT_TARGET_IDC: lambda: self._config_values[OptionKey.TT_TARGET_IDC.value],
-                OptionKey.PROXY: lambda: self._args_values[OptionKey.PROXY.value] or self._config_values[OptionKey.PROXY.value],
-                OptionKey.WAIT_UNTIL_LIVE: lambda: self._args_values[OptionKey.WAIT_UNTIL_LIVE.value],
-                OptionKey.TIMEOUT: lambda: self._args_values[OptionKey.TIMEOUT.value],
-            }
-            if key in key_map:
-                return key_map[key]()
-            raise InvalidArgKeyError(key)
-        except KeyError:
-            return None
+        val = self._args_values.get(key.value)
+        if val is not None:
+            return val
+
+        val = self._config_values.get(key.value)
+        if val is not None:
+            return val
+
+        return DEFAULT_VALUES.get(key)
 
     def save_args_values(self, *args: dict, **kwargs: str | int) -> None:
         for arg in args:
