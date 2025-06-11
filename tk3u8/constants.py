@@ -51,6 +51,7 @@ class Messages:
     user_offline: str = "User [b]@{username}[/b] is [red]currently offline[/red]."
     preparing_to_go_live: str = "User [b]@{username}[/b] is preparing to go live. Try again in a minute or two to be able to download the stream."
     user_is_now_live: str = "User [b]@{username}[/b] is now [b][green]streaming live[/b][/green]."
+    reattempting_download: str = "[grey50]Reattempting download for user [b]@{username}[/b][/grey50]..."
     awaiting_to_go_live: str = "User [b]@{username}[/b] is [red]currently offline[/red]. Awaiting [b]@{username}[/b] to start streaming..."
     quality_not_available: str = "[grey50]Cannot proceed with downloading. The chosen quality [b]({quality})[/b] is not available for download.[/grey50]"
     starting_download: str = "Starting download for user [b]@{username}[/b] [grey50](quality: {stream_link.quality}, stream Link: {stream_link.link})[/grey50]"
@@ -58,6 +59,7 @@ class Messages:
     cancelled_checking_live: str = "Checking cancelled by user. Exiting..."
     retrying_to_check_live: str = "[bold yellow]Retrying in {remaining} seconds{seconds_extra_space}"
     ongoing_checking_live: str = "Checking..."
+    redownloading_notice: str = "You are using the [yellow]FORCE_REDOWNLOAD[/yellow] option. You have 5 seconds to exit the program, or the program will attempt to redownload again."
     processing_data: str = "Processing data..."
     processing_data_for_user: str = "Processing data for user @{username}"
     trying_extractor: str = "Trying extractor #{pos}: {extractor_class_name}"
@@ -74,6 +76,7 @@ class Messages:
     retrieved_stream_links: str = "Retrieved stream links for user @{username}: {stream_links}"
     extracted_stream_data: str = "Extracted stream_data for user @{username}: {stream_data}"
     extracted_status_code: str = "Extracted status_code for user @{username}: {status_code}"
+    exiting: str = "Exiting..."
 
 
 APP_NAME = "tk3u8"

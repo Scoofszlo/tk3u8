@@ -30,11 +30,13 @@ class Tk3u8:
             username: str,
             quality: str = Quality.ORIGINAL.value,
             wait_until_live: bool = False,
-            timeout: int = 30
+            timeout: int = 30,
+            force_redownload: bool = False
     ) -> None:
         self._options_handler.save_args_values(
             wait_until_live=wait_until_live,
-            timeout=timeout
+            timeout=timeout,
+            force_redownload=force_redownload
         )
         self._stream_metadata_handler.initialize_data(username)
         self._downloader.download(quality)
