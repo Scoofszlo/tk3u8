@@ -49,7 +49,6 @@ class ArgsHandler():
             "--timeout",
             help="Set the timeout in seconds before rechecking if the user is live.",
             type=int,
-            default=30
         )
         self._parser.add_argument(
             "--log-level",
