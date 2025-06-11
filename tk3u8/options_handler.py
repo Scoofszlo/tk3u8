@@ -10,7 +10,8 @@ DEFAULT_VALUES = {
     OptionKey.TT_TARGET_IDC: None,
     OptionKey.PROXY: None,
     OptionKey.WAIT_UNTIL_LIVE: False,
-    OptionKey.TIMEOUT: 30
+    OptionKey.TIMEOUT: 30,
+    OptionKey.FORCE_REDOWNLOAD: False
 }
 
 

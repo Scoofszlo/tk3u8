@@ -43,6 +43,7 @@ class OptionKey(Enum):
     QUALITY = "quality"
     WAIT_UNTIL_LIVE = "wait_until_live"
     TIMEOUT = "timeout"
+    FORCE_REDOWNLOAD = "force_redownload"
 
 
 @dataclass
