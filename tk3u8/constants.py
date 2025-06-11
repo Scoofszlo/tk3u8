@@ -56,9 +56,9 @@ class Messages:
     quality_not_available: str = "[grey50]Cannot proceed with downloading. The chosen quality [b]({quality})[/b] is not available for download.[/grey50]"
     starting_download: str = "Starting download for user [b]@{username}[/b] [grey50](quality: {stream_link.quality}, stream Link: {stream_link.link})[/grey50]"
     finished_downloading: str = "[green]Finished downloading[/green] [b]{filename}.mp4[/b] [grey50](saved at: {filename_with_download_dir})[/grey50]"
-    cancelled_checking_live: str = "Checking cancelled by user. Exiting..."
+    cancelled_checking_live: str = "[grey50]Checking cancelled by user. Exiting...[/grey50]"
     retrying_to_check_live: str = "[bold yellow]Retrying in {remaining} seconds{seconds_extra_space}"
-    ongoing_checking_live: str = "Checking..."
+    ongoing_checking_live: str = "[grey50]Checking...[/grey50]"
     redownloading_notice: str = "You are using the [yellow]FORCE_REDOWNLOAD[/yellow] option. You have 5 seconds to exit the program, or the program will attempt to redownload again."
     processing_data: str = "Processing data..."
     processing_data_for_user: str = "Processing data for user @{username}"
@@ -76,7 +76,7 @@ class Messages:
     retrieved_stream_links: str = "Retrieved stream links for user @{username}: {stream_links}"
     extracted_stream_data: str = "Extracted stream_data for user @{username}: {stream_data}"
     extracted_status_code: str = "Extracted status_code for user @{username}: {status_code}"
-    exiting: str = "Exiting..."
+    exiting: str = "[grey50]Exiting...[/grey50]"
 
 
 APP_NAME = "tk3u8"
