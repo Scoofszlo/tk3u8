@@ -59,7 +59,7 @@ class Messages:
     cancelled_checking_live: str = "[grey50]Checking cancelled by user. Exiting...[/grey50]"
     retrying_to_check_live: str = "[bold yellow]Retrying in {remaining} seconds{seconds_extra_space}"
     ongoing_checking_live: str = "[grey50]Checking...[/grey50]"
-    redownloading_notice: str = "You are using the [yellow]FORCE_REDOWNLOAD[/yellow] option. You have 5 seconds to exit the program, or the program will attempt to redownload again."
+    redownloading_notice: str = "You are using the [yellow]FORCE_REDOWNLOAD[/yellow] option. You have {remaining} seconds to exit the program, or the program will attempt to redownload again."
     processing_data: str = "Processing data..."
     processing_data_for_user: str = "Processing data for user @{username}"
     trying_extractor: str = "Trying extractor #{pos}: {extractor_class_name}"

@@ -140,9 +140,11 @@ class Downloader:
         return True
 
     def _show_exit_notice(self) -> None:
-        try:
-            console.print("\n" + messages.redownloading_notice)
-            time.sleep(5)
-        except KeyboardInterrupt:
-            console.print(messages.exiting)
-            exit(0)
+        with Live() as live:
+            try:
+                for remaining_seconds in range(5, -1, -1):
+                    live.update(render_lines("\n" + messages.redownloading_notice.format(remaining=remaining_seconds)))
+                    time.sleep(1)
+            except KeyboardInterrupt:
+                live.update(render_lines(messages.exiting))
+                exit(0)
