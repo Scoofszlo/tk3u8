@@ -13,6 +13,7 @@ def start_cli() -> None:
     wait_until_live = args.wait_until_live
     timeout = args.timeout
     log_level = args.log_level
+    force_redownload = args.force_redownload
 
     setup_logging(log_level)
 
@@ -22,5 +23,6 @@ def start_cli() -> None:
         username=username,
         quality=quality,
         wait_until_live=wait_until_live,
-        timeout=timeout
+        timeout=timeout,
+        force_redownload=force_redownload
     )

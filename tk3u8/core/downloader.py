@@ -29,32 +29,48 @@ class Downloader:
         username = self._stream_metadata_handler.get_username()
         wait_until_live = self._options_handler.get_option_val(OptionKey.WAIT_UNTIL_LIVE)
         live_status = self._stream_metadata_handler.get_live_status()
+        force_redownload = self._options_handler.get_option_val(OptionKey.FORCE_REDOWNLOAD)
+        redownload_attempted = False
 
         assert isinstance(username, str)
         assert isinstance(wait_until_live, int)
         assert isinstance(live_status, LiveStatus)
+        assert isinstance(force_redownload, bool)
 
-        if live_status in (LiveStatus.OFFLINE, LiveStatus.PREPARING_TO_GO_LIVE):
-            if not wait_until_live:
-                if live_status == LiveStatus.OFFLINE:
-                    console.print(messages.user_offline.format(username=username))
-                    exit(0)
-                elif live_status == LiveStatus.PREPARING_TO_GO_LIVE:
-                    console.print(messages.preparing_to_go_live.format(username=username))
-                    exit(0)
+        while True:
+            if live_status in (LiveStatus.OFFLINE, LiveStatus.PREPARING_TO_GO_LIVE):
+                if not wait_until_live:
+                    if live_status == LiveStatus.OFFLINE:
+                        console.print(messages.user_offline.format(username=username))
+                        exit(0)
+                    elif live_status == LiveStatus.PREPARING_TO_GO_LIVE:
+                        console.print(messages.preparing_to_go_live.format(username=username))
+                        exit(0)
 
-            offline_msg = messages.awaiting_to_go_live.format(username=username)
-            self._wait_until_live(offline_msg, live_status)
+                offline_msg = messages.awaiting_to_go_live.format(username=username)
+                self._wait_until_live(offline_msg, live_status)
 
-        console.print(messages.user_is_now_live.format(username=username))
+            if not redownload_attempted:
+                console.print(messages.user_is_now_live.format(username=username))
+            else:
+                console.print(messages.reattempting_download.format(username=username))
 
-        stream_link = self._stream_metadata_handler.get_stream_link(quality)
-        if not self._is_stream_link_available(stream_link):
-            console.print(messages.quality_not_available.format(quality=quality))
-            logger.error(f"{QualityNotAvailableError.__name__}: {QualityNotAvailableError()}")
-            exit(0)
+            stream_link = self._stream_metadata_handler.get_stream_link(quality)
+            if not self._is_stream_link_available(stream_link):
+                console.print(messages.quality_not_available.format(quality=quality))
+                logger.error(f"{QualityNotAvailableError.__name__}: {QualityNotAvailableError()}")
+                exit(0)
 
-        self._start_download(username, stream_link)
+            self._start_download(username, stream_link)
+
+            if not force_redownload:
+                break
+
+            self._show_exit_notice()
+
+            self._update_data()
+            live_status = live_status = self._stream_metadata_handler.get_live_status()
+            redownload_attempted = True
 
     def _start_download(self, username: str, stream_link: StreamLink) -> None:
         starting_download_msg = messages.starting_download.format(
@@ -122,3 +138,13 @@ class Downloader:
         if stream_link.link is None:
             return False
         return True
+
+    def _show_exit_notice(self) -> None:
+        with Live() as live:
+            try:
+                for remaining_seconds in range(5, -1, -1):
+                    live.update(render_lines("\n" + messages.redownloading_notice.format(remaining=remaining_seconds)))
+                    time.sleep(1)
+            except KeyboardInterrupt:
+                live.update(render_lines(messages.exiting_download_reattempt))
+                exit(0)

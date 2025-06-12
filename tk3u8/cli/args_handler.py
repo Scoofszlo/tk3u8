@@ -51,6 +51,12 @@ class ArgsHandler():
             type=int,
         )
         self._parser.add_argument(
+            "--force-redownload",
+            action="store_true",
+            help="Forces the program to redownload again while user is still live.",
+            default=False
+        )
+        self._parser.add_argument(
             "--log-level",
             help="Set the logging level (default: no logging if not used)",
             choices=["DEBUG", "ERROR"],
