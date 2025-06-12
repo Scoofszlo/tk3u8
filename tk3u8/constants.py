@@ -76,7 +76,7 @@ class Messages:
     retrieved_stream_links: str = "Retrieved stream links for user @{username}: {stream_links}"
     extracted_stream_data: str = "Extracted stream_data for user @{username}: {stream_data}"
     extracted_status_code: str = "Extracted status_code for user @{username}: {status_code}"
-    exiting: str = "[grey50]Exiting...[/grey50]"
+    exiting_download_reattempt: str = "[grey50]Reattempting download cancelled by user. Exiting...[/grey50]"
 
 
 APP_NAME = "tk3u8"

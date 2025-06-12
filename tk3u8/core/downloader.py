@@ -146,5 +146,5 @@ class Downloader:
                     live.update(render_lines("\n" + messages.redownloading_notice.format(remaining=remaining_seconds)))
                     time.sleep(1)
             except KeyboardInterrupt:
-                live.update(render_lines(messages.exiting))
+                live.update(render_lines(messages.exiting_download_reattempt))
                 exit(0)
