@@ -51,7 +51,7 @@ class Messages:
     user_offline: str = "User [b]@{username}[/b] is [red]currently offline[/red]."
     preparing_to_go_live: str = "User [b]@{username}[/b] is preparing to go live. Try again in a minute or two to be able to download the stream."
     user_is_now_live: str = "User [b]@{username}[/b] is now [b][green]streaming live[/b][/green]."
-    reattempting_download: str = "[grey50]Reattempting download for user [b]@{username}[/b][/grey50]..."
+    reattempting_download: str = "[grey50]Reattempting download for user [b]@{username}[/b]...[/grey50]"
     awaiting_to_go_live: str = "User [b]@{username}[/b] is [red]currently offline[/red]. Awaiting [b]@{username}[/b] to start streaming..."
     quality_not_available: str = "[grey50]Cannot proceed with downloading. The chosen quality [b]({quality})[/b] is not available for download.[/grey50]"
     starting_download: str = "Starting download for user [b]@{username}[/b] [grey50](quality: {stream_link.quality}, stream Link: {stream_link.link})[/grey50]"
