@@ -103,11 +103,16 @@ class Downloader:
             logger.exception(f"{DownloadError.__name__}: {DownloadError(e)}")
             raise DownloadError(e)
 
+    def _is_stream_link_available(self, stream_link: StreamLink) -> bool:
+        if stream_link.link is None:
+            return False
+        return True
+
     def _wait_until_live(self, offline_msg: str, live_status: LiveStatus) -> None:
         with Live(render_lines(offline_msg)) as live:
             try:
                 while not live_status == LiveStatus.LIVE:
-                    self._checking_timeout(live, offline_msg)
+                    self._pause_rechecking(live, offline_msg)
                     self._update_data()
                     live_status = self._stream_metadata_handler.get_live_status()
                 live.update(render_lines())
@@ -118,7 +123,10 @@ class Downloader:
     def _update_data(self) -> None:
         self._stream_metadata_handler.update_data()
 
-    def _checking_timeout(self, live: Live, offline_msg: str) -> None:
+    def _pause_rechecking(self, live: Live, offline_msg: str) -> None:
+        """Handles temporarily pausing before rechecking live status,
+        and prints the seconds remaining before the next check."""
+
         seconds_left = self._options_handler.get_option_val(OptionKey.TIMEOUT)
         assert isinstance(seconds_left, int)
 
@@ -133,11 +141,6 @@ class Downloader:
             time.sleep(1)
 
         live.update(render_lines(offline_msg, messages.ongoing_checking_live))
-
-    def _is_stream_link_available(self, stream_link: StreamLink) -> bool:
-        if stream_link.link is None:
-            return False
-        return True
 
     def _show_exit_notice(self) -> None:
         with Live() as live:
