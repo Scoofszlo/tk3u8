@@ -74,7 +74,10 @@ class OptionsHandler:
 
         for key, value in raw_config.items():
             if key not in option_keys:
-                console.print(messages.invalid_option_key.format(key=key))
+                msg = messages.invalid_option_key.format(key=key)
+                console.print(msg)
+                logger.debug(msg)
+
                 exit(1)
 
             if value == "":
