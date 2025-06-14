@@ -1,7 +1,11 @@
 from typing import Optional
 import toml
+from toml import TomlDecodeError
+from tk3u8 import logging
+from tk3u8.cli.console import console
 from tk3u8.constants import OptionKey
 from tk3u8.exceptions import FileParsingError
+from tk3u8.messages import messages
 from tk3u8.path_initializer import PathInitializer
 
 
@@ -13,6 +17,8 @@ DEFAULT_VALUES = {
     OptionKey.TIMEOUT: 30,
     OptionKey.FORCE_REDOWNLOAD: False
 }
+
+logger = logging.getLogger(__name__)
 
 
 class OptionsHandler:
@@ -51,13 +57,29 @@ class OptionsHandler:
                 return config
         except FileNotFoundError:
             raise FileParsingError()
+        except TomlDecodeError as e:
+            exc_msg = f'{e.msg} (line {e.lineno} column {e.colno} char {e.pos})'
+            formatted_msg = messages.config_file_decoding_error.format(exc_msg=exc_msg)
+
+            console.print(formatted_msg)
+            logger.debug(formatted_msg)
+
+            exit(1)
 
     def _retouch_config_values(self, config: dict) -> dict:
         """Turns empty strings into None values"""
 
         raw_config: dict = config['config']
+        option_keys = [option_key.value for option_key in OptionKey]
 
         for key, value in raw_config.items():
+            if key not in option_keys:
+                msg = messages.invalid_option_key.format(key=key)
+                console.print(msg)
+                logger.debug(msg)
+
+                exit(1)
+
             if value == "":
                 raw_config[key] = None
 

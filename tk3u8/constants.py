@@ -77,6 +77,8 @@ class Messages:
     extracted_stream_data: str = "Extracted stream_data for user @{username}: {stream_data}"
     extracted_status_code: str = "Extracted status_code for user @{username}: {status_code}"
     exiting_download_reattempt: str = "[grey50]Reattempting download cancelled by user. Exiting...[/grey50]"
+    invalid_option_key: str = "Option key [b]{key}[/b] is invalid. Please ensure you entered a valid option key in your config file."
+    config_file_decoding_error: str = "Error decoding config file due to: '[yellow]{exc_msg}[/yellow]'"
 
 
 APP_NAME = "tk3u8"
