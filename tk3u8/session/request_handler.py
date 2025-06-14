@@ -32,7 +32,7 @@ class RequestHandler:
         self._setup_cookies()
         self._setup_proxy()
         self._session.headers.update({
-            "User-Agent": self.get_random_user_agent()
+            "User-Agent": self._get_random_user_agent()
         })
         self._response: requests.Response
 
@@ -83,7 +83,7 @@ class RequestHandler:
         if proxy:
             self.update_proxy(proxy)
 
-    def get_random_user_agent(self) -> str:
+    def _get_random_user_agent(self) -> str:
         random_ua = random.choice(USER_AGENT_LIST)
 
         logger.debug(f"Random User-Agent selected: {random_ua}")
