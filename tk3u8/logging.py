@@ -4,6 +4,7 @@ import os
 
 from platformdirs import user_data_path
 from tk3u8 import logger
+from tk3u8.constants import APP_NAME
 
 
 def setup_logging(log_level: str | None) -> None:
@@ -13,7 +14,7 @@ def setup_logging(log_level: str | None) -> None:
 
     logger.setLevel(logging.DEBUG)
 
-    log_directory = os.path.join(user_data_path(), "tk3u8", "logs")
+    log_directory = os.path.join(user_data_path(), APP_NAME, "logs")
 
     if not os.path.exists(log_directory):
         os.mkdir(log_directory)
