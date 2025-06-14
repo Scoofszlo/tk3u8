@@ -9,7 +9,7 @@ from tk3u8.messages import messages
 from tk3u8.path_initializer import PathInitializer
 
 
-DEFAULT_VALUES = {
+OPTION_KEY_DEFAULT_VALUES = {
     OptionKey.SESSIONID_SS: None,
     OptionKey.TT_TARGET_IDC: None,
     OptionKey.PROXY: None,
@@ -36,7 +36,7 @@ class OptionsHandler:
         if val is not None:
             return val
 
-        return DEFAULT_VALUES.get(key)
+        return OPTION_KEY_DEFAULT_VALUES.get(key)
 
     def save_args_values(self, *args: dict, **kwargs: str | int) -> None:
         for arg in args:
