@@ -10,13 +10,29 @@ logger = logging.getLogger(__name__)
 
 
 class RequestHandler:
+    """
+    Handles HTTP requests with session management, proxy, and cookie support.
+    This class manages a requests.Session object, allowing for persistent cookies,
+    proxy configuration, and dynamic User-Agent selection. It provides methods to
+    fetch data from URLs, update proxy settings, and configure session cookies
+    based on provided options.
+
+    Args:
+        options_handler (OptionsHandler): An instance responsible for providing
+            configuration options such as cookies and proxy settings.
+
+    Attributes:
+        _options_handler (OptionsHandler): Stores the options handler instance.
+        _session (requests.Session): The session object used for HTTP requests.
+        _response (requests.Response): Stores the most recent response object.
+    """
     def __init__(self, options_handler: OptionsHandler) -> None:
         self._options_handler = options_handler
         self._session = requests.Session()
         self._setup_cookies()
         self._setup_proxy()
         self._session.headers.update({
-            "User-Agent": self.get_random_user_agent()
+            "User-Agent": self._get_random_user_agent()
         })
         self._response: requests.Response
 
@@ -67,7 +83,7 @@ class RequestHandler:
         if proxy:
             self.update_proxy(proxy)
 
-    def get_random_user_agent(self) -> str:
+    def _get_random_user_agent(self) -> str:
         random_ua = random.choice(USER_AGENT_LIST)
 
         logger.debug(f"Random User-Agent selected: {random_ua}")

@@ -24,6 +24,23 @@ logger = logging.getLogger(__name__)
 
 
 class StreamMetadataHandler:
+    """
+    Handles the retrieval, validation, and management of stream metadata for a given user.
+    This class coordinates the extraction of stream data from multiple sources (API, webpage, etc.),
+    validates user input, manages live status, and provides access to stream links and metadata.
+    It uses a list of extractor classes to attempt data retrieval in sequence, handling errors and
+    falling back as needed.
+
+    Attributes:
+        _request_handler (RequestHandler): Handles HTTP requests for data extraction.
+        _options_handler (OptionsHandler): Manages configuration options.
+        _extractor_classes (List[type[Extractor]]): List of extractor classes to use for data retrieval.
+        _source_data (dict): Raw data obtained from the extractor.
+        _stream_data (dict): Processed stream data.
+        _stream_links (dict): Available stream links by quality.
+        _live_status (LiveStatus | None): Current live status of the stream.
+        _username (str | None): Username for which metadata is being handled.
+    """
     def __init__(self, request_handler: RequestHandler, options_handler: OptionsHandler):
         self._request_handler = request_handler
         self._options_handler = options_handler
@@ -65,6 +82,13 @@ class StreamMetadataHandler:
             raise QualityNotAvailableError()
 
     def _process_data(self, username: Optional[str] = None) -> None:
+        """
+        Processes stream metadata for the given username.
+
+        Whenever the first extractor fails due to the given exceptions, the next
+        available extractor will be used. When all of the available extractors
+        failed, the program will exit.
+        """
         if username:
             self._username = self._validate_username(username)
 

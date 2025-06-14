@@ -48,6 +48,7 @@ class OptionKey(Enum):
 
 @dataclass
 class Messages:
+    """A collection of message templates used throughout the program."""
     user_offline: str = "User [b]@{username}[/b] is [red]currently offline[/red]."
     preparing_to_go_live: str = "User [b]@{username}[/b] is preparing to go live. Try again in a minute or two to be able to download the stream."
     user_is_now_live: str = "User [b]@{username}[/b] is now [b][green]streaming live[/b][/green]."

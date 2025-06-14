@@ -39,6 +39,9 @@ class Downloader:
 
         while True:
             if live_status in (LiveStatus.OFFLINE, LiveStatus.PREPARING_TO_GO_LIVE):
+                # If the user did not use the 'wait until live' option from
+                # either the config file or command-line argument, the program
+                # will exit momentarily
                 if not wait_until_live:
                     if live_status == LiveStatus.OFFLINE:
                         console.print(messages.user_offline.format(username=username))
@@ -47,6 +50,8 @@ class Downloader:
                         console.print(messages.preparing_to_go_live.format(username=username))
                         exit(0)
 
+                # Otherwise, the program will attempt to check the live
+                # status every n seconds until the user goes live.
                 offline_msg = messages.awaiting_to_go_live.format(username=username)
                 self._wait_until_live(offline_msg, live_status)
 
@@ -66,7 +71,7 @@ class Downloader:
             if not force_redownload:
                 break
 
-            self._show_exit_notice()
+            self._show_redownloading_notice()
 
             self._update_data()
             live_status = live_status = self._stream_metadata_handler.get_live_status()
@@ -103,11 +108,23 @@ class Downloader:
             logger.exception(f"{DownloadError.__name__}: {DownloadError(e)}")
             raise DownloadError(e)
 
+    def _is_stream_link_available(self, stream_link: StreamLink) -> bool:
+        if stream_link.link is None:
+            return False
+        return True
+
     def _wait_until_live(self, offline_msg: str, live_status: LiveStatus) -> None:
+        """
+        Waits until the stream becomes live, periodically checking the live
+        status. This method displays a live-updating message while the stream
+        is offline, repeatedly checking the stream's status until it becomes
+        live.
+        """
+
         with Live(render_lines(offline_msg)) as live:
             try:
                 while not live_status == LiveStatus.LIVE:
-                    self._checking_timeout(live, offline_msg)
+                    self._pause_rechecking(live, offline_msg)
                     self._update_data()
                     live_status = self._stream_metadata_handler.get_live_status()
                 live.update(render_lines())
@@ -118,7 +135,12 @@ class Downloader:
     def _update_data(self) -> None:
         self._stream_metadata_handler.update_data()
 
-    def _checking_timeout(self, live: Live, offline_msg: str) -> None:
+    def _pause_rechecking(self, live: Live, offline_msg: str) -> None:
+        """
+        Handles temporarily pausing before rechecking live status,
+        and prints the seconds remaining before the next check.
+        """
+
         seconds_left = self._options_handler.get_option_val(OptionKey.TIMEOUT)
         assert isinstance(seconds_left, int)
 
@@ -134,12 +156,15 @@ class Downloader:
 
         live.update(render_lines(offline_msg, messages.ongoing_checking_live))
 
-    def _is_stream_link_available(self, stream_link: StreamLink) -> bool:
-        if stream_link.link is None:
-            return False
-        return True
+    def _show_redownloading_notice(self) -> None:
+        """
+        Displays a message notifying the user that they have 5 seconds to
+        exit the program to avoid redownloading the stream.
 
-    def _show_exit_notice(self) -> None:
+        This only occurs if the user uses the 'FORCE_REDOWNLOAD' option from
+        the config file or command-line argument.
+        """
+
         with Live() as live:
             try:
                 for remaining_seconds in range(5, -1, -1):
