@@ -1,7 +1,7 @@
+import logging
 from typing import Optional
 import toml
 from toml import TomlDecodeError
-from tk3u8 import logging
 from tk3u8.cli.console import console
 from tk3u8.constants import OptionKey
 from tk3u8.exceptions import FileParsingError
