@@ -1,7 +1,9 @@
 from typing import Optional
 import toml
+from tk3u8.cli.console import console
 from tk3u8.constants import OptionKey
 from tk3u8.exceptions import FileParsingError
+from tk3u8.messages import messages
 from tk3u8.path_initializer import PathInitializer
 
 
@@ -56,8 +58,13 @@ class OptionsHandler:
         """Turns empty strings into None values"""
 
         raw_config: dict = config['config']
+        option_keys = [option_key.value for option_key in OptionKey]
 
         for key, value in raw_config.items():
+            if key not in option_keys:
+                console.print(messages.invalid_option_key.format(key=key))
+                exit(0)
+
             if value == "":
                 raw_config[key] = None
 
