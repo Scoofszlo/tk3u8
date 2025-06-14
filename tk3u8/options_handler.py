@@ -53,7 +53,7 @@ class OptionsHandler:
     def _load_config_values(self) -> dict:
         try:
             with open(self._paths_initializer.CONFIG_FILE_PATH, 'r') as file:
-                config = self._retouch_config_values(toml.load(file))
+                config = self._validate_and_retouch_config(toml.load(file))
                 return config
         except FileNotFoundError:
             raise FileParsingError()
@@ -66,8 +66,9 @@ class OptionsHandler:
 
             exit(1)
 
-    def _retouch_config_values(self, config: dict) -> dict:
-        """Turns empty strings into None values"""
+    def _validate_and_retouch_config(self, config: dict) -> dict:
+        """Validates the config file by checking if the option key value,
+        as well as changing empty strings into None values."""
 
         raw_config: dict = config['config']
         option_keys = [option_key.value for option_key in OptionKey]
