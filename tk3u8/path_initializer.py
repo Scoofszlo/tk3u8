@@ -36,7 +36,7 @@ class PathInitializer:
             self.PROGRAM_DATA_DIR = os.path.abspath(self.PROGRAM_DATA_DIR)
 
         if not os.path.exists(self.PROGRAM_DATA_DIR):
-            os.mkdir(self.PROGRAM_DATA_DIR)
+            os.makedirs(self.PROGRAM_DATA_DIR, exist_ok=True)
 
         if not os.path.isfile(self.CONFIG_FILE_PATH):
             with open(self.CONFIG_FILE_PATH, "w") as file:
