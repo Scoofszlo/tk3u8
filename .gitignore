@@ -11,7 +11,6 @@ wheels/
 # Virtual environments
 .venv
 
-tests
 user_data
 playground
 .coverage
