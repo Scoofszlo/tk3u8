@@ -49,3 +49,29 @@ jobs:
         uses: py-actions/flake8@v2.3.0
         with:
           max-line-length: "200"
+
+  integration-test:
+    runs-on: ubuntu-latest
+    name: Integration test
+    
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+    
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Create virtual environment
+        run: uv venv
+
+      - name: Install dependencies (including dev)
+        run: |
+          uv sync --dev
+
+      - name: Run pytest
+        run: pytest tests
