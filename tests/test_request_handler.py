@@ -20,7 +20,6 @@ LOADED_MOCK_CONFIG = {
 }
 
 
-
 @pytest.fixture
 def mock_options_handler():
     with patch("tk3u8.options_handler.open", mock_open(read_data="dummy")), \
