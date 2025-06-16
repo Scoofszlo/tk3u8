@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import MagicMock, mock_open, patch
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
 from tk3u8.constants import LiveStatus, OptionKey, StreamLink
-from tk3u8.exceptions import InvalidUsernameError, NoUsernameEnteredError, InvalidQualityError, QualityNotAvailableError
+from tk3u8.exceptions import InvalidQualityError
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.session.request_handler import RequestHandler
 
@@ -19,6 +19,7 @@ MOCK_CONFIG = {
 LOADED_MOCK_CONFIG = {
     "config": MOCK_CONFIG
 }
+
 
 @pytest.fixture
 def options_handler():
