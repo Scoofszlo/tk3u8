@@ -1,9 +1,10 @@
 from tk3u8.cli.args_handler import ArgsHandler
-from tk3u8.core.model import Tk3u8
 from tk3u8.logging import setup_logging
 
 
 def start_cli() -> None:
+    from tk3u8.core.model import Tk3u8
+
     ah = ArgsHandler()
     args = ah.parse_args()
 

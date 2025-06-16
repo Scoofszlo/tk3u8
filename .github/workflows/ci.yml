@@ -1,0 +1,77 @@
+name: Test package
+
+on:
+  pull_request:
+    branches:
+      main
+
+jobs:
+  check-type:
+    name: Type checking
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Create virtual environment
+        run: uv venv
+
+      - name: Install dependencies
+        run: |
+          uv pip install mypy toml types-toml types-requests yt-dlp-types
+
+      - name: Run mypy
+        run: uv run mypy tk3u8 --check-untyped-defs --disallow-incomplete-defs --disallow-untyped-defs
+
+  check-lint:
+    runs-on: ubuntu-latest
+    name: Lint checking
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Run flake8
+        uses: py-actions/flake8@v2.3.0
+        with:
+          max-line-length: "200"
+
+  integration-test:
+    runs-on: ubuntu-latest
+    name: Integration test
+    
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+    
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Create virtual environment
+        run: uv venv
+
+      - name: Install dependencies (including dev dependencies)
+        run: |
+          uv sync --dev
+
+      - name: Run pytest
+        run: uv run pytest tests
