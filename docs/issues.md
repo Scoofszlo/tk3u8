@@ -59,3 +59,7 @@ The guide for setting up `tt_target_idc` in your config file is available [here]
 You may encounter issues wherein the program will stop downloading, with a message saying `Finished downloading username-20250101_120015-original.mp4...` even if you didn't do anything. My guess is that it could be a source issue. If the user's live stream is unstable, `ffmpeg` may abrutply end the downloading of stream. That's the pattern that I have observed for some time, but I still need some confirmation for this one. 
 
 This issue is outside the scope of this program, so fixing it is impossibe in my end.
+
+## `StreamDataNotFoundError` occurs
+
+The cause of this exception is not yet confirmed due to limited testing, but I suspect that this is due to live restrictions. To fix this, you have to supply `sessionid_ss` in your config file. To set this up, refer to this [guide](https://github.com/Scoofszlo/tk3u8/wiki/Configuration/#grabbing-and-setting-up-sessionid_ss-andor-tt_target_idc).
