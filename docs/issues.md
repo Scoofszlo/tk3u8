@@ -1,4 +1,4 @@
-This page covers the issues that may arise within the usage of the program, explains what causes themn, and what should you do.
+This page covers the issues that may arise within the usage of the program, explains what causes them, and what should you do.
 
 
 ## `WAFChallengeError` occasionally pops up
@@ -49,7 +49,7 @@ To fix this issue:
 
 - For the first scenario, just retry again.
 - For the second scenario, use a VPN and/or avoid setting `tt_target_idc` in the config file. If you are using a VPN, the server that you should connect could be anywhere, as long as it is not the US servers or one nearby.
-    - Alternatively, if one prefers not using VPN, you can set the tt_target_idc to any valid values such as alisg or useast1a. These are the valid values that I have tested and have work so far.
+    - Alternatively, if one prefers not using VPN, you can set the `tt_target_idc` to any valid values such as alisg or useast1a. These are the valid values that I have tested and have work so far.
 - For the third scenario, use a VPN and connect to a server that is the same with the location of the user you are downloading from. 
 
 The guide for setting up `tt_target_idc` in your config file is available [here](configuration.md#grabbing-and-setting-up-sessionid_ss-andor-tt_target_idc).

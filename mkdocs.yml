@@ -1,4 +1,6 @@
 site_name: tk3u8
+repo_name: tk3u8
+repo_url: https://github.com/Scoofszlo/tk3u8
 
 nav:
   - Home: index.md
@@ -25,9 +27,12 @@ extra:
       link: https://www.reddit.com/user/Scoofszlo/
     - icon: fontawesome/brands/x-twitter
       link: https://x.com/Scoofszlo/
+  version:
+    provider: mike
     
 
 markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.tilde

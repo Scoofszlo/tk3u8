@@ -50,7 +50,7 @@ Cannot proceed with downloading. The chosen quality (uhd_60) is not available fo
 
 If a user is not live yet  but you want the program to start downloading as soon as they go live, you can do this by simply adding `--wait-until-live` option in the command-line just like this:
 
-```sh
+```console
 uv run tk3u8 username --wait-until-live
 ```
 
@@ -69,7 +69,7 @@ However, I do not suggest entering a number less than 30 seconds to avoid sendin
 ### Using proxy
 
 You can also use a proxy by specifying the `IP_ADDRESS:PORT` in `--proxy` arg:
-```sh
+```console
 # Replace with your actual proxy address
 uv run tk3u8 username --proxy 127.0.0.1:80
 ```
