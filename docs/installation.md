@@ -1,6 +1,6 @@
 This section will walk you through the process of setting up the required environment and installing all necessary dependencies to get tk3u8 running on your system.
 
-## Installation Methods
+## Installation methods
 
 ### Isolated installation (via pip)
 
@@ -197,7 +197,7 @@ If system-wide installation was done via pip:
 pip install tk3u8 --upgrade
 ```
 
-## Verifying Installation
+## Verifying installation
 
 In case that there are some problems during the installation, ensure that all requirements are properly installed. You can verify each one by running the following commands in your terminal or command prompt:
 
