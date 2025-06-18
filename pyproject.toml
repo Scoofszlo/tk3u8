@@ -75,7 +75,8 @@ namespaces = false
 
 [tool.setuptools_scm]
 version_file = "tk3u8/_version.py"
-version_scheme = "no-guess-dev"
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
 
 [tool.uv]
 default-groups = []
