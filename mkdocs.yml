@@ -1,4 +1,6 @@
 site_name: tk3u8
+repo_name: tk3u8
+repo_url: https://github.com/Scoofszlo/tk3u8
 
 nav:
   - Home: index.md
