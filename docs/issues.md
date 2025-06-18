@@ -1,4 +1,4 @@
-This page covers the issues that may arise within the usage of the program, explains what causes themn, and what should you do.
+This page covers the issues that may arise within the usage of the program, explains what causes them, and what should you do.
 
 
 ## `WAFChallengeError` occasionally pops up
