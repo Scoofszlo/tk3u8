@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 from tk3u8.constants import OptionKey, Quality
 from tk3u8.core.downloader import Downloader
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
@@ -8,6 +9,7 @@ from tk3u8.session.request_handler import RequestHandler
 
 
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 
 class Tk3u8:
@@ -23,9 +25,14 @@ class Tk3u8:
     interact with this class directly when integrating tk3u8 into their
     scripts.
     """
-    def __init__(self, program_data_dir: str | None = None) -> None:
+    def __init__(
+            self,
+            program_data_dir: Optional[str] = None,
+            config_file_path: Optional[str] = None,
+            downloads_dir: Optional[str] = None
+    ) -> None:
         logger.debug("Initializing Tk3u8 class")
-        self._paths_handler = PathInitializer(program_data_dir)
+        self._paths_handler = PathInitializer(program_data_dir, config_file_path, downloads_dir)
         self._options_handler = OptionsHandler()
         self._request_handler = RequestHandler(self._options_handler)
         self._stream_metadata_handler = StreamMetadataHandler(

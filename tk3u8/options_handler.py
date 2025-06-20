@@ -4,7 +4,6 @@ import toml
 from toml import TomlDecodeError
 from tk3u8.cli.console import console
 from tk3u8.constants import OptionKey
-from tk3u8.exceptions import FileParsingError
 from tk3u8.messages import messages
 from tk3u8.path_initializer import PathInitializer
 
@@ -19,6 +18,7 @@ OPTION_KEY_DEFAULT_VALUES = {
 }
 
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 
 class OptionsHandler:
@@ -79,8 +79,11 @@ class OptionsHandler:
             with open(self._paths_initializer.CONFIG_FILE_PATH, 'r') as file:
                 config = self._validate_and_retouch_config(toml.load(file))
                 return config
-        except FileNotFoundError:
-            raise FileParsingError()
+        except (FileNotFoundError, UnicodeDecodeError):
+            console.print(messages.config_file_parsing_error)
+            logger.error(messages.config_file_parsing_error)
+            exit(1)
+
         except TomlDecodeError as e:
             exc_msg = f'{e.msg} (line {e.lineno} column {e.colno} char {e.pos})'
             formatted_msg = messages.config_file_decoding_error.format(exc_msg=exc_msg)
