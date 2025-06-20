@@ -1,5 +1,5 @@
 from tk3u8.cli.args_handler import ArgsHandler
-from tk3u8.logging import setup_logging
+from tk3u8.cli.logging import setup_logging
 
 
 def start_cli() -> None:
