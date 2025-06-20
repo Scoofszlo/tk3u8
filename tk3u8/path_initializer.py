@@ -78,7 +78,7 @@ class PathInitializer:
         If user specified a custom config file location, it will be honored
         as long as it exists. If not, it will raise an error.
 
-        If there is no specified custom config path, it will just 
+        If there is no specified custom config path, it will just
         """
 
         if config_file_path:
