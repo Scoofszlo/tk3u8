@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import patch
 
+from tk3u8.constants import OptionKey
 from tk3u8.core.model import Tk3u8
 
 
@@ -18,6 +19,22 @@ def test_set_proxy_updates_option_and_request_handler(tk3u8):
         mock_save_args.assert_called_once()
         mock_get_option.assert_called_once()
         mock_update_proxy.assert_called_once_with('http://proxy:8080')
+
+
+def test_set_cookies_updates_option_and_request_handler(tk3u8):
+    cookies = {
+        'sessionid_ss': 'abc123',
+        'tt_target_idc': 'idc456'
+    }
+    tk3u8.set_cookies(cookies)
+
+    set_sessionid_ss = cookies.get(OptionKey.SESSIONID_SS.value)
+    set_tt_target_idc = cookies.get("tt-target-idc")
+    stored_sessionid_ss = tk3u8._request_handler._session.cookies.get(OptionKey.SESSIONID_SS.value)
+    stored_tt_target_idc = tk3u8._request_handler._session.cookies.get(OptionKey.TT_TARGET_IDC.value)
+
+    assert set_sessionid_ss == stored_sessionid_ss
+    assert set_tt_target_idc == stored_tt_target_idc
 
 
 def test_download_triggers_all_components(tk3u8):
