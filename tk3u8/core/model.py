@@ -13,15 +13,15 @@ logger = logging.getLogger(__name__)
 class Tk3u8:
     """
     Serves as the main entry point and public API, organizing all core modules
-    and functionalities in this single interface.
+    and functionalities in this single interface, allowing users to easily
+    setup their scripts.
 
     This class is designed to simplify usage by encapsulating the
     initialization and coordination of various internal components,
     such as path handling, options management, HTTP requests, stream
     metadata processing, and downloading logic. Users are encouraged to
     interact with this class directly when integrating tk3u8 into their
-    scripts, as it provides a unified and stable interface for all major
-    operations.
+    scripts.
     """
     def __init__(self, program_data_dir: str | None = None) -> None:
         logger.debug("Initializing Tk3u8 class")
