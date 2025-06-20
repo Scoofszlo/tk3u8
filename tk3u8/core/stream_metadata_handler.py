@@ -21,6 +21,7 @@ from tk3u8.session.request_handler import RequestHandler
 
 
 logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 
 class StreamMetadataHandler:
