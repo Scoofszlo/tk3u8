@@ -1,8 +1,10 @@
 import logging
 from typing import Optional
+from tk3u8.cli.console import console
 from tk3u8.constants import OptionKey, Quality
 from tk3u8.core.downloader import Downloader
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
+from tk3u8.messages import messages
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.path_initializer import PathInitializer
 from tk3u8.session.request_handler import RequestHandler
@@ -87,3 +89,23 @@ class Tk3u8:
         assert isinstance(new_proxy, (str, type(None)))
 
         self._request_handler.update_proxy(new_proxy)
+
+    def set_cookies(self, cookies: dict) -> None:
+        for key, value in cookies.items():
+            if key == OptionKey.SESSIONID_SS.value:
+                self._options_handler.save_args_values({OptionKey.SESSIONID_SS.value: value})
+            elif key == OptionKey.TT_TARGET_IDC.value:
+                self._options_handler.save_args_values({OptionKey.TT_TARGET_IDC.value: value})
+            else:
+                error_msg = messages.invalid_cookie_key_error.format(key=key)
+                console.print(error_msg)
+                logger.error(error_msg)
+                exit(1)
+
+        new_sessionid_ss = self._options_handler.get_option_val(OptionKey.SESSIONID_SS)
+        new_tt_target_idc = self._options_handler.get_option_val(OptionKey.TT_TARGET_IDC)
+
+        assert isinstance(new_sessionid_ss, str)
+        assert isinstance(new_tt_target_idc, str)
+
+        self._request_handler.update_cookies(new_sessionid_ss, new_tt_target_idc)
