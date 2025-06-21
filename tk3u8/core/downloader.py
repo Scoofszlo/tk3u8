@@ -13,7 +13,6 @@ from tk3u8.path_initializer import PathInitializer
 
 
 logger = logging.getLogger(__name__)
-logger.addHandler(logging.NullHandler())
 
 
 class Downloader:
