@@ -7,6 +7,7 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+a[0-9]+'
       - 'v[0-9]+.[0-9]+.[0-9]+b[0-9]+'
       - 'v[0-9]+.[0-9]+.[0-9]+rc[0-9]+'
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -21,6 +22,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      
+      # This ensures that version will be guessed properly with setuptools-scm
+      - name: Ensure full Git history and tags
+        run: |
+          git fetch --unshallow || true
+          git fetch --tags
 
       - name: Set up Python
         uses: actions/setup-python@v5
