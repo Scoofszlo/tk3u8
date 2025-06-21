@@ -1,7 +1,6 @@
 import pytest
 from unittest.mock import patch, mock_open
 from tk3u8.constants import OptionKey
-from tk3u8.exceptions import FileParsingError
 from tk3u8.options_handler import OptionsHandler
 
 
@@ -64,7 +63,7 @@ def test_file_not_found_raises():
         mock_path_init.return_value.CONFIG_FILE_PATH = "dummy_path"
 
         with patch("tk3u8.options_handler.open", side_effect=FileNotFoundError):
-            with pytest.raises(FileParsingError):
+            with pytest.raises(SystemExit):
                 OptionsHandler()
 
 

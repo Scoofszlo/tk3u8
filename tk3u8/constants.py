@@ -80,6 +80,9 @@ class Messages:
     exiting_download_reattempt: str = "[grey50]Reattempting download cancelled by user. Exiting...[/grey50]"
     invalid_option_key: str = "Option key [b]{key}[/b] is invalid. Please ensure you entered a valid option key in your config file."
     config_file_decoding_error: str = "Error decoding config file due to: '[yellow]{exc_msg}[/yellow]'"
+    config_file_loading_error: str = "Config file path is not valid."
+    config_file_parsing_error: str = "Error parsing config file."
+    invalid_cookie_key_error: str = "Cookie key '{key}' is invalid. Ensure that the cookie key is either 'sessionid_ss' or 'tt_target_idc'."
 
 
 APP_NAME = "tk3u8"

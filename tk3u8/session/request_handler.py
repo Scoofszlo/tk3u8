@@ -54,6 +54,14 @@ class RequestHandler:
 
             logger.debug(f"Proxy updated to: {proxy}")
 
+    def update_cookies(self, sessionid_ss: str, tt_target_idc: str) -> None:
+        self._session.cookies.update({
+                "sessionid_ss": sessionid_ss,
+                "tt-target-idc": tt_target_idc
+            })
+        logger.debug(f"'sessionid_ss' cookie updated to: {sessionid_ss}")
+        logger.debug(f"'sessionid_ss' cookie updated to: {tt_target_idc}")
+
     def _setup_cookies(self) -> None:
         sessionid_ss = self._options_handler.get_option_val(OptionKey.SESSIONID_SS)
         tt_target_idc = self._options_handler.get_option_val(OptionKey.TT_TARGET_IDC)
