@@ -29,16 +29,15 @@ class RequestHandler:
     def __init__(self, options_handler: OptionsHandler) -> None:
         self._options_handler = options_handler
         self._initialize_session()
-        self._response: requests.Response | None = None
 
     def get_data(self, url: str) -> requests.Response:
-        self._response = self._session.get(url)
+        response = self._session.get(url)
 
-        if self._response.status_code != 200:
-            logger.exception(f"{RequestFailedError.__name__}: {RequestFailedError(self._response.status_code)}")
-            raise RequestFailedError(status_code=self._response.status_code)
+        if response.status_code != 200:
+            logger.exception(f"{RequestFailedError.__name__}: {RequestFailedError(response.status_code)}")
+            raise RequestFailedError(status_code=response.status_code)
 
-        return self._response
+        return response
 
     def update_proxy(self, proxy: str | None) -> None:
         if proxy:
