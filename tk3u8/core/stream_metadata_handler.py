@@ -56,7 +56,8 @@ class StreamMetadataHandler:
             self._process_data(username)
 
     def update_data(self) -> None:
-        self._process_data()
+        with console.status(messages.processing_data):
+            self._process_data()
 
     def get_username(self) -> str:
         assert isinstance(self._username, str)
