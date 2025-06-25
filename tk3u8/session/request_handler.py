@@ -28,13 +28,8 @@ class RequestHandler:
     """
     def __init__(self, options_handler: OptionsHandler) -> None:
         self._options_handler = options_handler
-        self._session = requests.Session()
-        self._setup_cookies()
-        self._setup_proxy()
-        self._session.headers.update({
-            "User-Agent": self._get_random_user_agent()
-        })
-        self._response: requests.Response
+        self._initialize_session()
+        self._response: requests.Response | None = None
 
     def get_data(self, url: str) -> requests.Response:
         self._response = self._session.get(url)
@@ -61,6 +56,24 @@ class RequestHandler:
             })
         logger.debug(f"'sessionid_ss' cookie updated to: {sessionid_ss}")
         logger.debug(f"'sessionid_ss' cookie updated to: {tt_target_idc}")
+
+    def _initialize_session(self) -> None:
+        if hasattr(self, '_session') and self._session:
+            try:
+                self._session.close()
+                logger.debug("Previous requests' session closed.")
+            except Exception as e:
+                logger.warning(f"Error closing previous requests' session: {e}")
+
+        self._session = requests.Session()
+        self._setup_cookies()
+        self._setup_proxy()
+        self._session.headers.update({
+            "User-Agent": self._get_random_user_agent()
+        })
+
+        logger.debug("New requests.Session initialized.")
+
 
     def _setup_cookies(self) -> None:
         sessionid_ss = self._options_handler.get_option_val(OptionKey.SESSIONID_SS)
