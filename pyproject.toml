@@ -69,6 +69,18 @@ dev = [
 requires = ["setuptools", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
+[tool.ruff.lint]
+extend-select = [
+    "E302",
+    "E303",
+    "E305",
+]
+preview = true
+
+[tool.ruff.format]
+preview = true
+
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["tk3u8*"]
@@ -81,3 +93,4 @@ local_scheme = "no-local-version"
 
 [tool.uv]
 default-groups = []
+

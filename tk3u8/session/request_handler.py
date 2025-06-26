@@ -28,6 +28,7 @@ class RequestHandler:
     """
     def __init__(self, options_handler: OptionsHandler) -> None:
         self._options_handler = options_handler
+        self._session: requests.Session
         self._initialize_session()
 
     def get_data(self, url: str) -> requests.Response:
@@ -104,7 +105,6 @@ class RequestHandler:
         })
 
         logger.debug("New requests.Session initialized.")
-
 
     def _setup_cookies(self) -> None:
         sessionid_ss = self._options_handler.get_option_val(OptionKey.SESSIONID_SS)
