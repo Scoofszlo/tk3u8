@@ -28,22 +28,46 @@ class RequestHandler:
     """
     def __init__(self, options_handler: OptionsHandler) -> None:
         self._options_handler = options_handler
-        self._session = requests.Session()
-        self._setup_cookies()
-        self._setup_proxy()
-        self._session.headers.update({
-            "User-Agent": self._get_random_user_agent()
-        })
-        self._response: requests.Response
+        self._session: requests.Session
+        self._initialize_session()
 
     def get_data(self, url: str) -> requests.Response:
-        self._response = self._session.get(url)
+        retries = 3
+        exc_msg: str = ""
 
-        if self._response.status_code != 200:
-            logger.exception(f"{RequestFailedError.__name__}: {RequestFailedError(self._response.status_code)}")
-            raise RequestFailedError(status_code=self._response.status_code)
+        for retry in range(1, retries + 1):
+            try:
+                response = self._session.get(url)
+                status_code = response.status_code
 
-        return self._response
+                if status_code != 200:
+                    raw_exc_msg = f"Request error due to status code: {status_code}"
+                    exc_msg = f"{RequestFailedError.__name__}: {RequestFailedError(raw_exc_msg)}"
+
+                    if retry == 3:
+                        break
+
+                    logger.warning(exc_msg)
+                    continue
+
+                return response
+
+            except requests.exceptions.ConnectionError as e:
+                logger.warning(f"ConnectionError occurred on attempt #{retry}: {e}")
+
+                if retry == 3:
+                    exc_msg = f"{RequestFailedError.__name__}: {RequestFailedError(str(e))}"
+                    logger.exception(exc_msg)
+
+                    break
+
+                # Re-initalizes the sesssion instance to discard the previous
+                # instance as the established connection of it is likely to
+                # be staled, so we need to re-initialized this to create new
+                # connection.
+                self._initialize_session(reinitialized=True)
+
+        raise RequestFailedError(exc_msg)
 
     def update_proxy(self, proxy: str | None) -> None:
         if proxy:
@@ -61,6 +85,26 @@ class RequestHandler:
             })
         logger.debug(f"'sessionid_ss' cookie updated to: {sessionid_ss}")
         logger.debug(f"'sessionid_ss' cookie updated to: {tt_target_idc}")
+
+    def _initialize_session(self, reinitialized: bool = False) -> None:
+        if hasattr(self, '_session') and self._session:
+            try:
+                self._session.close()
+                logger.debug("Previous requests' session closed.")
+            except Exception as e:
+                logger.warning(f"Error closing previous requests' session: {e}")
+
+        if reinitialized:
+            logger.debug("Re-initializing requests.Session")
+
+        self._session = requests.Session()
+        self._setup_cookies()
+        self._setup_proxy()
+        self._session.headers.update({
+            "User-Agent": self._get_random_user_agent()
+        })
+
+        logger.debug("New requests.Session initialized.")
 
     def _setup_cookies(self) -> None:
         sessionid_ss = self._options_handler.get_option_val(OptionKey.SESSIONID_SS)

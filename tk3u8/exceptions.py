@@ -8,8 +8,8 @@ class RequestFailedError(Exception):
     invalid responses, or other related errors.
     """
 
-    def __init__(self, status_code: int) -> None:
-        self.message = f" Request failed with status code: {status_code})"
+    def __init__(self, exc_msg: str) -> None:
+        self.message = f"Request failed: {exc_msg})"
         super().__init__(self.message)
 
 
