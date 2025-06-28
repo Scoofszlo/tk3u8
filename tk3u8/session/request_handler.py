@@ -1,6 +1,7 @@
 import logging
 import random
 import requests
+from requests.exceptions import ConnectionError, ReadTimeout
 from tk3u8.constants import USER_AGENT_LIST, OptionKey
 from tk3u8.exceptions import RequestFailedError
 from tk3u8.options_handler import OptionsHandler
@@ -52,8 +53,8 @@ class RequestHandler:
 
                 return response
 
-            except requests.exceptions.ConnectionError as e:
-                logger.warning(f"ConnectionError occurred on attempt #{retry}: {e}")
+            except (ConnectionError, ReadTimeout) as e:
+                logger.warning(f"{type(e).__name__} occurred on attempt #{retry}: {e}")
 
                 if retry == 3:
                     exc_msg = f"{RequestFailedError.__name__}: {RequestFailedError(str(e))}"
