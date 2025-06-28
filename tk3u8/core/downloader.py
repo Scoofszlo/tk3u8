@@ -99,8 +99,11 @@ class Downloader:
         ]
 
         try:
-            subprocess.run(ffmpeg_command)
-            self._finish_download(filename, filename_with_download_dir)  
+            result = subprocess.run(ffmpeg_command)
+
+            if result == 0:  # If no erros has been detected
+                self._finish_download(filename, filename_with_download_dir)
+
         except KeyboardInterrupt:
             self._finish_download(filename, filename_with_download_dir)
         except Exception as e:
