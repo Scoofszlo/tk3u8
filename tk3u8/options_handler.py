@@ -42,7 +42,7 @@ class OptionsHandler:
         self._args_values: dict = {}
         self._config_values: dict = self._load_config_values()
 
-    def get_option_val(self, key: OptionKey) -> Optional[str | int]:
+    def get_option_val(self, key: OptionKey) -> Optional[str | int | bool]:
         """
         Retrieves the value for a given option key, checking arguments first, then config file,
         and finally falling back to default values.

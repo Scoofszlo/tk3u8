@@ -44,6 +44,7 @@ class OptionKey(Enum):
     WAIT_UNTIL_LIVE = "wait_until_live"
     TIMEOUT = "timeout"
     FORCE_REDOWNLOAD = "force_redownload"
+    USE_H265 = "use_h265"
 
 
 @dataclass

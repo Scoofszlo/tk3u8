@@ -57,6 +57,12 @@ class ArgsHandler():
             default=False
         )
         self._parser.add_argument(
+            "--use-h265",
+            action="store_true",
+            help="Use the H.265 (HEVC) encoded live stream instead of H.264 (AVC)",
+            default=False
+        )
+        self._parser.add_argument(
             "--log-level",
             help="Set the logging level (default: no logging if not used)",
             choices=["DEBUG", "ERROR"],
