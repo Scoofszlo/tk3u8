@@ -45,7 +45,7 @@ class Extractor(ABC):
         a LiveStatus constant.
         """
 
-    def get_stream_links(self, stream_data: dict) -> dict:
+    def get_stream_links(self, stream_data: dict[str, dict]) -> dict:
         """
         This builds the stream links in dict. The qualities are first constructed
         into a list by getting all the values from Quality enum class except for
@@ -59,27 +59,34 @@ class Extractor(ABC):
         qualities = [quality.value for quality in list(Quality)[1:]]
         qualities.insert(0, "origin")
 
-        for quality in qualities:
-            try:
-                link = stream_data["data"][quality]["main"]["hls"]
-            except KeyError:
-                link = None
+        for quality_key in qualities:
+            quality_dict = {}
 
-            # Link can be an empty string. Based on my testing, this errpr
-            # will most likely to happen for those who live in the US region.
-            if link == "":
-                logger.exception(f"{HLSLinkNotFoundError.__name__}: {HLSLinkNotFoundError(self._username)}")
-                raise HLSLinkNotFoundError(self._username)
+            for vid_format in stream_data.keys():
+                try:
+                    link = stream_data[vid_format]["data"][quality_key]["main"]["hls"]
+                except KeyError:
+                    link = None
+
+                # Link can be an empty string. Based on my testing, this errpr
+                # will most likely to happen for those who live in the US region.
+                if link == "":
+                    logger.exception(f"{HLSLinkNotFoundError.__name__}: {HLSLinkNotFoundError(self._username)}")
+                    raise HLSLinkNotFoundError(self._username)
+
+                quality_dict.update({
+                    vid_format: link
+                })
 
             stream_links.update({
-                quality: link
+                quality_key: quality_dict
             })
 
         stream_links["original"] = stream_links.pop("origin")
 
         logger.debug(messages.retrieved_stream_links.format(
             username=self._username,
-            stream_links=stream_links
+            stream_links=json.dumps(stream_links, indent=4, ensure_ascii=False)
         ))
 
         return stream_links
@@ -112,10 +119,14 @@ class APIExtractor(Extractor):
 
     def get_stream_data(self, source_data: dict) -> dict:
         try:
-            stream_data = json.loads(source_data["data"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
+            stream_data = {
+                "h2644": json.loads(source_data["data"]["liveRoom"]["streamData"]["pull_data"]["stream_data"]),
+                "h265": json.loads(source_data["data"]["liveRoom"]["hevcStreamData"]["pull_data"]["stream_data"])
+            }
+
             logger.debug(messages.extracted_stream_data.format(
                 username=self._username,
-                stream_data=stream_data
+                stream_data=json.dumps(stream_data, indent=4, ensure_ascii=False)
             ))
 
             return stream_data
@@ -164,9 +175,14 @@ class WebpageExtractor(Extractor):
     def get_stream_data(self, source_data: dict) -> dict:
         try:
             stream_data = json.loads(source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
+            stream_data = {
+                "h264": json.loads(source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"]),
+                "h265": json.loads(source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["hevcStreamData"]["pull_data"]["stream_data"])
+            }
+            
             logger.debug(messages.extracted_stream_data.format(
                 username=self._username,
-                stream_data=stream_data
+                stream_data=json.dumps(stream_data, indent=4, ensure_ascii=False)
             ))
 
             return stream_data
