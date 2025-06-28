@@ -1,8 +1,8 @@
 from datetime import datetime
 import logging
 import os
+import subprocess
 import time
-from yt_dlp import YoutubeDL
 from tk3u8.constants import LiveStatus, OptionKey, StreamLink
 from tk3u8.cli.console import console, Live, render_lines
 from tk3u8.exceptions import DownloadError, QualityNotAvailableError
@@ -87,26 +87,33 @@ class Downloader:
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"{username}-{timestamp}-{stream_link.quality}"
-        filename_with_download_dir = os.path.join(self._path_initializer.DOWNLOAD_DIR, f"{username}", f"{filename}.%(ext)s")
+        filename_with_download_dir = os.path.join(self._path_initializer.DOWNLOAD_DIR, f"{username}", f"{filename}.mp4")
+        output_dir = os.path.dirname(filename_with_download_dir)
+        os.makedirs(output_dir, exist_ok=True)
 
-        ydl_opts = {
-            'outtmpl': filename_with_download_dir,
-            'quiet': False,  # Set to True to suppress output if needed
-        }
+        ffmpeg_command = [
+            "ffmpeg",
+            "-i", stream_link.link,
+            "-c", "copy",
+            filename_with_download_dir
+        ]
 
         try:
-            with YoutubeDL(ydl_opts) as ydl:  # type: ignore[arg-type]
-                ydl.download([stream_link.link])
-
-                finished_downloading_msg = messages.finished_downloading.format(
-                    filename=filename,
-                    filename_with_download_dir=filename_with_download_dir.replace('%(ext)s', 'mp4'),
-                )
-                console.print("\n" + finished_downloading_msg)
-                logger.debug(finished_downloading_msg)
+            subprocess.run(ffmpeg_command)
+            self._finish_download(filename, filename_with_download_dir)  
+        except KeyboardInterrupt:
+            self._finish_download(filename, filename_with_download_dir)
         except Exception as e:
             logger.exception(f"{DownloadError.__name__}: {DownloadError(e)}")
             raise DownloadError(e)
+
+    def _finish_download(self, filename: str, filename_with_download_dir: str):
+        finished_downloading_msg = messages.finished_downloading.format(
+            filename=filename,
+            filename_with_download_dir=filename_with_download_dir,
+        )
+        console.print("\n" + finished_downloading_msg)
+        logger.debug(finished_downloading_msg)
 
     def _is_stream_link_available(self, stream_link: StreamLink) -> bool:
         if stream_link.link is None:
