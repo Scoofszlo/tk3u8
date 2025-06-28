@@ -68,12 +68,6 @@ class Extractor(ABC):
                 except KeyError:
                     link = None
 
-                # Link can be an empty string. Based on my testing, this errpr
-                # will most likely to happen for those who live in the US region.
-                if link == "":
-                    logger.exception(f"{HLSLinkNotFoundError.__name__}: {HLSLinkNotFoundError(self._username)}")
-                    raise HLSLinkNotFoundError(self._username)
-
                 quality_dict.update({
                     vid_format: link
                 })
@@ -83,6 +77,11 @@ class Extractor(ABC):
             })
 
         stream_links["original"] = stream_links.pop("origin")
+
+        are_stream_links_empty = self._are_hls_stream_links_empty(stream_links)
+        if are_stream_links_empty:
+                logger.exception(f"{HLSLinkNotFoundError.__name__}: {HLSLinkNotFoundError(self._username)}")
+                raise HLSLinkNotFoundError(self._username)
 
         logger.debug(messages.retrieved_stream_links.format(
             username=self._username,
@@ -102,6 +101,33 @@ class Extractor(ABC):
             logger.exception(f"{UnknownStatusCodeError.__name__}: {UnknownStatusCodeError(status_code)}")
             raise UnknownStatusCodeError(status_code)
 
+    def _are_hls_stream_links_empty(self, stream_links: dict[str, dict[str, str | None]]) -> bool:
+        """
+        Checks whether the all stream links contain similar empty strings.
+        If satisfied, this function returns True and vice versa.
+
+        This is important because there is a tendency that stream links can be empty.
+        Based on testing, this is more likely to happen if you and the user you are
+        trying to download is in different server locations.
+        """
+
+        h264_bool: bool = False
+        h265_bool: bool = False
+
+        for quality in stream_links:
+            links_by_codec = stream_links[quality]
+
+            for codec, link in links_by_codec.items():
+                if link != "":
+                    continue
+                else:
+                    if codec == "h264":
+                        h264_bool = True
+                    elif codec == "h265":
+                        h265_bool = True
+
+        return all([h264_bool, h265_bool])
+
 
 class APIExtractor(Extractor):
     def get_source_data(self) -> dict:
@@ -120,7 +146,7 @@ class APIExtractor(Extractor):
     def get_stream_data(self, source_data: dict) -> dict:
         try:
             stream_data = {
-                "h2644": json.loads(source_data["data"]["liveRoom"]["streamData"]["pull_data"]["stream_data"]),
+                "h264": json.loads(source_data["data"]["liveRoom"]["streamData"]["pull_data"]["stream_data"]),
                 "h265": json.loads(source_data["data"]["liveRoom"]["hevcStreamData"]["pull_data"]["stream_data"])
             }
 
