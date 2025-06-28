@@ -69,11 +69,11 @@ class StreamMetadataHandler:
 
         return self._live_status
 
-    def get_stream_link(self, quality: str) -> StreamLink:
+    def get_stream_link(self, quality: str, use_h265: bool = False) -> StreamLink:
         try:
             if quality in self._stream_links:
-                stream_link = StreamLink(quality, self._stream_links[quality])
-                logger.debug(f"Chosen stream link: {stream_link}")
+                stream_link = StreamLink(quality, self._stream_links[quality]["h265"] if use_h265 else self._stream_links[quality]["h264"])
+                logger.debug(f"Chosen stream link: {stream_link} ({'H.265' if use_h265 else 'H.264'})")
 
                 return stream_link
             logger.exception(f"{InvalidQualityError.__name__}: {InvalidQualityError}")
