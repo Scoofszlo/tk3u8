@@ -44,6 +44,7 @@ class OptionKey(Enum):
     WAIT_UNTIL_LIVE = "wait_until_live"
     TIMEOUT = "timeout"
     FORCE_REDOWNLOAD = "force_redownload"
+    USE_H265 = "use_h265"
 
 
 @dataclass
@@ -55,6 +56,7 @@ class Messages:
     reattempting_download: str = "[grey50]Reattempting download for user [b]@{username}[/b]...[/grey50]"
     awaiting_to_go_live: str = "User [b]@{username}[/b] is [red]currently offline[/red]. Awaiting [b]@{username}[/b] to start streaming..."
     quality_not_available: str = "[grey50]Cannot proceed with downloading. The chosen quality [b]({quality})[/b] is not available for download.[/grey50]"
+    empty_stream_link_error: str = "Cannot proceed with downloading as the stream link was somehow unavailable during stream data extraction. Try downloading again."
     starting_download: str = "Starting download for user [b]@{username}[/b] [grey50](quality: {stream_link.quality}, stream Link: {stream_link.link})[/grey50]"
     finished_downloading: str = "[green]Finished downloading[/green] [b]{filename}.mp4[/b] [grey50](saved at: {filename_with_download_dir})[/grey50]"
     cancelled_checking_live: str = "[grey50]Checking cancelled by user. Exiting...[/grey50]"

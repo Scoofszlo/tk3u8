@@ -14,7 +14,8 @@ OPTION_KEY_DEFAULT_VALUES = {
     OptionKey.PROXY: None,
     OptionKey.WAIT_UNTIL_LIVE: False,
     OptionKey.TIMEOUT: 30,
-    OptionKey.FORCE_REDOWNLOAD: False
+    OptionKey.FORCE_REDOWNLOAD: False,
+    OptionKey.USE_H265: False
 }
 
 logger = logging.getLogger(__name__)
@@ -42,7 +43,7 @@ class OptionsHandler:
         self._args_values: dict = {}
         self._config_values: dict = self._load_config_values()
 
-    def get_option_val(self, key: OptionKey) -> Optional[str | int]:
+    def get_option_val(self, key: OptionKey) -> Optional[str | int | bool]:
         """
         Retrieves the value for a given option key, checking arguments first, then config file,
         and finally falling back to default values.

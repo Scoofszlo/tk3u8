@@ -90,20 +90,31 @@ def test_get_live_status_returns_correct_value(request_handler, options_handler)
     assert handler.get_live_status() == LiveStatus.PREPARING_TO_GO_LIVE
 
 
-def test_get_stream_link_returns_link(request_handler, options_handler):
+def test_get_stream_link_returns_link_by_codec(request_handler, options_handler):
     handler = StreamMetadataHandler(request_handler, options_handler)
-    handler._stream_links = {'original': 'http://test'}
-    link = handler.get_stream_link('original')
+    handler._stream_links = {
+        "original": {
+            "h264": "http://testh264",
+            "h265": "http://testh265"
+        }
+    }
+    handler._username = "testuser"
+
+    # Test for H.265
+    link = handler.get_stream_link('original', use_h265=True)
     assert isinstance(link, StreamLink)
     assert link.quality == 'original'
-    assert link.link == 'http://test'
+    assert link.link == 'http://testh265'
+
+    link = handler.get_stream_link('original', use_h265=False)
+    assert link.link == 'http://testh264'
 
 
 def test_get_stream_link_invalid_quality_raises(request_handler, options_handler):
     handler = StreamMetadataHandler(request_handler, options_handler)
     handler._stream_links = {'original': 'http://test'}
     with pytest.raises(InvalidQualityError):
-        handler.get_stream_link('origgg')
+        handler.get_stream_link('origgg', use_h265=True)
 
 
 def test_validate_username_empty_exits(monkeypatch, request_handler, options_handler):

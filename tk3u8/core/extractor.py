@@ -45,7 +45,7 @@ class Extractor(ABC):
         a LiveStatus constant.
         """
 
-    def get_stream_links(self, stream_data: dict) -> dict:
+    def get_stream_links(self, stream_data: dict[str, dict]) -> dict:
         """
         This builds the stream links in dict. The qualities are first constructed
         into a list by getting all the values from Quality enum class except for
@@ -59,27 +59,33 @@ class Extractor(ABC):
         qualities = [quality.value for quality in list(Quality)[1:]]
         qualities.insert(0, "origin")
 
-        for quality in qualities:
-            try:
-                link = stream_data["data"][quality]["main"]["hls"]
-            except KeyError:
-                link = None
+        for quality_key in qualities:
+            quality_dict = {}
 
-            # Link can be an empty string. Based on my testing, this errpr
-            # will most likely to happen for those who live in the US region.
-            if link == "":
-                logger.exception(f"{HLSLinkNotFoundError.__name__}: {HLSLinkNotFoundError(self._username)}")
-                raise HLSLinkNotFoundError(self._username)
+            for vid_format in stream_data.keys():
+                try:
+                    link = stream_data[vid_format]["data"][quality_key]["main"]["hls"]
+                except KeyError:
+                    link = None
+
+                quality_dict.update({
+                    vid_format: link
+                })
 
             stream_links.update({
-                quality: link
+                quality_key: quality_dict
             })
 
         stream_links["original"] = stream_links.pop("origin")
 
+        are_stream_links_empty = self._are_hls_stream_links_empty(stream_links)
+        if are_stream_links_empty:
+            logger.exception(f"{HLSLinkNotFoundError.__name__}: {HLSLinkNotFoundError(self._username)}")
+            raise HLSLinkNotFoundError(self._username)
+
         logger.debug(messages.retrieved_stream_links.format(
             username=self._username,
-            stream_links=stream_links
+            stream_links=json.dumps(stream_links, indent=4, ensure_ascii=False)
         ))
 
         return stream_links
@@ -94,6 +100,33 @@ class Extractor(ABC):
         else:
             logger.exception(f"{UnknownStatusCodeError.__name__}: {UnknownStatusCodeError(status_code)}")
             raise UnknownStatusCodeError(status_code)
+
+    def _are_hls_stream_links_empty(self, stream_links: dict[str, dict[str, str | None]]) -> bool:
+        """
+        Checks whether the all stream links contain similar empty strings.
+        If satisfied, this function returns True and vice versa.
+
+        This is important because there is a tendency that stream links can be empty.
+        Based on testing, this is more likely to happen if you and the user you are
+        trying to download is in different server locations.
+        """
+
+        h264_bool: bool = False
+        h265_bool: bool = False
+
+        for quality in stream_links:
+            links_by_codec = stream_links[quality]
+
+            for codec, link in links_by_codec.items():
+                if link != "":
+                    continue
+                else:
+                    if codec == "h264":
+                        h264_bool = True
+                    elif codec == "h265":
+                        h265_bool = True
+
+        return all([h264_bool, h265_bool])
 
 
 class APIExtractor(Extractor):
@@ -112,10 +145,14 @@ class APIExtractor(Extractor):
 
     def get_stream_data(self, source_data: dict) -> dict:
         try:
-            stream_data = json.loads(source_data["data"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
+            stream_data = {
+                "h264": json.loads(source_data["data"]["liveRoom"]["streamData"]["pull_data"]["stream_data"]),
+                "h265": json.loads(source_data["data"]["liveRoom"]["hevcStreamData"]["pull_data"]["stream_data"])
+            }
+
             logger.debug(messages.extracted_stream_data.format(
                 username=self._username,
-                stream_data=stream_data
+                stream_data=json.dumps(stream_data, indent=4, ensure_ascii=False)
             ))
 
             return stream_data
@@ -164,9 +201,14 @@ class WebpageExtractor(Extractor):
     def get_stream_data(self, source_data: dict) -> dict:
         try:
             stream_data = json.loads(source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"])
+            stream_data = {
+                "h264": json.loads(source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"]),
+                "h265": json.loads(source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["hevcStreamData"]["pull_data"]["stream_data"])
+            }
+
             logger.debug(messages.extracted_stream_data.format(
                 username=self._username,
-                stream_data=stream_data
+                stream_data=json.dumps(stream_data, indent=4, ensure_ascii=False)
             ))
 
             return stream_data

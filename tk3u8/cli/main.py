@@ -15,6 +15,7 @@ def start_cli() -> None:
     timeout = args.timeout
     log_level = args.log_level
     force_redownload = args.force_redownload
+    use_h265 = args.use_h265
 
     setup_logging(log_level)
 
@@ -25,5 +26,6 @@ def start_cli() -> None:
         quality=quality,
         wait_until_live=wait_until_live,
         timeout=timeout,
-        force_redownload=force_redownload
+        force_redownload=force_redownload,
+        use_h265=use_h265
     )
