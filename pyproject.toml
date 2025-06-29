@@ -71,9 +71,11 @@ build-backend = "setuptools.build_meta"
 
 [tool.ruff.lint]
 extend-select = [
+    "E117",
     "E302",
     "E303",
     "E305",
+    "W293"
 ]
 preview = true
 

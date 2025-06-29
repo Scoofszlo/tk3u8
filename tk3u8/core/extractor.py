@@ -80,8 +80,8 @@ class Extractor(ABC):
 
         are_stream_links_empty = self._are_hls_stream_links_empty(stream_links)
         if are_stream_links_empty:
-                logger.exception(f"{HLSLinkNotFoundError.__name__}: {HLSLinkNotFoundError(self._username)}")
-                raise HLSLinkNotFoundError(self._username)
+            logger.exception(f"{HLSLinkNotFoundError.__name__}: {HLSLinkNotFoundError(self._username)}")
+            raise HLSLinkNotFoundError(self._username)
 
         logger.debug(messages.retrieved_stream_links.format(
             username=self._username,
@@ -205,7 +205,7 @@ class WebpageExtractor(Extractor):
                 "h264": json.loads(source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["streamData"]["pull_data"]["stream_data"]),
                 "h265": json.loads(source_data["LiveRoom"]["liveRoomUserInfo"]["liveRoom"]["hevcStreamData"]["pull_data"]["stream_data"])
             }
-            
+
             logger.debug(messages.extracted_stream_data.format(
                 username=self._username,
                 stream_data=json.dumps(stream_data, indent=4, ensure_ascii=False)

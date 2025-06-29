@@ -41,9 +41,9 @@ def test_download_triggers_all_components(tk3u8):
     with patch.object(tk3u8._options_handler, 'save_args_values') as mock_save_args, \
          patch.object(tk3u8._stream_metadata_handler, 'initialize_data') as mock_init_data, \
          patch.object(tk3u8._downloader, 'download') as mock_download:
-        tk3u8.download('testuser', quality='original', wait_until_live=True, timeout=10, force_redownload=False)
+        tk3u8.download('testuser', quality='original', wait_until_live=True, timeout=10, force_redownload=False, use_h265=True)
         mock_save_args.assert_called_once_with(
-            wait_until_live=True, timeout=10, force_redownload=False
+            wait_until_live=True, timeout=10, force_redownload=False, use_h265=True
         )
         mock_init_data.assert_called_once_with('testuser')
         mock_download.assert_called_once_with('original')
