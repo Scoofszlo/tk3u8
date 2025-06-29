@@ -109,7 +109,7 @@ class StreamMetadataHandler:
 
         for idx, extractor_class in enumerate(self._extractor_classes):
             logger.debug(messages.trying_extractor.format(
-                pos=idx+1,
+                pos=idx + 1,
                 extractor_class_name=extractor_class.__name__
             ))
 
@@ -134,16 +134,16 @@ class StreamMetadataHandler:
             ) as e:
                 if idx != len(self._extractor_classes) - 1:
                     error_msg = messages.current_extractor_failed.format(
-                        current_extr_pos=idx+1,
+                        current_extr_pos=idx + 1,
                         current_extr_name=extractor.__class__.__name__,
                         exc_name=type(e).__name__,
-                        next_extr_pos=idx+2
+                        next_extr_pos=idx + 2
                     )
                     console.print(error_msg)
                     logger.error(error_msg)
                 else:
                     error_msg = messages.last_extractor_failed.format(
-                        current_extr_pos=idx+1,
+                        current_extr_pos=idx + 1,
                         current_extr_name=extractor.__class__.__name__,
                         exc_name=type(e).__name__,
                     )
