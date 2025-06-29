@@ -49,9 +49,10 @@ class Tk3u8:
             self,
             username: str,
             quality: str = Quality.ORIGINAL.value,
-            wait_until_live: bool = False,
-            timeout: int = 30,
-            force_redownload: bool = False
+            wait_until_live: Optional[bool] = None,
+            timeout: Optional[int] = None,
+            force_redownload: Optional[bool] = None,
+            use_h265: Optional[bool] = None
     ) -> None:
         """
         Downloads a stream for the specified user with the given quality and options.
@@ -70,7 +71,8 @@ class Tk3u8:
         self._options_handler.save_args_values(
             wait_until_live=wait_until_live,
             timeout=timeout,
-            force_redownload=force_redownload
+            force_redownload=force_redownload,
+            use_h265=use_h265
         )
         self._stream_metadata_handler.initialize_data(username)
         self._downloader.download(quality)

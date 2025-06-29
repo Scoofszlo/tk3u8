@@ -31,11 +31,13 @@ class Downloader:
         live_status = self._stream_metadata_handler.get_live_status()
         force_redownload = self._options_handler.get_option_val(OptionKey.FORCE_REDOWNLOAD)
         redownload_attempted = False
+        use_h265 = self._options_handler.get_option_val(OptionKey.USE_H265)
 
         assert isinstance(username, str)
         assert isinstance(wait_until_live, int)
         assert isinstance(live_status, LiveStatus)
         assert isinstance(force_redownload, bool)
+        assert isinstance(use_h265, bool)
 
         while True:
             if live_status in (LiveStatus.OFFLINE, LiveStatus.PREPARING_TO_GO_LIVE):
@@ -60,7 +62,7 @@ class Downloader:
             else:
                 console.print(messages.reattempting_download.format(username=username))
 
-            stream_link = self._stream_metadata_handler.get_stream_link(quality)
+            stream_link = self._stream_metadata_handler.get_stream_link(quality, use_h265)
             if not self._is_stream_link_available(stream_link):
                 console.print(messages.quality_not_available.format(quality=quality))
                 logger.error(f"{QualityNotAvailableError.__name__}: {QualityNotAvailableError()}")

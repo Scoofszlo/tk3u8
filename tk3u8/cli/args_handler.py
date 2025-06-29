@@ -43,7 +43,7 @@ class ArgsHandler():
             "--wait-until-live",
             action="store_true",
             help="Let the program wait until the user goes live to start downloading stream",
-            default=False
+            default=None
         )
         self._parser.add_argument(
             "--timeout",
@@ -54,7 +54,13 @@ class ArgsHandler():
             "--force-redownload",
             action="store_true",
             help="Forces the program to redownload again while user is still live.",
-            default=False
+            default=None
+        )
+        self._parser.add_argument(
+            "--use-h265",
+            action="store_true",
+            help="Use the H.265 (HEVC) encoded live stream instead of H.264 (AVC)",
+            default=None
         )
         self._parser.add_argument(
             "--log-level",

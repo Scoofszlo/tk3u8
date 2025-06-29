@@ -6,6 +6,7 @@ from tk3u8.core.extractor import APIExtractor, Extractor, WebpageExtractor
 from tk3u8.core.helper import is_user_exists, is_username_valid
 from tk3u8.exceptions import (
     HLSLinkNotFoundError,
+    HLSLinkTemporarilyUnavailableError,
     InvalidQualityError,
     InvalidUsernameError,
     NoUsernameEnteredError,
@@ -69,13 +70,23 @@ class StreamMetadataHandler:
 
         return self._live_status
 
-    def get_stream_link(self, quality: str) -> StreamLink:
+    def get_stream_link(self, quality: str, use_h265: bool) -> StreamLink:
         try:
             if quality in self._stream_links:
-                stream_link = StreamLink(quality, self._stream_links[quality])
-                logger.debug(f"Chosen stream link: {stream_link}")
+                assert isinstance(self._username, str)
+                codec, formatted_codec_str = ("h265", "H.265") if use_h265 else ("h264", "H.264")
+                stream_link = self._stream_links[quality][codec]
 
-                return stream_link
+                if stream_link == "":
+                    logger.exception(f"{HLSLinkTemporarilyUnavailableError.__name__}: {HLSLinkTemporarilyUnavailableError()}")
+                    console.print(messages.empty_stream_link_error)
+                    exit(0)
+
+                stream_link_obj = StreamLink(quality, stream_link)
+                logger.debug(f"Chosen stream link: {stream_link_obj} ({formatted_codec_str})")
+
+                return stream_link_obj
+
             logger.exception(f"{InvalidQualityError.__name__}: {InvalidQualityError}")
             raise InvalidQualityError()
         except AttributeError:
@@ -98,7 +109,7 @@ class StreamMetadataHandler:
 
         for idx, extractor_class in enumerate(self._extractor_classes):
             logger.debug(messages.trying_extractor.format(
-                pos=idx+1,
+                pos=idx + 1,
                 extractor_class_name=extractor_class.__name__
             ))
 
@@ -123,16 +134,16 @@ class StreamMetadataHandler:
             ) as e:
                 if idx != len(self._extractor_classes) - 1:
                     error_msg = messages.current_extractor_failed.format(
-                        current_extr_pos=idx+1,
+                        current_extr_pos=idx + 1,
                         current_extr_name=extractor.__class__.__name__,
                         exc_name=type(e).__name__,
-                        next_extr_pos=idx+2
+                        next_extr_pos=idx + 2
                     )
                     console.print(error_msg)
                     logger.error(error_msg)
                 else:
                     error_msg = messages.last_extractor_failed.format(
-                        current_extr_pos=idx+1,
+                        current_extr_pos=idx + 1,
                         current_extr_name=extractor.__class__.__name__,
                         exc_name=type(e).__name__,
                     )

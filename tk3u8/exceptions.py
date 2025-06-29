@@ -145,6 +145,21 @@ class HLSLinkNotFoundError(Exception):
         super().__init__(self.message)
 
 
+class HLSLinkTemporarilyUnavailableError(Exception):
+    """Custom exception when the HLS stream link isn't available temporarily
+    for some reason.
+
+    The difference with the exception 'HLSLinkNotFoundError' is that this exception
+    will be used if the HLS link becomes unavaiable initially, but becomes available
+    again whenever user retries to download the live stream. The other exception is
+    only used if there is no actually available HLS stream links persistently.
+    """
+
+    def __init__(self) -> None:
+        self.message = "Cannot proceed with downloading as the stream link was somehow unavailable during stream data extraction. Try downloading again."
+        super().__init__(self.message)
+
+
 class InvalidArgKeyError(Exception):
     """Custom exception when an invalid key is encountered."""
 
