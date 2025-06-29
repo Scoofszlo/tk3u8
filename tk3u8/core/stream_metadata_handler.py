@@ -70,7 +70,7 @@ class StreamMetadataHandler:
 
         return self._live_status
 
-    def get_stream_link(self, quality: str, use_h265: bool = False) -> StreamLink:
+    def get_stream_link(self, quality: str, use_h265: bool) -> StreamLink:
         try:
             if quality in self._stream_links:
                 assert isinstance(self._username, str)

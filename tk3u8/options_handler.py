@@ -14,7 +14,8 @@ OPTION_KEY_DEFAULT_VALUES = {
     OptionKey.PROXY: None,
     OptionKey.WAIT_UNTIL_LIVE: False,
     OptionKey.TIMEOUT: 30,
-    OptionKey.FORCE_REDOWNLOAD: False
+    OptionKey.FORCE_REDOWNLOAD: False,
+    OptionKey.USE_H265: False
 }
 
 logger = logging.getLogger(__name__)
