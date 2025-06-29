@@ -58,7 +58,7 @@ class OptionsHandler:
 
         return OPTION_KEY_DEFAULT_VALUES.get(key)
 
-    def save_args_values(self, *args: dict, **kwargs: str | int) -> None:
+    def save_args_values(self, *args: dict, **kwargs: Optional[str | int]) -> None:
         """
         Saves provided argument values into the 'self._args_values',
         accepting both dictionaries and keyword arguments.

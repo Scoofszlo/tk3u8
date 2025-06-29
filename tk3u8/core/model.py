@@ -49,10 +49,10 @@ class Tk3u8:
             self,
             username: str,
             quality: str = Quality.ORIGINAL.value,
-            wait_until_live: bool = False,
-            timeout: int = 30,
-            force_redownload: bool = False,
-            use_h265: bool = False
+            wait_until_live: Optional[bool] = None,
+            timeout: Optional[int] = None,
+            force_redownload: Optional[bool] = None,
+            use_h265: Optional[bool] = None
     ) -> None:
         """
         Downloads a stream for the specified user with the given quality and options.

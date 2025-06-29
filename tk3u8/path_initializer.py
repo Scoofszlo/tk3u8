@@ -18,7 +18,7 @@ class PathInitializer:
     """
     _instance = None
 
-    def __new__(cls, *args: dict, **kwargs: Any) -> 'PathInitializer':
+    def __new__(cls, *args: Optional[str], **kwargs: Any) -> 'PathInitializer':
         if not cls._instance:
             cls._instance = super(PathInitializer, cls).__new__(cls)
         return cls._instance
