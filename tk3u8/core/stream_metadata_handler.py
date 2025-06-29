@@ -6,6 +6,7 @@ from tk3u8.core.extractor import APIExtractor, Extractor, WebpageExtractor
 from tk3u8.core.helper import is_user_exists, is_username_valid
 from tk3u8.exceptions import (
     HLSLinkNotFoundError,
+    HLSLinkTemporarilyUnavailableError,
     InvalidQualityError,
     InvalidUsernameError,
     NoUsernameEnteredError,
@@ -72,10 +73,20 @@ class StreamMetadataHandler:
     def get_stream_link(self, quality: str, use_h265: bool = False) -> StreamLink:
         try:
             if quality in self._stream_links:
-                stream_link = StreamLink(quality, self._stream_links[quality]["h265"] if use_h265 else self._stream_links[quality]["h264"])
-                logger.debug(f"Chosen stream link: {stream_link} ({'H.265' if use_h265 else 'H.264'})")
+                assert isinstance(self._username, str)
+                codec, formatted_codec_str = ("h265", "H.265") if use_h265 else ("h264", "H.264")
+                stream_link = self._stream_links[quality][codec]
 
-                return stream_link
+                if stream_link == "":
+                    logger.exception(f"{HLSLinkTemporarilyUnavailableError.__name__}: {HLSLinkTemporarilyUnavailableError()}")
+                    console.print(messages.empty_stream_link_error)
+                    exit(0)
+
+                stream_link_obj = StreamLink(quality, stream_link)
+                logger.debug(f"Chosen stream link: {stream_link_obj} ({formatted_codec_str})")
+
+                return stream_link_obj
+
             logger.exception(f"{InvalidQualityError.__name__}: {InvalidQualityError}")
             raise InvalidQualityError()
         except AttributeError:
