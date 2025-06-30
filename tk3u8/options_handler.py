@@ -5,7 +5,7 @@ from toml import TomlDecodeError
 from tk3u8.cli.console import console
 from tk3u8.constants import OptionKey
 from tk3u8.messages import messages
-from tk3u8.path_initializer import PathInitializer
+from tk3u8.paths_handler import PathsHandler
 
 
 OPTION_KEY_DEFAULT_VALUES = {
@@ -31,15 +31,15 @@ class OptionsHandler:
     values, and validate configuration files.
 
     Attributes:
-        _paths_initializer (PathInitializer): Helper for resolving
+        _paths_initializer (PathsHandler): Helper for resolving
             configuration file paths.
         _args_values (dict): Stores option values provided from the
             command-line arguments.
         _config_values (dict): Stores option values loaded from the configuration file.
     """
 
-    def __init__(self) -> None:
-        self._paths_initializer = PathInitializer()
+    def __init__(self, paths_handler: PathsHandler) -> None:
+        self._paths_handler = paths_handler
         self._args_values: dict = {}
         self._config_values: dict = self._load_config_values()
 
@@ -77,7 +77,7 @@ class OptionsHandler:
 
     def _load_config_values(self) -> dict:
         try:
-            with open(self._paths_initializer.CONFIG_FILE_PATH, 'r') as file:
+            with open(self._paths_handler.CONFIG_FILE_PATH, 'r') as file:
                 config = self._validate_and_retouch_config(toml.load(file))
                 return config
         except (FileNotFoundError, UnicodeDecodeError):

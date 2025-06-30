@@ -2,6 +2,7 @@ import pytest
 from unittest.mock import patch, mock_open
 from tk3u8.constants import OptionKey
 from tk3u8.options_handler import OptionsHandler
+from tk3u8.paths_handler import PathsHandler
 
 
 MOCK_CONFIG = {
@@ -18,24 +19,25 @@ LOADED_MOCK_CONFIG = {
 }
 
 
-def test_load_config_and_defaults():
+@pytest.fixture
+def mock_paths_handler():
+    return PathsHandler()
+
+
+def test_load_config_and_defaults(mock_paths_handler):
     with patch("tk3u8.options_handler.open", mock_open(read_data="dummy")), \
-         patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG), \
-         patch("tk3u8.options_handler.PathInitializer") as mock_path_init:
-        mock_path_init.return_value.CONFIG_FILE_PATH = "dummy_path"
-        handler = OptionsHandler()
+         patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG):
+        handler = OptionsHandler(mock_paths_handler)
         assert handler._config_values[OptionKey.SESSIONID_SS.value] == "sessid"
         assert handler._config_values[OptionKey.TT_TARGET_IDC.value] is None
         assert handler._config_values[OptionKey.PROXY.value] is None
         assert handler._config_values[OptionKey.WAIT_UNTIL_LIVE.value] is False
 
 
-def test_get_option_val_precedence():
+def test_get_option_val_precedence(mock_paths_handler):
     with patch("tk3u8.options_handler.open", mock_open(read_data="dummy")), \
-         patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG), \
-         patch("tk3u8.options_handler.PathInitializer") as mock_path_init:
-        mock_path_init.return_value.CONFIG_FILE_PATH = "dummy_path"
-        handler = OptionsHandler()
+         patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG):
+        handler = OptionsHandler(mock_paths_handler)
 
         # Not set in args, should get from config
         assert handler.get_option_val(OptionKey.SESSIONID_SS) == "sessid"
@@ -48,31 +50,24 @@ def test_get_option_val_precedence():
         assert handler.get_option_val(OptionKey.SESSIONID_SS) == "override"
 
 
-def test_save_args_values_and_type_error():
+def test_save_args_values_and_type_error(mock_paths_handler):
     with patch("tk3u8.options_handler.open", mock_open(read_data="dummy")), \
-         patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG), \
-         patch("tk3u8.options_handler.PathInitializer") as mock_path_init:
-        mock_path_init.return_value.CONFIG_FILE_PATH = "dummy_path"
-        handler = OptionsHandler()
+         patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG):
+        handler = OptionsHandler(mock_paths_handler)
         with pytest.raises(TypeError):
             handler.save_args_values("not a dict")
 
 
-def test_file_not_found_raises():
-    with patch("tk3u8.options_handler.PathInitializer") as mock_path_init:
-        mock_path_init.return_value.CONFIG_FILE_PATH = "dummy_path"
-
-        with patch("tk3u8.options_handler.open", side_effect=FileNotFoundError):
-            with pytest.raises(SystemExit):
-                OptionsHandler()
+def test_file_not_found_raises(mock_paths_handler):
+    with patch("tk3u8.options_handler.open", side_effect=FileNotFoundError):
+        with pytest.raises(SystemExit):
+            OptionsHandler(mock_paths_handler)
 
 
-def test_save_args_overwrites_previous():
+def test_save_args_overwrites_previous(mock_paths_handler):
     with patch("tk3u8.options_handler.open", mock_open(read_data="dummy")), \
-         patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG), \
-         patch("tk3u8.options_handler.PathInitializer") as mock_path_init:
-        mock_path_init.return_value.CONFIG_FILE_PATH = "dummy_path"
-        handler = OptionsHandler()
+         patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG):
+        handler = OptionsHandler(mock_paths_handler)
 
         handler.save_args_values({OptionKey.USERNAME.value: "user1"})
         assert handler.get_option_val(OptionKey.USERNAME) == "user1"
@@ -81,12 +76,10 @@ def test_save_args_overwrites_previous():
         assert handler.get_option_val(OptionKey.USERNAME) == "user2"
 
 
-def test_get_option_val_returns_none_for_missing():
+def test_get_option_val_returns_none_for_missing(mock_paths_handler):
     with patch("tk3u8.options_handler.open", mock_open(read_data="dummy")), \
-         patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG), \
-         patch("tk3u8.options_handler.PathInitializer") as mock_path_init:
-        mock_path_init.return_value.CONFIG_FILE_PATH = "dummy_path"
-        handler = OptionsHandler()
+         patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG):
+        handler = OptionsHandler(mock_paths_handler)
 
         # Needed to pop the _config_values as the SESSIONID_SS from mockup
         # config contains a value
@@ -94,12 +87,10 @@ def test_get_option_val_returns_none_for_missing():
         assert handler.get_option_val(OptionKey.SESSIONID_SS) is None
 
 
-def test_get_option_val_args_override_config():
+def test_get_option_val_args_override_config(mock_paths_handler):
     with patch("tk3u8.options_handler.open", mock_open(read_data="dummy")), \
-         patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG), \
-         patch("tk3u8.options_handler.PathInitializer") as mock_path_init:
-        mock_path_init.return_value.CONFIG_FILE_PATH = "dummy_path"
-        handler = OptionsHandler()
+         patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG):
+        handler = OptionsHandler(mock_paths_handler)
         handler.save_args_values({OptionKey.PROXY.value: "127.0.0.1:8080"})
         assert handler.get_option_val(OptionKey.PROXY) == "127.0.0.1:8080"
         handler.save_args_values({OptionKey.PROXY.value: "0.0.0.1:1111"})

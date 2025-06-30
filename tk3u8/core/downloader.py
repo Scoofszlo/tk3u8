@@ -9,7 +9,7 @@ from tk3u8.exceptions import DownloadError, QualityNotAvailableError
 from tk3u8.messages import messages
 from tk3u8.options_handler import OptionsHandler
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
-from tk3u8.path_initializer import PathInitializer
+from tk3u8.paths_handler import PathsHandler
 
 
 logger = logging.getLogger(__name__)
@@ -18,10 +18,11 @@ logger = logging.getLogger(__name__)
 class Downloader:
     def __init__(
             self,
+            paths_handler: PathsHandler,
             stream_metadata_handler: StreamMetadataHandler,
             options_handler: OptionsHandler
     ) -> None:
-        self._path_initializer = PathInitializer()
+        self._paths_handler = paths_handler
         self._options_handler = options_handler
         self._stream_metadata_handler = stream_metadata_handler
 
@@ -89,8 +90,9 @@ class Downloader:
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"{username}-{timestamp}-{stream_link.quality}"
-        full_file_path_as_ts = os.path.join(self._path_initializer.DOWNLOAD_DIR, f"{username}", f"{filename}.ts")
-        full_file_path_as_mp4 = os.path.join(self._path_initializer.DOWNLOAD_DIR, f"{username}", f"{filename}.mp4")
+
+        full_file_path_as_ts = os.path.join(self._paths_handler.DOWNLOAD_DIR, f"{username}", f"{filename}.ts")
+        full_file_path_as_mp4 = os.path.join(self._paths_handler.DOWNLOAD_DIR, f"{username}", f"{filename}.mp4")
         output_dir = os.path.dirname(full_file_path_as_ts)
         os.makedirs(output_dir, exist_ok=True)
 
