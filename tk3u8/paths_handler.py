@@ -11,16 +11,16 @@ logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
 
-class PathInitializer:
+class PathsHandler:
     """
     Singleton class to initialize and manage important file and directory
     paths for the application
     """
     _instance = None
 
-    def __new__(cls, *args: Optional[str], **kwargs: Any) -> 'PathInitializer':
+    def __new__(cls, *args: Optional[str], **kwargs: Any) -> 'PathsHandler':
         if not cls._instance:
-            cls._instance = super(PathInitializer, cls).__new__(cls)
+            cls._instance = super(PathsHandler, cls).__new__(cls)
         return cls._instance
 
     def __init__(

@@ -24,7 +24,7 @@ LOADED_MOCK_CONFIG = {
 def mock_options_handler():
     with patch("tk3u8.options_handler.open", mock_open(read_data="dummy")), \
          patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG), \
-         patch("tk3u8.options_handler.PathInitializer") as mock_path_init:
+         patch("tk3u8.options_handler.PathsHandler") as mock_path_init:
         mock_path_init.return_value.CONFIG_FILE_PATH = "dummy_path"
 
         handler = OptionsHandler()
