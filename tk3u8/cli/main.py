@@ -16,10 +16,11 @@ def start_cli() -> None:
     log_level = args.log_level
     force_redownload = args.force_redownload
     use_h265 = args.use_h265
+    config_file_path = args.config_file
 
     setup_logging(log_level)
 
-    tk3u8 = Tk3u8()
+    tk3u8 = Tk3u8(config_file_path=config_file_path)
     tk3u8.set_proxy(proxy)
     tk3u8.download(
         username=username,
