@@ -38,8 +38,8 @@ class OptionsHandler:
         _config_values (dict): Stores option values loaded from the configuration file.
     """
 
-    def __init__(self) -> None:
-        self._paths_handler = PathsHandler()
+    def __init__(self, paths_handler: PathsHandler) -> None:
+        self._paths_handler = paths_handler
         self._args_values: dict = {}
         self._config_values: dict = self._load_config_values()
 

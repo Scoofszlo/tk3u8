@@ -34,13 +34,14 @@ class Tk3u8:
     ) -> None:
         logger.debug("Initializing Tk3u8 class")
         self._paths_handler = PathsHandler(program_data_dir, config_file_path, downloads_dir)
-        self._options_handler = OptionsHandler()
+        self._options_handler = OptionsHandler(self._paths_handler)
         self._request_handler = RequestHandler(self._options_handler)
         self._stream_metadata_handler = StreamMetadataHandler(
             self._request_handler,
             self._options_handler
         )
         self._downloader = Downloader(
+            self._paths_handler,
             self._stream_metadata_handler,
             self._options_handler
         )
