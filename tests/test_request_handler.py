@@ -1,9 +1,10 @@
 import pytest
 from unittest.mock import MagicMock, mock_open, patch
-from tk3u8.options_handler import OptionsHandler
-from tk3u8.session.request_handler import RequestHandler
 from tk3u8.constants import USER_AGENT_LIST, OptionKey
 from tk3u8.exceptions import RequestFailedError
+from tk3u8.options_handler import OptionsHandler
+from tk3u8.paths_handler import PathsHandler
+from tk3u8.session.request_handler import RequestHandler
 
 
 MOCK_CONFIG = {
@@ -21,13 +22,16 @@ LOADED_MOCK_CONFIG = {
 
 
 @pytest.fixture
-def mock_options_handler():
-    with patch("tk3u8.options_handler.open", mock_open(read_data="dummy")), \
-         patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG), \
-         patch("tk3u8.options_handler.PathsHandler") as mock_path_init:
-        mock_path_init.return_value.CONFIG_FILE_PATH = "dummy_path"
+def mock_paths_handler():
+    return PathsHandler()
 
-        handler = OptionsHandler()
+
+@pytest.fixture
+def mock_options_handler(mock_paths_handler):
+    with patch("tk3u8.options_handler.open", mock_open(read_data="dummy")), \
+         patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG):
+
+        handler = OptionsHandler(mock_paths_handler)
 
         return handler
 

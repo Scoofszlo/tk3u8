@@ -4,6 +4,7 @@ from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
 from tk3u8.constants import LiveStatus, OptionKey, StreamLink
 from tk3u8.exceptions import InvalidQualityError
 from tk3u8.options_handler import OptionsHandler
+from tk3u8.paths_handler import PathsHandler
 from tk3u8.session.request_handler import RequestHandler
 
 
@@ -22,13 +23,18 @@ LOADED_MOCK_CONFIG = {
 
 
 @pytest.fixture
-def options_handler():
+def mock_paths_handler():
+    return PathsHandler()
+
+
+@pytest.fixture
+def options_handler(mock_paths_handler):
     with patch("tk3u8.options_handler.open", mock_open(read_data="dummy")), \
          patch("tk3u8.options_handler.toml.load", return_value=LOADED_MOCK_CONFIG), \
          patch("tk3u8.options_handler.PathsHandler") as mock_path_init:
         mock_path_init.return_value.CONFIG_FILE_PATH = "dummy_path"
 
-        handler = OptionsHandler()
+        handler = OptionsHandler(mock_paths_handler)
 
         return handler
 
