@@ -89,33 +89,50 @@ class Downloader:
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"{username}-{timestamp}-{stream_link.quality}"
-        filename_with_download_dir = os.path.join(self._path_initializer.DOWNLOAD_DIR, f"{username}", f"{filename}.mp4")
-        output_dir = os.path.dirname(filename_with_download_dir)
+        full_file_path_as_ts = os.path.join(self._path_initializer.DOWNLOAD_DIR, f"{username}", f"{filename}.ts")
+        full_file_path_as_mp4 = os.path.join(self._path_initializer.DOWNLOAD_DIR, f"{username}", f"{filename}.mp4")
+        output_dir = os.path.dirname(full_file_path_as_ts)
         os.makedirs(output_dir, exist_ok=True)
 
-        ffmpeg_command = [
+        download_command = [
             "ffmpeg",
             "-i", stream_link.link,
             "-c", "copy",
-            filename_with_download_dir
+            full_file_path_as_ts
+        ]
+
+        fixup_command = [
+            "ffmpeg",
+            "-i", full_file_path_as_ts,
+            "-c", "copy",
+            "-f", "mp4",
+            "-bsf:a", "aac_adtstoasc",
+            full_file_path_as_mp4
         ]
 
         try:
-            result = subprocess.run(ffmpeg_command)
-
-            if result == 0:  # If no erros has been detected
-                self._finish_download(filename, filename_with_download_dir)
-
+            subprocess.run(download_command)
+            self._finish_download(filename, full_file_path_as_ts, full_file_path_as_mp4, fixup_command)
         except KeyboardInterrupt:
-            self._finish_download(filename, filename_with_download_dir)
+            self._finish_download(filename, full_file_path_as_ts, full_file_path_as_mp4, fixup_command)
         except Exception as e:
             logger.exception(f"{DownloadError.__name__}: {DownloadError(e)}")
             raise DownloadError(e)
 
-    def _finish_download(self, filename: str, filename_with_download_dir: str):
+    def _finish_download(
+            self,
+            filename: str,
+            full_file_path_as_ts: str,
+            full_file_path_as_mp4: str,
+            fixup_command: list[str]
+    ):
+        # This is to finalize the file and turn it into .mp4 file
+        subprocess.run(fixup_command)
+        # os.remove(full_file_path_as_ts)
+
         finished_downloading_msg = messages.finished_downloading.format(
             filename=filename,
-            filename_with_download_dir=filename_with_download_dir,
+            filename_with_download_dir=full_file_path_as_mp4,
         )
         console.print("\n" + finished_downloading_msg)
         logger.debug(finished_downloading_msg)
