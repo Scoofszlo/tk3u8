@@ -22,7 +22,7 @@ class Downloader:
             stream_metadata_handler: StreamMetadataHandler,
             options_handler: OptionsHandler
     ) -> None:
-        self._paths_handler = paths_handler,
+        self._paths_handler = paths_handler
         self._options_handler = options_handler
         self._stream_metadata_handler = stream_metadata_handler
 
