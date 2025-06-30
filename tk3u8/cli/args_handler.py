@@ -63,6 +63,11 @@ class ArgsHandler():
             default=None
         )
         self._parser.add_argument(
+            "--config-file",
+            help="The path of the config file to use",
+            default=None
+        )
+        self._parser.add_argument(
             "--log-level",
             help="Set the logging level (default: no logging if not used)",
             choices=["DEBUG", "ERROR"],
