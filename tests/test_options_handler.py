@@ -18,6 +18,7 @@ LOADED_MOCK_CONFIG = {
     "config": MOCK_CONFIG
 }
 
+
 @pytest.fixture
 def mock_paths_handler():
     return PathsHandler()
