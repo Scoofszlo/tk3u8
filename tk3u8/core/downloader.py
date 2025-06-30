@@ -127,10 +127,10 @@ class Downloader:
             full_file_path_as_ts: str,
             full_file_path_as_mp4: str,
             fixup_command: list[str]
-    ):
+    ) -> None:
         # This is to finalize the file and turn it into .mp4 file
         subprocess.run(fixup_command)
-        # os.remove(full_file_path_as_ts)
+        os.remove(full_file_path_as_ts)
 
         finished_downloading_msg = messages.finished_downloading.format(
             filename=filename,
