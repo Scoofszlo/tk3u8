@@ -6,7 +6,7 @@ from tk3u8.core.downloader import Downloader
 from tk3u8.core.stream_metadata_handler import StreamMetadataHandler
 from tk3u8.messages import messages
 from tk3u8.options_handler import OptionsHandler
-from tk3u8.path_initializer import PathInitializer
+from tk3u8.paths_handler import PathsHandler
 from tk3u8.session.request_handler import RequestHandler
 
 
@@ -33,14 +33,15 @@ class Tk3u8:
             downloads_dir: Optional[str] = None
     ) -> None:
         logger.debug("Initializing Tk3u8 class")
-        self._paths_handler = PathInitializer(program_data_dir, config_file_path, downloads_dir)
-        self._options_handler = OptionsHandler()
+        self._paths_handler = PathsHandler(program_data_dir, config_file_path, downloads_dir)
+        self._options_handler = OptionsHandler(self._paths_handler)
         self._request_handler = RequestHandler(self._options_handler)
         self._stream_metadata_handler = StreamMetadataHandler(
             self._request_handler,
             self._options_handler
         )
         self._downloader = Downloader(
+            self._paths_handler,
             self._stream_metadata_handler,
             self._options_handler
         )

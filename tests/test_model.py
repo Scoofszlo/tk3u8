@@ -1,6 +1,5 @@
 import pytest
 from unittest.mock import patch
-
 from tk3u8.constants import OptionKey
 from tk3u8.core.model import Tk3u8
 
