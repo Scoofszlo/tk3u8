@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Any, Optional
+from typing import Optional
 from platformdirs import user_data_path, user_downloads_path
 import toml
 from tk3u8.cli.console import console
@@ -13,15 +13,9 @@ logger.addHandler(logging.NullHandler())
 
 class PathsHandler:
     """
-    Singleton class to initialize and manage important file and directory
+    Handles the initialization and manages important file and directory
     paths for the application
     """
-    _instance = None
-
-    def __new__(cls, *args: Optional[str], **kwargs: Any) -> 'PathsHandler':
-        if not cls._instance:
-            cls._instance = super(PathsHandler, cls).__new__(cls)
-        return cls._instance
 
     def __init__(
             self,
@@ -29,10 +23,7 @@ class PathsHandler:
             config_file_path: Optional[str] = None,
             downloads_dir: Optional[str] = None
     ) -> None:
-        # Prevent re-initialization if already initialized
-        if not hasattr(self, "_initialized"):
-            self._set_dirs(program_data_dir, config_file_path, downloads_dir)
-            self._initialized = True
+        self._set_dirs(program_data_dir, config_file_path, downloads_dir)
 
     def _set_dirs(
             self,
