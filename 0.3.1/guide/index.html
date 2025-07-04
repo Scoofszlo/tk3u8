@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../installation/system-wide-installation-via-pip/">
+        <link rel="prev" href="../configuration/">
       
       
-        <link rel="next" href="using-through-terminal/">
+        <link rel="next" href="../issues/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Usage - tk3u8</title>
+        <title>Guides - tk3u8</title>
       
     
     
@@ -71,6 +71,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#grabbing-and-setting-up-sessionid_ss-andor-tt_target_idc" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -107,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Usage
+              Guides
             
           </span>
         </div>
@@ -381,8 +386,6 @@
       
   
   
-    
-  
   
   
     
@@ -400,15 +403,15 @@
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../usage/" class="md-nav__link ">
               
   
   
@@ -421,13 +424,13 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_3" id="__nav_3_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Usage
@@ -443,7 +446,7 @@
   
   
     <li class="md-nav__item">
-      <a href="using-through-terminal/" class="md-nav__link">
+      <a href="../usage/using-through-terminal/" class="md-nav__link">
         
   
   
@@ -466,7 +469,7 @@
   
   
     <li class="md-nav__item">
-      <a href="using-through-a-script/" class="md-nav__link">
+      <a href="../usage/using-through-a-script/" class="md-nav__link">
         
   
   
@@ -515,10 +518,30 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../guide/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Guides
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -529,6 +552,33 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#grabbing-and-setting-up-sessionid_ss-andor-tt_target_idc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grabbing and setting up sessionid_ss and/or tt_target_idc
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -573,6 +623,23 @@
   
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#grabbing-and-setting-up-sessionid_ss-andor-tt_target_idc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Grabbing and setting up sessionid_ss and/or tt_target_idc
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -590,13 +657,33 @@
   
 
 
-  <h1>Usage</h1>
+  <h1>Guides</h1>
 
-<p>Learn how to use the program with the following methods:</p>
-<ul>
-<li><a href="using-through-terminal/">Using through a terminal</a> - This is the most recommended ones as this is the intended and the most easiest way.</li>
-<li><a href="using-through-a-script/">Using through a script</a> - Preferred method for those who need flexibility (e.g., downloading multiple live streams from different users all at once), but this requires more technical knowledge.</li>
+<h2 id="grabbing-and-setting-up-sessionid_ss-andor-tt_target_idc">Grabbing and setting up <code>sessionid_ss</code> and/or <code>tt_target_idc</code></h2>
+<p>To fix issues related to <code>WAFChallengeError</code>, <code>HLSLinkNotFoundError</code>, and <code>StreamDataNotFoundError</code>, you can supply a value to <code>tt_target_idc</code> in the config file. If it doesn't work, try to supply both <code>sessionid_ss</code> and <code>tt_target_idc</code>. </p>
+<p>To grab these values, do the following:</p>
+<ol>
+<li>In your browser, go to https://tiktok.com and login your account.</li>
+<li>Open Inspect Element in your browser.</li>
+<li>Go to Cookies section:<ul>
+<li>For Google Chrome users, click the <code>Application</code>. If you can't see it, click the <code>&gt;&gt;</code>.</li>
+<li>For Firefox users, click the <code>Storage</code>. If you can't see it, click the <code>&gt;&gt;</code>.</li>
 </ul>
+</li>
+<li>On Cookies dropdown, click the <code>https://tiktok.com</code>.</li>
+<li>On the right hand side, find the <code>sessionid_ss</code>, as well as the <code>tt-target-idc</code>.</li>
+<li>Get those values and paste it in your config file located in your <a href="../configuration/">user data</a> folder.</li>
+<li>Your config should look like this.
+    <div class="highlight"><pre><span></span><code><span class="k">[config]</span>
+<span class="n">sessionid_ss</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;0124124abcdeuj214124mfncb23tgejf&quot;</span><span class="w">  </span><span class="c1"># Include this if only supplying tt-target-idc doesn&#39;t work</span>
+<span class="n">tt_target_idc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;alisg&quot;</span>
+</code></pre></div></li>
+<li>Save it.</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Do not share this to anyone as this is a sensitive data tied to your TikTok account.</p>
+</div>
 
 
 
