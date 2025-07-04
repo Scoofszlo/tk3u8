@@ -4,16 +4,27 @@ repo_url: https://github.com/Scoofszlo/tk3u8
 
 nav:
   - Home: index.md
-  - Installation: installation.md
-  - Usage: usage.md
+  - Installation: 
+    - Installation: installation/index.md
+    - System-wide installation via uv: installation/system-wide-installation-via-uv.md
+    - Isolated installation via uv: installation/isolated-installation-via-uv.md
+    - System-wide installation via pip: installation/system-wide-installation-via-pip.md
+  - Usage:
+    - Usage: usage/index.md
+    - Using through terminal: usage/using-through-terminal.md
+    - Using through a script: usage/using-through-a-script.md
   - Configuration: configuration.md
+  - Guides: guide.md
   - Issues: issues.md
 
 theme:
   name: material
   palette:
     scheme: slate
+  font:
+    text: Lato
   features:
+    - navigation.indexes
     - navigation.instant
     - navigation.instant.progress
 
@@ -29,6 +40,9 @@ extra:
       link: https://x.com/Scoofszlo/
   version:
     provider: mike
+
+extra_css:
+  - stylesheets/extra.css
     
 
 markdown_extensions:
