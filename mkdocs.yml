@@ -13,7 +13,10 @@ theme:
   name: material
   palette:
     scheme: slate
+  font:
+    text: Lato
   features:
+    - navigation.indexes
     - navigation.instant
     - navigation.instant.progress
 
@@ -29,6 +32,9 @@ extra:
       link: https://x.com/Scoofszlo/
   version:
     provider: mike
+
+extra_css:
+  - stylesheets/extra.css
     
 
 markdown_extensions:
