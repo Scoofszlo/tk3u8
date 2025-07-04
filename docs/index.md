@@ -46,7 +46,9 @@ In case you're in hurry, here is a short, quick installation and usage guide. Fo
 
 ## License
 
-tk3u8 is an open-source program under the [MIT](https://github.com/Scoofszlo/tk3u8/blob/main/LICENSE) license. If you can, please contribute to this [project]() by suggesting a feature, reporting issues, or make code contributions by checking the repository [here](https://github.com/Scoofszlo/tk3u8).
+tk3u8 is an open-source program licensed under the [MIT](https://github.com/Scoofszlo/tk3u8/blob/main/LICENSE) license.
+
+If you can, please contribute to this project by suggesting a feature, reporting issues, or make code contributions by checking the repository [here](https://github.com/Scoofszlo/tk3u8).
 
 ## Legal Disclaimer
 
