@@ -13,7 +13,7 @@ Some of the key features include:
 
 ## Quickstart
 
-In case you're in hurry, here is a short, quick installation and usage guide. For more comprehensive details, see the [installation](./installation/index.md) and [usage](./usage/index.md) guides.
+In case you're in hurry, here is a short, quick installation and usage guide. For more comprehensive details, see the [installation](https://scoofszlo.github.io/tk3u8/latest/installation/) and [usage](https://scoofszlo.github.io/tk3u8/latest/usage/) guides.
 
 ### Requirements
 - Windows or Linux
