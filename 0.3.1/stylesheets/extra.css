@@ -1,0 +1,5 @@
+[data-md-color-scheme="slate"] {
+    --md-primary-fg-color: hsl(230, 10%, 10%);
+    --md-default-bg-color: hsl(220, 10%, 5%);
+    --md-code-bg-color: hsl(220, 10%, 10%);
+}
