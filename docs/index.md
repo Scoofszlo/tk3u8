@@ -43,15 +43,3 @@ In case you're in hurry, here is a short, quick installation and usage guide. Fo
     ```
 
 7. To stop and save the live stream, just hit `Ctrl+C` once and wait for the program to finish processing and you're done! The live stream will be saved in your Downloads folder.
-
-## License
-
-tk3u8 is an open-source program licensed under the [MIT](https://github.com/Scoofszlo/tk3u8/blob/main/LICENSE) license.
-
-If you can, please contribute to this project by suggesting a feature, reporting issues, or make code contributions by checking the repository [here](https://github.com/Scoofszlo/tk3u8).
-
-## Legal Disclaimer
-
-The use of this software to download content without the permission may violate copyright laws or TikTok's terms of service. The author of this project is not responsible for any misuse or legal consequences arising from the use of this software. Use it at your own risk and ensure compliance with applicable laws and regulations.
-
-This project is not affiliated, endorsed, or sponsored by TikTok or its affiliates. Use this software at your own risk.
