@@ -12,7 +12,6 @@ dependencies = [
     "rich==14.0.0",
     "rich-argparse==1.7.1",
     "toml==0.10.2",
-    "yt-dlp==2025.6.25",
 ]
 authors = [
   {name = "Scoofszlo", email = "scoofszlo@gmail.com"},

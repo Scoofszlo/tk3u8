@@ -1,8 +1,8 @@
 from datetime import datetime
 import logging
 import os
+import subprocess
 import time
-from yt_dlp import YoutubeDL
 from tk3u8.constants import LiveStatus, OptionKey, StreamLink
 from tk3u8.cli.console import console, Live, render_lines
 from tk3u8.exceptions import DownloadError, QualityNotAvailableError
@@ -90,26 +90,54 @@ class Downloader:
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"{username}-{timestamp}-{stream_link.quality}"
-        filename_with_download_dir = os.path.join(self._paths_handler.DOWNLOAD_DIR, f"{username}", f"{filename}.%(ext)s")
 
-        ydl_opts = {
-            'outtmpl': filename_with_download_dir,
-            'quiet': False,  # Set to True to suppress output if needed
-        }
+        full_file_path_as_ts = os.path.join(self._paths_handler.DOWNLOAD_DIR, f"{username}", f"{filename}.ts")
+        full_file_path_as_mp4 = os.path.join(self._paths_handler.DOWNLOAD_DIR, f"{username}", f"{filename}.mp4")
+        output_dir = os.path.dirname(full_file_path_as_ts)
+        os.makedirs(output_dir, exist_ok=True)
+
+        download_command = [
+            "ffmpeg",
+            "-i", stream_link.link,
+            "-c", "copy",
+            full_file_path_as_ts
+        ]
+
+        fixup_command = [
+            "ffmpeg",
+            "-i", full_file_path_as_ts,
+            "-c", "copy",
+            "-f", "mp4",
+            "-bsf:a", "aac_adtstoasc",
+            full_file_path_as_mp4
+        ]
 
         try:
-            with YoutubeDL(ydl_opts) as ydl:  # type: ignore[arg-type]
-                ydl.download([stream_link.link])
-
-                finished_downloading_msg = messages.finished_downloading.format(
-                    filename=filename,
-                    filename_with_download_dir=filename_with_download_dir.replace('%(ext)s', 'mp4'),
-                )
-                console.print("\n" + finished_downloading_msg)
-                logger.debug(finished_downloading_msg)
+            subprocess.run(download_command)
+            self._finish_download(filename, full_file_path_as_ts, full_file_path_as_mp4, fixup_command)
+        except KeyboardInterrupt:
+            self._finish_download(filename, full_file_path_as_ts, full_file_path_as_mp4, fixup_command)
         except Exception as e:
             logger.exception(f"{DownloadError.__name__}: {DownloadError(e)}")
             raise DownloadError(e)
+
+    def _finish_download(
+            self,
+            filename: str,
+            full_file_path_as_ts: str,
+            full_file_path_as_mp4: str,
+            fixup_command: list[str]
+    ) -> None:
+        # This is to finalize the file and turn it into .mp4 file
+        subprocess.run(fixup_command)
+        os.remove(full_file_path_as_ts)
+
+        finished_downloading_msg = messages.finished_downloading.format(
+            filename=filename,
+            filename_with_download_dir=full_file_path_as_mp4,
+        )
+        console.print("\n" + finished_downloading_msg)
+        logger.debug(finished_downloading_msg)
 
     def _is_stream_link_available(self, stream_link: StreamLink) -> bool:
         if stream_link.link is None:
